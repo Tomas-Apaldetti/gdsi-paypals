@@ -1,0 +1,53 @@
+version: "3.8"
+
+volumes:
+  ignore_fe:
+  ignore_be:
+  dbdata:
+
+services:
+  frontend:
+    restart: always
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile.frontend
+      args:
+        - PORT=${FRONTEND_PORT}
+    volumes:
+      - ../frontend:/usr/src/frontend:delegated
+      - ignore_fe:/usr/src/frontend/node_modules
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    env_file:
+      - ../frontend/.env
+    environment:
+      - WDS_SOCKET_HOST=127.0.0.1 
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+
+  backend:
+    build: 
+      context: ..
+      dockerfile: ./docker/Dockerfile.backend
+      args:
+        - PORT=${BACKEND_PORT}
+    env_file:
+      - ../backend/.env
+    ports:
+      - '${BACKEND_PORT}:${BACKEND_PORT}'
+    depends_on:
+      - mongodb
+    volumes:
+      - ../backend:/usr/src/backend:delegated
+      - ignore_be:/usr/src/backend/node_modules
+
+  mongodb:
+    image: mongo:4.2.1-bionic
+    ports:
+      - '${MONGO_PORT}:${MONGO_PORT}'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PWD}
+    volumes:
+      - dbdata:/data/db
