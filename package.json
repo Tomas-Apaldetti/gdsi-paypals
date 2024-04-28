@@ -1,0 +1,23 @@
+{
+  "name": "paypals",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "cd docker && docker-compose up -d",
+    "start:build": "cd docker && docker-compose up -d --build",
+    "prettier": "prettier .",
+    "prettier:fix": "prettier --write .",
+    "lint": "eslint ."
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^28.3.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-security": "^3.0.0",
+    "prettier": "^3.2.5"
+  }
+}
