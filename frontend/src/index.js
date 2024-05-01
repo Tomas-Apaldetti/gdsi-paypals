@@ -6,16 +6,22 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ThemeProvider} from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
+import { Provider } from 'react-redux';
+import { store } from './store'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme()}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
-    </StyledEngineProvider>
+    <Provider store={store}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme()}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </StyledEngineProvider>
+
+    </Provider>
+
 
   </React.StrictMode>,
 );
