@@ -7,7 +7,8 @@
     "start:build": "cd docker && docker-compose up -d --build",
     "prettier": "prettier .",
     "prettier:fix": "prettier --write .",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "setup": "npm install && cd backend && npm install && cd .. && cd frontend && npm install"
   },
   "author": "",
   "license": "ISC",
