@@ -10,8 +10,16 @@ function App() {
     <div className='App'>
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<NeedsAuth redirect='/login'><Home /></NeedsAuth>} />
-            <Route path='/other' element={<Other />} />
+            <Route path='/' element={
+              <NeedsAuth redirect='/login'>
+                <Home />
+              </NeedsAuth>
+            } />
+            <Route path='/other' element={
+              <NeedsAuth redirect='/login'>
+                <Other />
+              </NeedsAuth>
+            }/>
             <Route path='/login' element={<Login/>} />
             <Route path='/register' element={<Register />}/>
           </Routes>

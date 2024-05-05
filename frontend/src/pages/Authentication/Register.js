@@ -51,7 +51,7 @@ export const Register = () => {
             {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => {
               return (
                 <Form>
-                  <LabeledInput id='username' label='Username' onChange={handleChange} />
+                  <LabeledInput id='userName' label='Username' onChange={handleChange} />
                   <LabeledInput id='fullName' label='Full name' onChange={handleChange} />
                   <LabeledDatePicker
                     id='birthDate'
