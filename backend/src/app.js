@@ -14,6 +14,9 @@ const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
+
+const groupRoutes = require('./routes/groups.route')
+
 const app = express();
 
 if (config.env !== 'test') {
@@ -42,8 +45,14 @@ app.use(cors());
 app.options('*', cors());
 
 // jwt authentication
-app.use(passport.initialize());
-passport.use('jwt', jwtStrategy);
+// app.use(passport.initialize());
+// passport.use('jwt', jwtStrategy);
+
+app.use('/group', groupRoutes)
+// app.use('/group/create', (req, res) => {
+//   console.log('entreeeeee acaaaaa', req)
+//   return res.status(200).json({ data: '', msg: 'Grupo creado'})
+// })
 
 // limit repeated failed requests to auth endpoints
 if (config.env === 'production') {
