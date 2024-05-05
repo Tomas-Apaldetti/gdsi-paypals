@@ -1,70 +1,75 @@
 import React from 'react';
-
+import Button from 'ui-components/button/Button';
+import { Card } from 'ui-components/card/Card';
+import { LabeledInput } from 'ui-components/input/LabeledInput';
 import { Link } from 'react-router-dom';
 
-import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import BaseBackground from 'ui-components/layouts/BaseBackground';
+import { Form, Formik } from 'formik';
 
-
-
-import AuthWrapper1 from './AuthWrapper1';
-import AuthCardWrapper from './AuthCardWrapper';
-import AuthLogin from './AuthLogin';
-import AuthFooter from './AuthFooter';
+async function handleSubmit(values, { setErrors, setStatus, setSubmitting }) {
+  console.log(values);
+  setSubmitting(false);
+}
 
 export const Login = () => {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-
   return (
-    <AuthWrapper1>
-      <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
-        <Grid item xs={12}>
-          <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
-            <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
-              <AuthCardWrapper>
-                <Grid container spacing={2} alignItems="center" justifyContent="center">
-                  <Grid item sx={{ mb: 3 }}>
-                    <Link to="#">
-                      {/* <Logo /> */ "Logo"}
-                    </Link>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid container direction={matchDownSM ? 'column-reverse' : 'row'} alignItems="center" justifyContent="center">
-                      <Grid item>
-                        <Stack alignItems="center" justifyContent="center" spacing={1}>
-                          <Typography color={theme.palette.secondary.main} gutterBottom variant={matchDownSM ? 'h3' : 'h2'}>
-                            Hi, Welcome Back
-                          </Typography>
-                          <Typography variant="caption" fontSize="16px" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                            Enter your credentials to continue
-                          </Typography>
-                        </Stack>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <AuthLogin />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Divider />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Grid item container direction="column" alignItems="center" xs={12}>
-                      <Typography component={Link} to="/pages/register/register3" variant="subtitle1" sx={{ textDecoration: 'none' }}>
-                        Don&apos;t have an account?
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </AuthCardWrapper>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} sx={{ m: 3, mt: 1 }}>
-          <AuthFooter />
-        </Grid>
-      </Grid>
-    </AuthWrapper1>
+    <BaseBackground>
+      <Card>
+        <div className='font-medium self-center text-3xl sm:text-3xl text-slate-700'>Welcome Back</div>
+        <div className='mt-4 self-center text-xl text-center sm:text-sm text-slate-700'>
+          Enter your credentials to access your account
+        </div>
+
+        <div className='mt-10'>
+          <Formik
+            initialValues={{
+              email: '',
+              password: '',
+            }}
+            // validationSchema={
+            //   Yup.object().shape({
+            //     email: Yup.string().email('Must be a valid email').max(255).required(),
+            //     password: Yup.string.max(30).required('Password is required'),
+            //   })
+            // }
+            onSubmit={handleSubmit}
+          >
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => {
+              return (
+                <Form>
+                  <LabeledInput id='email' type='email' label='E-Mail Address' placeholder='Enter your email' onChange={handleChange}/>
+                  <LabeledInput id='password' type='email' label='Password' placeholder='Enter your password' onChange={handleChange}/>
+
+                  <div className='flex w-full mt-3'>
+                    <Button type='submit' onClick={handleSubmit}>
+                      <span className='mr-2 text-lg sm:text-md'>Sign In</span>
+                      <span>
+                        <svg
+                          className='h-6 w-6'
+                          fill='none'
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          viewBox='0 0 24 24'
+                          stroke='currentColor'
+                        >
+                          <path d='M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z' />
+                        </svg>
+                      </span>
+                    </Button>
+                  </div>
+                </Form>
+              );
+            }}
+          </Formik>
+        </div>
+
+        <Link to='/register' className='mt-10 text-sm font-normal text-center'>
+            Don't have an account yet?
+            <span className='ml-2 font-bold text-purple-500'>Register Now</span>
+          </Link>
+      </Card>
+    </BaseBackground>
   );
 };

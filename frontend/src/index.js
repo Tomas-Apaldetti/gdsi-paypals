@@ -1,28 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {theme} from './themes/index'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {ThemeProvider} from '@mui/material/styles';
-import { CssBaseline, StyledEngineProvider } from '@mui/material';
-import { Provider } from 'react-redux';
-import { store } from './store'
+import { AuthProvider } from 'context/AuthContextProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme()}>
-          <CssBaseline />
-          <App />
-        </ThemeProvider>
-      </StyledEngineProvider>
-
-    </Provider>
-
-
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>,
 );
 
