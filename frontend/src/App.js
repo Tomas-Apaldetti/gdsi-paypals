@@ -17,10 +17,10 @@ function App() {
               <Home />
             </NeedsAuth>
           } />
-          <Route path='/other' element={
-            <NeedsAuth redirect='/login'>
-              <Other />
-            </NeedsAuth>
+          <Route path='/home' element={
+            // <NeedsAuth redirect='/login'>
+            <Home />
+            // </NeedsAuth>
           } />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
