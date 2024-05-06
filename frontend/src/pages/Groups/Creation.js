@@ -3,6 +3,8 @@ import { Form, Formik } from 'formik'
 import Button from 'ui-components/button/Button';
 import * as Yup from 'yup';
 
+const PORT = '3011' // poner aca el port del back
+
 function GroupCreation() {
   const initialValues = {
     name: "",
@@ -12,7 +14,7 @@ function GroupCreation() {
 
   const handleSubmit = (values, { setErrors, setStatus, setSubmitting }) => {
     console.log(values)
-    return fetch('http://localhost:3011/group/create').then((response) => {
+    return fetch(`http://localhost:${PORT}/group/create`).then((response) => {
       return response.json();
     });
   }
