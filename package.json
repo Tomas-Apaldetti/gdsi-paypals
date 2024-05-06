@@ -20,5 +20,8 @@
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-security": "^3.0.0",
     "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "@heroicons/react": "^2.1.3"
   }
 }

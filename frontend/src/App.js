@@ -4,6 +4,7 @@ import Other from './pages/Other';
 import { Login } from './pages/Authentication/Login';
 import { Register } from 'pages/Authentication/Register';
 import { NeedsAuth } from 'logic-components/NeedsAuth';
+import GroupCreation from './pages/Groups/Creation';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             }/>
             <Route path='/login' element={<Login/>} />
             <Route path='/register' element={<Register />}/>
+            <Route path='/group/create' element={<GroupCreation />}/>
           </Routes>
         </BrowserRouter>
     </div>
