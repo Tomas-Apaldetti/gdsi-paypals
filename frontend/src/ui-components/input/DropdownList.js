@@ -6,7 +6,8 @@ import { classNames } from 'utils/classNames';
 import { triggerOnChange } from 'utils/triggerOnChange';
 
 function defaultRenderDisplay(selected) {
-  return <span className='ml-3 block truncate'>{selected.value}</span>;
+  return <span className="ml-3 block truncate">{selected.value}</span>
+
 }
 
 function defaultRenderOption(option, isSelected, _isHovered) {
@@ -15,61 +16,42 @@ function defaultRenderOption(option, isSelected, _isHovered) {
   );
 }
 
-export const DropdownList = ({
-  id,
-  onChange,
-  label,
-  options,
-  initial,
-  renderDisplay = defaultRenderDisplay,
-  renderOption = defaultRenderOption,
-  handleBlur,
-  error = false,
-  touched = false
-}) => {
+
+export const DropdownList = ({ id, onChange, label, options, initial, renderDisplay = defaultRenderDisplay, renderOption = defaultRenderOption }) => {
   const [selected, setSelected] = useState(initial);
   const inputRef = useRef(null);
 
-  const isTouched = typeof touched === "object" ? touched[id] : touched;
-  const errorDesc = typeof error === "object" ? error[id] : error;
-  const showError = isTouched && errorDesc;
-
   return (
-    <>
-      <Listbox
-        name={id}
-        value={selected}
-        onChange={(newValue) => {
-          triggerOnChange('input', inputRef, JSON.stringify(newValue));
-          setSelected(newValue);
-        }}
-      >
+    <div className='py-2'>
+      <Listbox name={id} value={selected} onChange={(newValue) => {
+        triggerOnChange('input', inputRef, JSON.stringify(newValue))
+        setSelected(newValue);
+      }}>
         {({ open }) => (
           <>
-            <Listbox.Label htmlFor={id} className='mb-2 text-md sm:text-sm tracking-wide text-slate-700'>
-              {label}
-            </Listbox.Label>
+            <Listbox.Label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700'>{label}</Listbox.Label>
             <div className='relative'>
-              <Listbox.Button
-                className={`
-                relative
-                mt-2
-                cursor-default
-                text-md
-                sm:text-sm
-                w-full
-                rounded-xl
-                bg-white
-                px-2
-                py-2
-                border
-                border-slate-500
-                focus:ring-2
-                focus:ring-purple-500
-                ${showError && 'border-red-400'}
-                `}
-              >
-                {<span className='flex items-center'>{renderDisplay(selected)}</span>}
+              <Listbox.Button className='
+            mt-2
+            relative
+            cursor-default
+            text-md
+            sm:text-sm
+            w-full
+            rounded-xl
+            bg-white
+            px-2
+            py-2
+            border
+            border-slate-500
+            focus:ring-2
+            focus:ring-purple-500
+            '>
+                {
+                  <span className='flex items-center'>
+                    {renderDisplay(selected)}
+                  </span>
+                }
                 <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
                   <ChevronUpDownIcon className='h-5 w-5 text-purple-500' aria-hidden='true' />
                 </span>
@@ -82,8 +64,7 @@ export const DropdownList = ({
                 leaveFrom='opacity-100'
                 leaveTo='opacity-0'
               >
-                <Listbox.Options
-                  className='
+                <Listbox.Options className='
                 absolute
                 z-10
                 mt-1
@@ -100,8 +81,7 @@ export const DropdownList = ({
                 ring-opacity-5
                 focus:outline-none
                 sm:text-sm
-              '
-                >
+              '>
                   {options.map((option) => (
                     <Listbox.Option
                       key={option.id}
@@ -115,7 +95,11 @@ export const DropdownList = ({
                     >
                       {({ selected, active }) => (
                         <>
-                          <div className='flex items-center'>{renderOption(option, selected, active)}</div>
+                          <div className='flex items-center'>
+                            {
+                              renderOption(option, selected, active)
+                            }
+                          </div>
 
                           {selected ? (
                             <span
@@ -134,11 +118,10 @@ export const DropdownList = ({
                 </Listbox.Options>
               </Transition>
             </div>
-            <input id={id} name={id} ref={inputRef} className='hidden' onChange={onChange} onBlur={handleBlur} />
+            <input id={id} name={id} ref={inputRef} className='hidden' onChange={onChange} />
           </>
         )}
       </Listbox>
-      {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}
-    </>
+    </div>
   );
 };

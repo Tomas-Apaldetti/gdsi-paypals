@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { NeedsAuth } from 'logic-components/NeedsAuth';
+
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import { Login } from './pages/Authentication/Login';
@@ -20,6 +22,7 @@ function App() {
             <Route path='/register' element={<Register />}/>
             <Route path='/group/create' element={<GroupCreation />}/>
             <Route path='*' element={<NotFound />}/>
+            <Route path='/ticket/create' element={<TicketCreate />} />
           </Routes>
         </BrowserRouter>
     </div>

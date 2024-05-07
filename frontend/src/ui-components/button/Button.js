@@ -1,17 +1,17 @@
 import React from 'react';
 
-const Button = ({ type = 'button', onClick, children, disabled}) => {
+const Button = ({ type = 'button', onClick, children, className = "", bgcolor = "bg-purple-500", focusoutlinecolor = "outline-purple-600", hovercolor = "bg-purple-600" }) => {
   return (
     <button
       type={type}
       onClick={onClick}
-      className='
+      className={`
           flex
           items-center
           justify-center
           text-slate-50 text-sm
           sm:text-base
-          bg-purple-500
+          ${bgcolor}
 
           rounded-xl
           py-2
@@ -22,10 +22,10 @@ const Button = ({ type = 'button', onClick, children, disabled}) => {
           ease-in
           focus:outline-offset-2
           focus:outline-2
-          focus:outline-purple-600
-          hover:bg-purple-600
-        '
-        disabled={disabled}
+          focus:${focusoutlinecolor}
+          hover:${hovercolor}
+          ${className}
+        `}
     >
       {children}
     </button>
