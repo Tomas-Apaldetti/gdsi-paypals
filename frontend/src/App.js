@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Other from './pages/Other';
+import NotFound from './pages/NotFound';
 import { Login } from './pages/Authentication/Login';
 import { Register } from 'pages/Authentication/Register';
 import { NeedsAuth } from 'logic-components/NeedsAuth';
@@ -16,14 +16,10 @@ function App() {
                 <Home />
               </NeedsAuth>
             } />
-            <Route path='/other' element={
-              <NeedsAuth redirect='/login'>
-                <Other />
-              </NeedsAuth>
-            }/>
             <Route path='/login' element={<Login/>} />
             <Route path='/register' element={<Register />}/>
             <Route path='/group/create' element={<GroupCreation />}/>
+            <Route path='*' element={<NotFound />}/>
           </Routes>
         </BrowserRouter>
     </div>
