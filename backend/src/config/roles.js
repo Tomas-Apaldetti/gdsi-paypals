@@ -1,5 +1,6 @@
+// For now, let's just ignore this
 const allRoles = {
-  user: [],
+  user: ['getUsers', 'manageUsers'],
   admin: ['getUsers', 'manageUsers'],
 };
 
