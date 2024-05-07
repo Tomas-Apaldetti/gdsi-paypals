@@ -3,9 +3,11 @@ import Button from 'ui-components/button/Button';
 import { Card } from 'ui-components/card/Card';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
 import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { Form, Formik } from 'formik';
+import { password } from './password.yup';
 
 async function handleSubmit(values, { setErrors, setStatus, setSubmitting }) {
   console.log(values);
@@ -27,22 +29,38 @@ export const Login = () => {
               email: '',
               password: '',
             }}
-            // validationSchema={
-            //   Yup.object().shape({
-            //     email: Yup.string().email('Must be a valid email').max(255).required(),
-            //     password: Yup.string.max(30).required('Password is required'),
-            //   })
-            // }
+            validationSchema={Yup.object().shape({
+              email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+              password: password(),
+            })}
             onSubmit={handleSubmit}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => {
+            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
               return (
                 <Form>
-                  <LabeledInput id='email' type='email' label='E-Mail Address' placeholder='Enter your email' onChange={handleChange}/>
-                  <LabeledInput id='password' type='email' label='Password' placeholder='Enter your password' onChange={handleChange}/>
+                  <LabeledInput
+                    id='email'
+                    type='email'
+                    label='E-Mail Address'
+                    placeholder='Enter your email'
+                    onChange={handleChange}
+                    handleBlur={handleBlur}
+                    error={errors}
+                    touched={touched}
+                  />
+                  <LabeledInput
+                    id='password'
+                    type='email'
+                    label='Password'
+                    placeholder='Enter your password'
+                    onChange={handleChange}
+                    handleBlur={handleBlur}
+                    error={errors}
+                    touched={touched}
+                  />
 
                   <div className='flex w-full mt-3'>
-                    <Button type='submit' onClick={handleSubmit}>
+                    <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
                       <span className='mr-2 text-lg sm:text-md'>Sign In</span>
                       <span>
                         <svg
@@ -66,9 +84,9 @@ export const Login = () => {
         </div>
 
         <Link to='/register' className='mt-10 text-sm font-normal text-center'>
-            Don't have an account yet?
-            <span className='ml-2 font-bold text-purple-500'>Register Now</span>
-          </Link>
+          Don't have an account yet?
+          <span className='ml-2 font-bold text-purple-500'>Register Now</span>
+        </Link>
       </Card>
     </BaseBackground>
   );

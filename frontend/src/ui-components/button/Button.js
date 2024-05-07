@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ type = 'button', onClick, children }) => {
+const Button = ({ type = 'button', onClick, children, disabled}) => {
   return (
     <button
       type={type}
@@ -25,6 +25,7 @@ const Button = ({ type = 'button', onClick, children }) => {
           focus:outline-purple-600
           hover:bg-purple-600
         '
+        disabled={disabled}
     >
       {children}
     </button>

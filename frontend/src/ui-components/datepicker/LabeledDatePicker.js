@@ -9,18 +9,21 @@ function coalesceDates(dateValues){
   return JSON.stringify(dateValues);
 }
 
-export const LabeledDatePicker = ({id, label, value, onChange,  datepickerProps}) => {
+export const LabeledDatePicker = ({id, label, value, onChange, handleBlur, error = false, touched = false, datepickerProps}) => {
 
   const [datePickerValue, setDatePickerValue] = useState(value instanceof Date ? {startDate: value, endDate: value} : value)
   const inputRef = useRef(null);
 
+  const isTouched = typeof touched === "object" ? touched[id] : touched;
+  const errorDesc = typeof error === "object" ? error[id] : error;
+  const showError = isTouched && errorDesc;
 
   return (
     <div className='flex flex-col mb-5'>
       <label id={id} className='mb-1 text-md sm:text-sm tracking-wide text-slate-700'>
         {label}
       </label>
-      <input id={id} name={id} ref={inputRef} type='text' className='hidden' onChange={onChange}/>
+      <input id={id} name={id} ref={inputRef} type='text' className='hidden' onChange={onChange} onBlur={handleBlur}/>
       <Datepicker
               inputClassName={`
                 text-md
@@ -36,6 +39,7 @@ export const LabeledDatePicker = ({id, label, value, onChange,  datepickerProps}
                 focus:outline-none
                 focus:ring-purple-500
                 focus:ring-2
+                ${showError && 'border-red-400'}
               `}
               primaryColor={"purple"}
               value={datePickerValue}
@@ -45,6 +49,7 @@ export const LabeledDatePicker = ({id, label, value, onChange,  datepickerProps}
               }}
               {...datepickerProps}
             />
+      {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}
     </div>
   )
 }
