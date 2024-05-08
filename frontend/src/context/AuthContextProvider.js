@@ -1,30 +1,31 @@
 import React, { createContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { authCookie, refreshCookie } from 'utils/authCookies';
 
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({children}) => {
 
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(!!authCookie());
 
 
   useEffect(() => {
-    // Check if user is authenticated using cookies
-    const token = Cookies.get('token');
+    const token = authCookie();
     if (token) {
       setIsAuth(true);
     }
   }, []);
 
-  const login = (token) => {
+  const login = ({access, refresh}) => {
+    authCookie(access.token, new Date(access.expires));
+    refreshCookie(refresh.token, new Date(refresh.expires));
     setIsAuth(true);
-    Cookies.set('token', token, { expires: 7 });
   };
 
   const logout = () => {
     setIsAuth(false);
-    Cookies.remove('token');
+    Cookies.remove('token'); //TODO
   };
 
   const authContextValue = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from 'ui-components/button/Button';
 import { Card } from 'ui-components/card/Card';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
@@ -13,13 +13,8 @@ import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { formattedDate } from 'utils/dateFormat';
 import { password } from './password.yup';
-
-async function handleSubmit(values, { setErrors, setStatus, setSubmitting }) {
-  const cpy = { ...values };
-  cpy.country = JSON.parse(cpy.country);
-  console.log(cpy);
-  setSubmitting(false);
-}
+import { useAuth } from 'context/AuthContextProvider';
+import { register } from 'services/auth';
 
 export const Register = () => {
   const minBirth = new Date();
@@ -27,6 +22,32 @@ export const Register = () => {
 
   const maxBirth = new Date();
   maxBirth.setFullYear(maxBirth.getFullYear() - 100);
+
+  const navigate = useNavigate();
+  const auth = useAuth();
+
+  const handleSubmit = async (values, { setStatus, setSubmitting }) => {
+    const cpy = {
+      ...values,
+      country: JSON.parse(values.country).id,
+      repeatPassword: undefined
+    };
+    console.log(cpy);
+    try{
+      const response = await register(cpy);
+      if(!response.ok){
+        const body = await response.json();
+        throw new Error(body.message);
+      }
+      const body = await response.json();
+      auth.login(body.tokens);
+      navigate('/');
+    }catch(e){
+      setStatus(e.message)
+    }finally{
+      setSubmitting(false)
+    }
+  }
 
   return (
     <BaseBackground>
@@ -36,7 +57,7 @@ export const Register = () => {
         <div className='mt-10'>
           <Formik
             initialValues={{
-              userName: '',
+              username: '',
               fullName: '',
               birthDate: formattedDate(new Date()),
               email: '',
@@ -46,7 +67,7 @@ export const Register = () => {
             }}
             validationSchema={Yup.object()
               .shape({
-                userName: Yup.string().max(30).required('Username is required'),
+                username: Yup.string().max(30).required('Username is required'),
                 fullName: Yup.string().max(255).required('Fullname is required'),
                 birthDate: Yup.date()
                   .max(minBirth, `You must be at least 13 years old.`)
@@ -68,11 +89,12 @@ export const Register = () => {
               .noUnknown(false)}
             onSubmit={handleSubmit}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
+            {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
               return (
                 <Form>
+                  <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
                   <LabeledInput
-                    id='userName'
+                    id='username'
                     label='Username'
                     onChange={handleChange}
                     handleBlur={handleBlur}

@@ -17,9 +17,22 @@ function defaultRenderOption(option, isSelected, _isHovered) {
 }
 
 
-export const DropdownList = ({ id, onChange, label, options, initial, renderDisplay = defaultRenderDisplay, renderOption = defaultRenderOption }) => {
+export const DropdownList = ({ id,
+  onChange,
+  label,
+  options,
+  initial,
+  renderDisplay = defaultRenderDisplay,
+  renderOption = defaultRenderOption,
+  handleBlur,
+  error = false,
+  touched = false }) => {
   const [selected, setSelected] = useState(initial);
   const inputRef = useRef(null);
+
+  const isTouched = typeof touched === "object" ? touched[id] : touched;
+  const errorDesc = typeof error === "object" ? error[id] : error;
+  const showError = isTouched && errorDesc;
 
   return (
     <div className='py-2'>
@@ -31,22 +44,22 @@ export const DropdownList = ({ id, onChange, label, options, initial, renderDisp
           <>
             <Listbox.Label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700'>{label}</Listbox.Label>
             <div className='relative'>
-              <Listbox.Button className='
-            mt-2
-            relative
-            cursor-default
-            text-md
-            sm:text-sm
-            w-full
-            rounded-xl
-            bg-white
-            px-2
-            py-2
-            border
-            border-slate-500
-            focus:ring-2
-            focus:ring-purple-500
-            '>
+              <Listbox.Button className={`
+                relative
+                mt-2
+                cursor-default
+                text-md
+                sm:text-sm
+                w-full
+                rounded-xl
+                bg-white
+                px-2
+                py-2
+                border
+                ${showError ? 'border-red-400' : 'border-slate-500'}
+                focus:ring-2
+                focus:ring-purple-500
+                `}>
                 {
                   <span className='flex items-center'>
                     {renderDisplay(selected)}
@@ -118,10 +131,11 @@ export const DropdownList = ({ id, onChange, label, options, initial, renderDisp
                 </Listbox.Options>
               </Transition>
             </div>
-            <input id={id} name={id} ref={inputRef} className='hidden' onChange={onChange} />
+            <input id={id} name={id} ref={inputRef} className='hidden' onChange={onChange} onBlur={handleBlur}/>
           </>
         )}
       </Listbox>
+      {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}
     </div>
   );
 };

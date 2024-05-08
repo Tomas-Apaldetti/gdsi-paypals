@@ -11,22 +11,37 @@ import TicketCreate from './pages/Ticket/TicketCreate';
 function App() {
   return (
     <div className='App'>
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path='/'
+            element={
               <NeedsAuth redirect='/login'>
                 <Home />
               </NeedsAuth>
-            } />
-            <Route path='/login' element={<Login/>} />
-            <Route path='/register' element={<Register />}/>
-            <Route path='/group/create' element={<GroupCreation />}/>
-            <Route path='*' element={<NotFound />}/>
-            <Route path='/ticket/create' element={<TicketCreate />} />
-            <Route path='/home' element={<Home />
-          } />
-          </Routes>
-        </BrowserRouter>
+            }
+          />
+          <Route
+            path='/group/create'
+            element={
+              <NeedsAuth redirect='/login'>
+                <GroupCreation />
+              </NeedsAuth>
+            }
+          />
+          <Route
+            path='/ticket/create'
+            element={
+              <NeedsAuth redirect='/login'>
+                <TicketCreate />
+              </NeedsAuth>
+            }
+          />
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

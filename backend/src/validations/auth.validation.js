@@ -1,11 +1,27 @@
 const Joi = require('joi');
 const { password } = require('./custom.validation');
+const { countries } = require('../config/countries');
+
+const maxDate = () => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 13);
+  return date;
+}
+
+const minDate = () => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - 100);
+  return date
+}
 
 const register = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().required().email().max(255),
     password: Joi.string().required().custom(password),
-    name: Joi.string().required(),
+    username: Joi.string().max(30).required(),
+    fullName: Joi.string().max(255).required(),
+    birthDate: Joi.date().max(maxDate()).min(minDate()).required(),
+    country: Joi.string().valid(...countries).required(),
   }),
 };
 

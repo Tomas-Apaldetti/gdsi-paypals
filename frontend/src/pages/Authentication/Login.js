@@ -2,20 +2,36 @@ import React from 'react';
 import Button from 'ui-components/button/Button';
 import { Card } from 'ui-components/card/Card';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { Form, Formik } from 'formik';
 import { password } from './password.yup';
+import { login } from 'services/auth';
+import { useAuth } from 'context/AuthContextProvider';
 
 export const Login = () => {
 
-  const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
+  const navigate = useNavigate();
+  const auth = useAuth();
 
-    window.location.href = '/home';
+  const handleSubmit = async (values, { setStatus, setSubmitting }) => {
+    console.log(values);
+    try{
+      const response = await login(values);
+      if(!response.ok){
+        const body = await response.json();
+        throw new Error(body.message);
+      }
+      const body = await response.json();
+      auth.login(body.tokens);
+      navigate('/');
+    }catch(e){
+      setStatus(e.message)
+    }finally{
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -38,9 +54,10 @@ export const Login = () => {
             })}
             onSubmit={handleSubmit}
           >
-            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
+            {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
               return (
                 <Form>
+                  <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
                   <LabeledInput
                     id='email'
                     type='email'

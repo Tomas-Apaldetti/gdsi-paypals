@@ -33,13 +33,12 @@ export const LabeledDatePicker = ({id, label, value, onChange, handleBlur, error
                 px-4
                 rounded-xl
                 border
-                border-slate-500
+                ${showError ? 'border-red-400' : 'border-slate-500'}
                 w-full
                 py-2
                 focus:outline-none
                 focus:ring-purple-500
                 focus:ring-2
-                ${showError && 'border-red-400'}
               `}
               primaryColor={"purple"}
               value={datePickerValue}
