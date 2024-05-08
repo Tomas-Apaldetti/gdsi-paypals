@@ -29,9 +29,7 @@ export const LabeledInput = ({ id, type = 'text', step = 0, label, placeholder =
                 '
         placeholder={placeholder}
         onChange={onChange}
-        onBlur={handleBlur}
       />
-      {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}
     </div>
   );
 };

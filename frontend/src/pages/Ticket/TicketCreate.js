@@ -17,7 +17,7 @@ async function handleSubmit(values, { setErrors, setStatus, setSubmitting }) {
     setSubmitting(false);
 }
 
-export const TicketCreate = () => {
+const TicketCreate = () => {
     return (
         <BaseBackground>
             <Card>
@@ -114,3 +114,5 @@ export const TicketCreate = () => {
         </BaseBackground >
     );
 }
+
+export default TicketCreate
