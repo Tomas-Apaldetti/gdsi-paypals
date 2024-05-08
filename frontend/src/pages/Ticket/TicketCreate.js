@@ -1,7 +1,6 @@
 import React from 'react';
 import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { Card } from 'ui-components/card/Card';
-import { LabeledAmountInput } from 'ui-components/input/LabeledAmountInput';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
 import Button from 'ui-components/button/Button';
 import { classNames } from 'utils/classNames';
@@ -10,14 +9,33 @@ import { categories } from 'utils/categories';
 import { debtors } from 'utils/debtors';
 
 import { Form, Formik } from 'formik';
-import { PlusIcon } from '@heroicons/react/20/solid';
 
-async function handleSubmit(values, { setErrors, setStatus, setSubmitting }) {
-    console.log(values);
-    setSubmitting(false);
-}
+const PORT = '3011' // poner aca el port del back
 
 const TicketCreate = () => {
+
+    const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
+        
+        const ticket = {
+            amount: values.amount,
+            debtor: JSON.parse(values.debtor).id,
+            category: JSON.parse(values.category).id,
+            comments: values.comments
+        }
+        
+        setSubmitting(false);
+
+        return fetch(`http://localhost:${PORT}/ticket/create`, {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(ticket),
+            }).then((response) => {
+                return response.json();
+        });
+    }
+
     return (
         <BaseBackground>
             <Card>
@@ -39,9 +57,9 @@ const TicketCreate = () => {
                     {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => {
                         return (
                             <Form>
-                                <LabeledInput id='amount' type='number' step='0.01' placeholder='0.00' label='Monto' onChange={handleChange} />
+                                <LabeledInput id='amount' type='number' step='0.01' placeholder='0.00' label='Amount' onChange={handleChange} />
                                 <DropdownList
-                                    label='Categoría'
+                                    label='Category'
                                     options={categories}
                                     renderOption={(option, isSelected, _) => {
                                         return (
@@ -63,7 +81,7 @@ const TicketCreate = () => {
                                     onChange={handleChange}
                                 />
                                 <DropdownList
-                                    label='Deudor'
+                                    label='Debtor'
                                     options={debtors}
                                     renderOption={(option, isSelected, _) => {
                                         return (
@@ -80,17 +98,17 @@ const TicketCreate = () => {
                                             </span>
                                         );
                                     }}
-                                    initial={debtors.find(({ id }) => id === 'usr2')}
+                                    initial={debtors.find(({ id }) => id === 'lu')}
                                     id='debtor'
                                     onChange={handleChange}
                                 />
 
-                                <LabeledInput id='comments' label='Comentarios' placeholder='Ingrese sus Comentarios' onChange={handleChange} />
+                                <LabeledInput id='comments' label='Comment' placeholder='Enter your comment' onChange={handleChange} />
 
                                 <div className='flex flex-row-reverse mt-3'>
                                     <Button type='submit' onClick={handleSubmit} className="w-1/4" bgcolor="bg-green-500" focusoutlinecolor="outline-green-600" hovercolor="bg-green-600">
                                         {/* <PlusIcon className='h-6 w-6 mr-1' /> */}
-                                        <span className='text-lg sm:text-md'>Guardar</span>
+                                        <span className='text-lg sm:text-md'>Save</span>
                                         {/* <span>
                                             <svg
                                                 className='h-6 w-6'

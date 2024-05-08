@@ -17,6 +17,7 @@ const user = {
 const navigation = [
   { name: 'Home', href: '/home', current: true },
   { name: 'Dashboards', href: '#', current: false },
+  { name: 'Sign Out', href: '/login', current: false },
 ]
 
 const userNavigation = [
@@ -101,7 +102,7 @@ export default function Example() {
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
                                   <a
-                                    href={item.href}
+                                    href={item.name == 'Sign out' ? "/login" : item.href}
                                     className={classNames(
                                       active ? 'bg-gray-100' : '',
                                       'block px-4 py-2 text-sm text-gray-700'
@@ -191,15 +192,15 @@ export default function Example() {
           </div>
         </header>
         <main>
-          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-row justify-center">
             <Card>
               <a href="/ticket/create">
-                <Button>Crear un Ticket</Button>
+                <Button>Create Ticket</Button>
               </a>
             </Card>
-            <Card className={"mt-10"}>
-              <a href="/ticket/create">
-                <Button>Crear un Grupo</Button>
+            <Card>
+              <a href="/group/create">
+                <Button>Create Group</Button>
               </a>
             </Card>
           </div>
