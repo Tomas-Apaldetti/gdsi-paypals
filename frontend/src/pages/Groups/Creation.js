@@ -13,7 +13,6 @@ function GroupCreation() {
   }
 
   const handleSubmit = (values, { setErrors, setStatus, setSubmitting }) => {
-    console.log(values)
     return fetch(`http://localhost:${PORT}/group/create`, {
       headers: {
       'Content-Type': 'application/json'

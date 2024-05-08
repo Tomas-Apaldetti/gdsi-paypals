@@ -32,7 +32,6 @@ export const Register = () => {
       country: JSON.parse(values.country).id,
       repeatPassword: undefined
     };
-    console.log(cpy);
     try{
       const response = await register(cpy);
       if(!response.ok){

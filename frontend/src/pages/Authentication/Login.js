@@ -17,7 +17,6 @@ export const Login = () => {
   const auth = useAuth();
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
-    console.log(values);
     try{
       const response = await login(values);
       if(!response.ok){
