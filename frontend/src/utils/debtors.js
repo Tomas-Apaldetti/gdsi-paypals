@@ -1,10 +1,10 @@
 export const debtors = [
   {
-    "id": "usr1",
+    "id": "caro",
     "name": "Caro",
   },
   {
-    "id": "usr2",
+    "id": "lu",
     "name": "Lu",
   },
 ];

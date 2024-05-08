@@ -9,12 +9,15 @@ import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { Form, Formik } from 'formik';
 import { password } from './password.yup';
 
-async function handleSubmit(values, { setErrors, setStatus, setSubmitting }) {
-  console.log(values);
-  setSubmitting(false);
-}
-
 export const Login = () => {
+
+  const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
+    console.log(values);
+    setSubmitting(false);
+
+    window.location.href = '/home';
+  }
+
   return (
     <BaseBackground>
       <Card>
@@ -50,7 +53,7 @@ export const Login = () => {
                   />
                   <LabeledInput
                     id='password'
-                    type='email'
+                    type='password'
                     label='Password'
                     placeholder='Enter your password'
                     onChange={handleChange}

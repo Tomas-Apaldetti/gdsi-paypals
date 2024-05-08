@@ -14,7 +14,13 @@ function GroupCreation() {
 
   const handleSubmit = (values, { setErrors, setStatus, setSubmitting }) => {
     console.log(values)
-    return fetch(`http://localhost:${PORT}/group/create`).then((response) => {
+    return fetch(`http://localhost:${PORT}/group/create`, {
+      headers: {
+      'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(values),
+    }).then((response) => {
       return response.json();
     });
   }

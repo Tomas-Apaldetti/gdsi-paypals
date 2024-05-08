@@ -23,6 +23,8 @@ function App() {
             <Route path='/group/create' element={<GroupCreation />}/>
             <Route path='*' element={<NotFound />}/>
             <Route path='/ticket/create' element={<TicketCreate />} />
+            <Route path='/home' element={<Home />
+          } />
           </Routes>
         </BrowserRouter>
     </div>
