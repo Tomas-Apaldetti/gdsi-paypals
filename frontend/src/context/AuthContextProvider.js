@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { authCookie, refreshCookie } from 'utils/authCookies';
+import { authCookie, purge, refreshCookie } from 'utils/auth';
 
 
 const AuthContext = createContext();
@@ -24,8 +24,8 @@ export const AuthProvider = ({children}) => {
   };
 
   const logout = () => {
+    purge();
     setIsAuth(false);
-    Cookies.remove('token'); //TODO
   };
 
   const authContextValue = {

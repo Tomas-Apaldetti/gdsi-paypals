@@ -1,6 +1,6 @@
-import { authCookie } from "utils/authCookies";
+import { authCookie } from "utils/auth";
 
-export const BASE_URL = process.env.BACKEND_URL
+export const BASE_URL = process.env.REACT_APP_BACKEND_URL
 
 export async function stdFetch(url, config = {}){
   var auth = authCookie();

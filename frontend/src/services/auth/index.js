@@ -1,5 +1,5 @@
 import { BASE_URL, post } from "services/utils";
-import { refreshCookie } from "utils/authCookies";
+import { refreshCookie } from "utils/auth";
 
 const PATHS = {
   login: `v1/auth/login/`,
@@ -13,7 +13,7 @@ export async function login(body){
 
 export async function logout(){
   const refreshToken = refreshCookie();
-  return post(`${BASE_URL}/${PATHS.logout}`, refreshToken)
+  return post(`${BASE_URL}/${PATHS.logout}`, {refreshToken})
 }
 
 export async function register(body){
