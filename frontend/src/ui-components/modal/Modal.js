@@ -52,7 +52,7 @@ export const Modal = ({ title, open, setOpen, onClose, children }) => {
               </button>
             )}
 
-            <div className='h-max ml-4 mr-2 my-4 overflow-auto'>{children}</div>
+            <div className='h-full mx-2 my-4 overflow-auto'>{children}</div>
           </Dialog.Panel>
         </Transition.Child>
       </Dialog>

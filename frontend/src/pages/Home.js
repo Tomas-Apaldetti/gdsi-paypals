@@ -1,8 +1,13 @@
 import { Card } from 'ui-components/card/Card';
 import Button from 'ui-components/button/Button';
 import Navbar from 'ui-components/layouts/Navbar/Navbar';
+import { useState } from 'react';
+import { Modal } from 'ui-components/modal/Modal';
+import GroupCreation from './Groups/Creation';
 
 export default function Example() {
+  const [showCreate, setShowCreate] = useState(false);
+
   return (
     <>
       <div className='min-h-screen bg-slate-300'>
@@ -14,6 +19,13 @@ export default function Example() {
           </div>
         </header>
         <main>
+          <button onClick={() => setShowCreate(!showCreate)}>
+              Create Group
+          </button>
+          <Modal open={showCreate} setOpen={setShowCreate} title={"Create Group"} onClose={() => setShowCreate(false)} >
+            <GroupCreation onSuccesfullSubmit={() => setShowCreate(false)} onCancel={()=> setShowCreate(false)}/>
+          </Modal>
+
           <div className='mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 flex flex-row justify-center'>
             <Card>
               <a href='/ticket/create'>

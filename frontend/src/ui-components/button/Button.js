@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Button = ({ type = 'button', onClick, children, className = "", bgcolor = "bg-purple-500", focusoutlinecolor = "outline-purple-600", hovercolor = "bg-purple-600" }) => {
+const Button = ({ type = 'button', secondary, onClick, children, disabled = false, className = "" }) => {
   return (
     <button
       type={type}
@@ -9,10 +9,12 @@ const Button = ({ type = 'button', onClick, children, className = "", bgcolor = 
           flex
           items-center
           justify-center
-          text-slate-50 text-sm
-          sm:text-base
-          ${bgcolor}
+          ${!secondary ? 'bg-purple-500' : 'bg-transparent'}
+          ${!secondary ? 'text-slate-50' : 'text-purple-500'}
+          ${!secondary ? '' : "border-2 border-purple-500"}
+          ${!secondary ? "hover:bg-purple-600" : "hover:text-purple-700 hover:border-purple-700"}
 
+          sm:text-base
           rounded-xl
           py-2
           w-full
@@ -20,12 +22,14 @@ const Button = ({ type = 'button', onClick, children, className = "", bgcolor = 
           transition
           duration-150
           ease-in
-          focus:outline-offset-2
-          focus:outline-2
-          focus:${focusoutlinecolor}
-          hover:${hovercolor}
+          focus:outline-none
+          focus:ring-1
+          focus:ring-purple-500
+          focus: ring-offset-2
+
           ${className}
         `}
+      disabled={disabled}
     >
       {children}
     </button>
