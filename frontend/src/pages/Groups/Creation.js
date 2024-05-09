@@ -2,8 +2,7 @@ import { LabeledInput } from 'ui-components/input/LabeledInput'
 import { Form, Formik } from 'formik'
 import Button from 'ui-components/button/Button';
 import * as Yup from 'yup';
-
-const PORT = '3011' // poner aca el port del back
+import { BASE_URL } from 'services/utils';
 
 function GroupCreation() {
   const initialValues = {
@@ -13,7 +12,7 @@ function GroupCreation() {
   }
 
   const handleSubmit = (values, { setErrors, setStatus, setSubmitting }) => {
-    return fetch(`http://localhost:${PORT}/group/create`, {
+    return fetch(`${BASE_URL}/group/create`, {
       headers: {
       'Content-Type': 'application/json'
       },

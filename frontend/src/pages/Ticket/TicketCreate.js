@@ -9,23 +9,22 @@ import { categories } from 'utils/categories';
 import { debtors } from 'utils/debtors';
 
 import { Form, Formik } from 'formik';
-
-const PORT = '3011' // poner aca el port del back
+import { BASE_URL } from 'services/utils';
 
 const TicketCreate = () => {
 
     const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-        
+
         const ticket = {
             amount: values.amount,
             debtor: JSON.parse(values.debtor).id,
             category: JSON.parse(values.category).id,
             comments: values.comments
         }
-        
+
         setSubmitting(false);
 
-        return fetch(`http://localhost:${PORT}/ticket/create`, {
+        return fetch(`${BASE_URL}/ticket/create`, {
             headers: {
                 'Content-Type': 'application/json'
             },
