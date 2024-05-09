@@ -8,6 +8,7 @@ import { NeedsAuth } from 'logic-components/NeedsAuth';
 import GroupCreation from './pages/Groups/Creation';
 import TicketCreate from './pages/Ticket/TicketCreate';
 import { Logout } from 'pages/Authentication/Logout';
+import { Test } from 'pages/Test';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/logout' element={<Logout />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/test' element={<Test />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </BrowserRouter>
