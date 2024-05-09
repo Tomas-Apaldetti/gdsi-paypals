@@ -18,7 +18,7 @@ export const Test = () => {
       Test
       </button>
       <p>{lorem}</p>
-      <Modal open={show} setOpen={setShow} onClose={() => {console.log("Closing");setShow(false)}} title={"Title"}><p>{lorem}</p></Modal>
+      <Modal open={show} setOpen={setShow} onClose={() => {setShow(false)}} title={"asdfsad"}><p>{lorem}</p></Modal>
     </div>
 
   )
