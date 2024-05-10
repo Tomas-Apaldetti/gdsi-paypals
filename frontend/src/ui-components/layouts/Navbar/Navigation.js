@@ -18,7 +18,7 @@ const Mobile = () => {
           as={Link}
           to={item.href}
           className={classNames(
-            item.href === location.pathname ? 'underline underline-offset-4 pointer-events-none' : 'hover:text-purple-200',
+            item.href === location.pathname ? 'border-l-4 border-purple-500 pointer-events-none' : 'ml-1 hover:text-purple-200',
             'block px-3 py-2 font-semibold tracking-wider text-slate-50',
           )}
           aria-current={ item.href === location.pathname ? 'page' : undefined}
@@ -41,7 +41,7 @@ const Desktop = () => {
             key={item.name}
             to={item.href}
             className={classNames(
-              item.href === location.pathname ? ' underline underline-offset-4 pointer-events-none' : 'hover:text-purple-200',
+              item.href === location.pathname ? 'border-b-4 border-purple-500 pointer-events-none' : 'hover:text-purple-200',
               'px-3 py-2 text-lg font-semibold tracking-wider text-slate-50',
             )}
             aria-current={item.href === location.pathname ? 'page' : undefined}

@@ -51,7 +51,7 @@ export const DropdownList = ({ id,
                 text-md
                 sm:text-sm
                 w-full
-                rounded-xl
+                rounded-sm
                 bg-white
                 px-2
                 py-2

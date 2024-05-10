@@ -31,7 +31,7 @@ export const LabeledDatePicker = ({id, label, value, onChange, handleBlur, error
                 bg-white
                 placeholder-slate-500
                 px-4
-                rounded-xl
+                rounded-sm
                 border
                 ${showError ? 'border-red-400' : 'border-slate-500'}
                 w-full

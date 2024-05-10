@@ -1,19 +1,21 @@
-import { Card } from 'ui-components/card/Card';
-import Button from 'ui-components/button/Button';
-import Navbar from 'ui-components/layouts/Navbar/Navbar';
-import { useState } from 'react';
-import { Modal } from 'ui-components/modal/Modal';
-import GroupCreation from './Groups/Creation';
+import ThreeColumn from 'ui-components/layouts/ThreeColumn';
+import { NavbarFooterLayout } from 'ui-components/layouts/NavbarFooterLayout';
+import { GroupsInfo } from './GroupsInfo';
+import { ChartBarIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 
-export default function Example() {
-  const [showCreate, setShowCreate] = useState(false);
-
+export default function Home() {
   return (
-    <>
-      <div className='min-h-screen bg-slate-300'>
-        <Navbar />
+    <NavbarFooterLayout>
+      <ThreeColumn
+        leftColumn={[
+            <GroupsInfo key={'groups-info'}/>
+        ]}
+        leftColumnIcon={<UserGroupIcon className='h-6 w-6'></UserGroupIcon>}
+        rightColumnIcon={<ChartBarIcon className='h-6 w-6'></ChartBarIcon>}
+      />
 
-        <header className='bg-indigo-300 shadow'>
+
+      {/* <header className='bg-indigo-300 shadow'>
           <div className='mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'>
             <h1 className='text-3xl font-bold tracking-tight text-gray-900'>Welcome to PayPals :)</h1>
           </div>
@@ -38,8 +40,7 @@ export default function Example() {
               </a>
             </Card>
           </div>
-        </main>
-      </div>
-    </>
+        </main> */}
+    </NavbarFooterLayout>
   );
 }

@@ -28,9 +28,9 @@ export const Modal = ({ title, open, setOpen, onClose, children }) => {
           leaveTo="opacity-0 scale-95"
           className='fixed inset-0 flex w-screen items-center justify-center px-4'
         >
-          <Dialog.Panel className='relative bg-slate-100 w-full md:w-2/3 xl:w-1/2 2xl:w-2/5 h-2/3 rounded-md ring-1 ring-slate-600 shadow-lg flex flex-col'>
+          <Dialog.Panel className='relative bg-slate-100 w-full md:w-2/3 xl:w-1/2 2xl:w-2/5 h-2/3 rounded-sm ring-1 ring-slate-600 shadow-lg flex flex-col'>
             {title ? (
-              <div className='bg-slate-900 rounded-t-md border-b-2 border-b-purple-500 px-4 py-2 text-xl font-semibold tracking-wider uppercase text-slate-50 flex justify-between'>
+              <div className='bg-slate-900 rounded-t-sm border-b-2 border-b-purple-500 px-4 py-2 text-xl font-semibold tracking-wider uppercase text-slate-50 flex justify-between'>
                 <Dialog.Title>{title}</Dialog.Title>
                 <button
                   onClick={() => {

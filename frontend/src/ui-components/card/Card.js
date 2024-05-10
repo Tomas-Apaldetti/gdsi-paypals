@@ -13,7 +13,7 @@ export const Card = ({ className, children }) => {
       md:px-8
       lg:px-10
       py-8
-      rounded-xl
+      rounded-sm
       w-full
       md:w-1/2
       lg:w-1/3

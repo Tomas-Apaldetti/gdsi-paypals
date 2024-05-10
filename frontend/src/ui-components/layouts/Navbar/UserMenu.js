@@ -14,7 +14,7 @@ const Desktop = () => {
 
         <Menu as='div' className='relative ml-3'>
           <div>
-            <Menu.Button className='relative flex justify-center  items-center outline-none rounded-md p-2 focus:ring-2 focus:ring-slate-50'>
+            <Menu.Button className='relative flex justify-center  items-center outline-none rounded-sm p-2 focus:ring-2 focus:ring-slate-50'>
               <span className='absolute -inset-1.5' />
               <span className='sr-only'>Open user menu</span>
               <p className='tracking-wider text-slate-50 text-lg font-semibold'>{user().username}</p>
@@ -31,7 +31,7 @@ const Desktop = () => {
             leaveFrom='transform opacity-100 scale-100'
             leaveTo='transform opacity-0 scale-95'
           >
-            <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-slate-50 shadow-lg ring-2 ring-slate-800 ring-opacity-5 focus:outline-none'>
+            <Menu.Items className='absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-sm bg-slate-50 shadow-lg ring-2 ring-slate-800 ring-opacity-5 focus:outline-none'>
               {userNavigation.map((item) => (
                 <Menu.Item key={item.name}>
                   {({ active }) => (
@@ -39,7 +39,7 @@ const Desktop = () => {
                       to={item.href}
                       className={classNames(
                         active ? 'bg-purple-500 text-slate-50' : 'text-slate-800',
-                        'block px-4 py-2 text-sm rounded-md font-normal tracking-wide')}
+                        'block px-4 py-2 text-sm rounded-sm font-normal tracking-wide')}
                     >
                       {item.name}
                     </Link>
@@ -70,7 +70,7 @@ const Mobile = () => {
             key={item.name}
             as={Link}
             to={item.href}
-            className='block rounded-md px-6 py-2 text-base font-medium text-slate-50 hover:bg-slate-50 hover:text-purple-500'
+            className='block rounded-sm px-6 py-2 text-base font-medium text-slate-50 hover:bg-slate-50 hover:text-purple-500'
           >
             {item.name}
           </Disclosure.Button>

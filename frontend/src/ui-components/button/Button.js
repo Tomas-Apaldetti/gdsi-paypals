@@ -13,9 +13,10 @@ const Button = ({ type = 'button', secondary, onClick, children, disabled = fals
           ${!secondary ? 'text-slate-50' : 'text-purple-500'}
           ${!secondary ? '' : "border-2 border-purple-500"}
           ${!secondary ? "hover:bg-purple-600" : "hover:text-purple-700 hover:border-purple-700"}
-
+          hover:shadow-md
+          hover:shadow-slate-300
           sm:text-base
-          rounded-xl
+          rounded-sm
           py-2
           w-full
 

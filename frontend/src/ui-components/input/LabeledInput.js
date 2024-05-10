@@ -20,7 +20,7 @@ export const LabeledInput = ({ id, type = 'text', step = 0, label, placeholder =
           sm:text-sm
           placeholder-slate-500
           px-4
-          rounded-xl
+          rounded-sm
           border
           ${showError ? 'border-red-400' : 'border-slate-500'}
           w-full
