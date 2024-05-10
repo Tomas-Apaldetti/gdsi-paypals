@@ -19,7 +19,9 @@ export default function ThreeColumn({ mainColumn, leftColumn = [], leftColumnIco
 
   return (
     <div className='h-full grow w-full flex flex-row'>
-      <aside className='hidden md:block md:w-1/5 lg:w-2/12 overflow-y-hidden'>{renderedLeftColumn}</aside>
+      <aside className='hidden md:block md:w-1/5 lg:w-2/12 overflow-y-hidden'>
+        {renderedLeftColumn}
+      </aside>
       <button
         className='block md:hidden fixed left-3.5 bottom-3.5 p-4 rounded-sm bg-purple-500 text-slate-50'
         onClick={() => setShowLeft(!showLeft)}
@@ -29,9 +31,12 @@ export default function ThreeColumn({ mainColumn, leftColumn = [], leftColumnIco
       <ObscureSlideover width='w-4/5' left show={showLeft} onClose={() => setShowLeft(false)}>
         {renderedLeftColumn}
       </ObscureSlideover>
+
       <main className='grow border border-slate-200'>{mainColumn}</main>
 
-      <aside className='hidden md:block md:w-1/5 lg:w-2/12 overflow-y-hidden'>{rightColumn}</aside>
+      <aside className='hidden md:block md:w-1/5 lg:w-2/12 overflow-y-hidden'>
+        {renderedRightColumn}
+      </aside>
       <button
         className='block md:hidden fixed right-3.5 z-10 bottom-3.5 p-4 rounded-sm bg-purple-500 text-slate-50'
         onClick={() => setShowRight(!showLeft)}

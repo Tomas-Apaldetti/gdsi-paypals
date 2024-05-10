@@ -5,7 +5,7 @@ import React, { Fragment } from 'react';
 export const ObscureSlideover = ({ width = 'w-4/5', left = false,  show, onClose, children }) => {
   return (
     <Transition show={show} as={Fragment}>
-      <Dialog onClose={() => {}} className='relative z-50'>
+      <Dialog onClose={onClose} className='relative z-50'>
         <Transition.Child
           as={Fragment}
           enter='ease-out duration-300'
