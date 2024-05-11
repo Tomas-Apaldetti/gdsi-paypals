@@ -1,4 +1,4 @@
-import { ObscureSlideover } from 'ui-components/slideover/ObscureSlideover';
+import { FullSizeSlideover } from 'ui-components/slideover/FullSizeSlideover';
 import React, { useState } from 'react';
 
 function renderColumn(parts = []) {
@@ -23,14 +23,14 @@ export default function ThreeColumn({ mainColumn, leftColumn = [], leftColumnIco
         {renderedLeftColumn}
       </aside>
       <button
-        className='block md:hidden fixed left-3.5 bottom-3.5 p-4 rounded-sm bg-purple-500 text-slate-50'
+        className='block md:hidden fixed left-24 bottom-10 p-4 rounded-sm shadow-md shadow-slate-500 bg-purple-500  transition hover:bg-purple-600 text-slate-50 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:ring-offset-2'
         onClick={() => setShowLeft(!showLeft)}
       >
         {leftColumnIcon}
       </button>
-      <ObscureSlideover width='w-4/5' left show={showLeft} onClose={() => setShowLeft(false)}>
+      <FullSizeSlideover width='w-4/5' left show={showLeft} onClose={() => setShowLeft(false)}>
         {renderedLeftColumn}
-      </ObscureSlideover>
+      </FullSizeSlideover>
 
       <main className='grow border border-slate-200'>{mainColumn}</main>
 
@@ -38,14 +38,14 @@ export default function ThreeColumn({ mainColumn, leftColumn = [], leftColumnIco
         {renderedRightColumn}
       </aside>
       <button
-        className='block md:hidden fixed right-3.5 z-10 bottom-3.5 p-4 rounded-sm bg-purple-500 text-slate-50'
+        className='block md:hidden fixed right-24 z-10 bottom-10 p-4 rounded-sm shadow-md shadow-slate-500 bg-purple-500  transition hover:bg-purple-600 text-slate-50 focus:outline-none focus:ring-1 focus:ring-purple-500 focus:ring-offset-2'
         onClick={() => setShowRight(!showLeft)}
       >
         {rightColumnIcon}
       </button>
-      <ObscureSlideover width='w-4/5' show={showRight} onClose={() => setShowRight(false)}>
+      <FullSizeSlideover width='w-4/5' show={showRight} onClose={() => setShowRight(false)}>
         {renderedRightColumn}
-      </ObscureSlideover>
+      </FullSizeSlideover>
     </div>
   );
 }

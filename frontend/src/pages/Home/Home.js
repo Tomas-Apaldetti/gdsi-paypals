@@ -8,7 +8,7 @@ export default function Home() {
     <NavbarFooterLayout>
       <ThreeColumn
         leftColumn={[
-            <GroupsInfo key={'groups-info'}/>
+            <GroupsInfo/>
         ]}
         leftColumnIcon={<UserGroupIcon className='h-6 w-6'></UserGroupIcon>}
         rightColumnIcon={<ChartBarIcon className='h-6 w-6'></ChartBarIcon>}

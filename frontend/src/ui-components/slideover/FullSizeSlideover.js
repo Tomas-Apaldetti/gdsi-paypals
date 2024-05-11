@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import React, { Fragment } from 'react';
 
-export const ObscureSlideover = ({ width = 'w-4/5', left = false,  show, onClose, children }) => {
+export const FullSizeSlideover = ({ width = 'w-4/5', left = false,  show, onClose, children }) => {
   return (
     <Transition show={show} as={Fragment}>
       <Dialog onClose={onClose} className='relative z-50'>
