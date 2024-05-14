@@ -2,18 +2,19 @@ import ThreeColumn from 'ui-components/layouts/ThreeColumn';
 import { NavbarFooterLayout } from 'ui-components/layouts/NavbarFooterLayout';
 import { GroupsInfo } from './GroupsInfo';
 import { ChartBarIcon, UserGroupIcon } from '@heroicons/react/20/solid';
+import GroupHome from '../Groups/GroupHome'
 
 export default function Home() {
   return (
     <NavbarFooterLayout>
       <ThreeColumn
+        mainColumn={<GroupHome />}
         leftColumn={[
             <GroupsInfo/>
         ]}
         leftColumnIcon={<UserGroupIcon className='h-6 w-6'></UserGroupIcon>}
         rightColumnIcon={<ChartBarIcon className='h-6 w-6'></ChartBarIcon>}
       />
-
 
       {/* <header className='bg-indigo-300 shadow'>
           <div className='mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8'>

@@ -29,3 +29,6 @@ export async function stdFetch(url, config = {}){
 export async function post(url, body){
   return stdFetch(url, {body: JSON.stringify(body), method: 'POST'})
 }
+export async function get(url){
+  return stdFetch(url, {method: 'GET'})
+}
