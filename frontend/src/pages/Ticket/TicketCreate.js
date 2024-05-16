@@ -7,6 +7,7 @@ import { classNames } from 'utils/classNames';
 import { DropdownList } from 'ui-components/input/DropdownList';
 import { categories } from 'utils/categories';
 import { debtors } from 'utils/debtors';
+import { ticketCreate } from 'services/tickets';
 
 import { Form, Formik } from 'formik';
 import { BASE_URL } from 'services/utils';
@@ -22,17 +23,9 @@ const TicketCreate = () => {
             comments: values.comments
         }
 
-        setSubmitting(false);
+        await ticketCreate(ticket);
 
-        return fetch(`${BASE_URL}/ticket/create`, {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(ticket),
-            }).then((response) => {
-                return response.json();
-        });
+        setSubmitting(false);
     }
 
     return (

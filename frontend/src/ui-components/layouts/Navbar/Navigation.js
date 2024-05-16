@@ -5,7 +5,7 @@ import { classNames } from 'utils/classNames';
 
 const navigation = [
   { name: 'Home', href: '/'},
-  { name: 'Test', href: '/test'}
+  { name: 'Create Ticket', href: '/ticket/create'}
 ];
 
 const Mobile = () => {

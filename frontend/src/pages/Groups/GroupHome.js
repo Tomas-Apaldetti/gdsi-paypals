@@ -1,5 +1,5 @@
 export default function Group() {
   return (
-    <div>holaaaaaa</div>
+    <div>Main Group Page</div>
   )
 }
