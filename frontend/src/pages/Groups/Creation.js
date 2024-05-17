@@ -3,21 +3,22 @@ import { Form, Formik } from 'formik';
 import Button from 'ui-components/button/Button';
 import * as Yup from 'yup';
 import { groupCreate } from 'services/groups';
+import { TagIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 
-function GroupCreation({onSuccesfullSubmit, onCancel}) {
+function GroupCreation({ onSuccesfullSubmit, onCancel }) {
   const initialValues = {
     name: '',
     description: '',
     category: '',
   };
 
-  async function handleSubmit(values, { setStatus, setSubmitting }){
-    try{
+  async function handleSubmit(values, { setStatus, setSubmitting }) {
+    try {
       await groupCreate(values);
       onSuccesfullSubmit();
-    }catch(e){
+    } catch (e) {
       setStatus(e.message);
-    }finally{
+    } finally {
       setSubmitting(false);
     }
   }
@@ -34,9 +35,9 @@ function GroupCreation({onSuccesfullSubmit, onCancel}) {
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
         return (
-          <Form className='h-full w-full flex flex-col justify-between px-4 pb-4'>
-            <div className='w-3/5'>
+          <Form className='h-full w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
               <LabeledInput
+                icon={<UserGroupIcon />}
                 id='name'
                 label='Name'
                 onChange={handleChange}
@@ -45,14 +46,7 @@ function GroupCreation({onSuccesfullSubmit, onCancel}) {
                 touched={touched}
               />
               <LabeledInput
-                id='description'
-                label='Description'
-                onChange={handleChange}
-                handleBlur={handleBlur}
-                error={errors}
-                touched={touched}
-              />
-              <LabeledInput
+                icon={<TagIcon />}
                 id='category'
                 label='Category'
                 onChange={handleChange}
@@ -60,24 +54,32 @@ function GroupCreation({onSuccesfullSubmit, onCancel}) {
                 error={errors}
                 touched={touched}
               />
-            </div>
 
-            <div className='flex'>
-              <div className='w-full'></div>
+              <LabeledInput
+                id='description'
+                label='Description'
+                textarea
+                onChange={handleChange}
+                handleBlur={handleBlur}
+                error={errors}
+                touched={touched}
+              />
 
-              <div className='w-full px-4'>
-                <Button secondary type='cancel' onClick={onCancel} disabled={isSubmitting} >
-                  <span className='text-md font-semibold tracking-wider'>Cancel</span>
-                </Button>
+              <div className='flex pt-10'>
+                <div className='w-full'></div>
+
+                <div className='w-full px-4'>
+                  <Button secondary type='cancel' onClick={onCancel} disabled={isSubmitting}>
+                    <span className='text-md font-semibold tracking-wider'>Cancel</span>
+                  </Button>
+                </div>
+
+                <div className='w-full pl-4'>
+                  <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
+                    <span className='text-md font-semibold tracking-wider'>Create</span>
+                  </Button>
+                </div>
               </div>
-
-              <div className = 'w-full px-4'>
-                <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                  <span className='text-md font-semibold tracking-wider'>Create</span>
-                </Button>
-              </div>
-
-            </div>
           </Form>
         );
       }}

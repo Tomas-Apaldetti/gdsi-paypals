@@ -15,6 +15,7 @@ import { formattedDate } from 'utils/dateFormat';
 import { password } from './password.yup';
 import { useAuth } from 'context/AuthContextProvider';
 import { register } from 'services/auth';
+import { AtSymbolIcon, FingerPrintIcon, KeyIcon, UserIcon } from '@heroicons/react/20/solid';
 
 export const Register = () => {
   const minBirth = new Date();
@@ -30,23 +31,23 @@ export const Register = () => {
     const cpy = {
       ...values,
       country: JSON.parse(values.country).id,
-      repeatPassword: undefined
+      repeatPassword: undefined,
     };
-    try{
+    try {
       const response = await register(cpy);
-      if(!response.ok){
+      if (!response.ok) {
         const body = await response.json();
         throw new Error(body.message);
       }
       const body = await response.json();
       auth.login(body.tokens);
       navigate('/');
-    }catch(e){
-      setStatus(e.message)
-    }finally{
-      setSubmitting(false)
+    } catch (e) {
+      setStatus(e.message);
+    } finally {
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <BaseBackground>
@@ -82,8 +83,7 @@ export const Register = () => {
                   .required('Country is required'),
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                 password: password(),
-                repeatPassword: password()
-                  .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+                repeatPassword: password().oneOf([Yup.ref('password'), null], 'Passwords must match'),
               })
               .noUnknown(false)}
             onSubmit={handleSubmit}
@@ -93,6 +93,7 @@ export const Register = () => {
                 <Form>
                   <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
                   <LabeledInput
+                    icon={<UserIcon />}
                     id='username'
                     label='Username'
                     onChange={handleChange}
@@ -101,6 +102,7 @@ export const Register = () => {
                     touched={touched}
                   />
                   <LabeledInput
+                    icon={<FingerPrintIcon />}
                     id='fullName'
                     label='Full name'
                     onChange={handleChange}
@@ -153,6 +155,7 @@ export const Register = () => {
                   <div className='mt-10' />
 
                   <LabeledInput
+                    icon={<AtSymbolIcon />}
                     id='email'
                     type='email'
                     label='E-Mail Address'
@@ -163,6 +166,7 @@ export const Register = () => {
                     touched={touched}
                   />
                   <LabeledInput
+                    icon={<KeyIcon />}
                     id='password'
                     type='password'
                     label='Password'
@@ -173,6 +177,7 @@ export const Register = () => {
                     touched={touched}
                   />
                   <LabeledInput
+                    icon={<KeyIcon />}
                     id='repeatPassword'
                     type='password'
                     label='Password'

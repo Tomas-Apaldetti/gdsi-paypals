@@ -10,6 +10,7 @@ import { Form, Formik } from 'formik';
 import { password } from './password.yup';
 import { login } from 'services/auth';
 import { useAuth } from 'context/AuthContextProvider';
+import { AtSymbolIcon, KeyIcon } from '@heroicons/react/20/solid';
 
 export const Login = () => {
 
@@ -58,6 +59,7 @@ export const Login = () => {
                 <Form>
                   <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
                   <LabeledInput
+                    icon={<AtSymbolIcon />}
                     id='email'
                     type='email'
                     label='E-Mail Address'
@@ -68,6 +70,7 @@ export const Login = () => {
                     touched={touched}
                   />
                   <LabeledInput
+                    icon={<KeyIcon />}
                     id='password'
                     type='password'
                     label='Password'

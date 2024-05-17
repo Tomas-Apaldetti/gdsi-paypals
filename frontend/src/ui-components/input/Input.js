@@ -1,12 +1,11 @@
 import React from 'react';
 
-export const LabeledInput = ({
+export const Input = ({
   icon = null,
   id,
   type = 'text',
   textarea = false,
   step = 0,
-  label,
   placeholder = '',
   onChange,
   className = '',
@@ -18,13 +17,7 @@ export const LabeledInput = ({
   const errorDesc = typeof error === 'object' ? error[id] : error;
   const showError = isTouched && errorDesc;
 
-  const inputIcon = icon && React.cloneElement(
-    icon,
-    {className: 'absolute top-1/2 -translate-y-1/2 mt-1 mx-2 h-4 w-4 text-slate-500' }
-  )
-
   const inputStyle = `
-    mt-2
     text-md
     sm:text-sm
     placeholder-slate-500
@@ -38,15 +31,16 @@ export const LabeledInput = ({
     focus:ring-purple-500
     focus:ring-2
     ${className}
-`
+`;
+
+  const inputIcon = icon && React.cloneElement(
+    icon,
+    {className: 'absolute top-1/2 -translate-y-1/2 mx-2 h-4 w-4 text-slate-500' }
+  )
 
   return (
     <div className='flex flex-col py-2 w-full'>
-      <label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700'>
-        {label}
-      </label>
-      {
-        textarea ?
+      {textarea ? (
         <textarea
           id={id}
           name={id}
@@ -54,8 +48,8 @@ export const LabeledInput = ({
           onChange={onChange}
           onBlur={handleBlur}
           className={`${inputStyle} resize-y max-h-96 min-h-10 overflow-y-auto`}
-        />
-        :
+        ></textarea>
+      ) : (
         <div className='relative'>
           <input
             id={id}
@@ -69,7 +63,7 @@ export const LabeledInput = ({
           />
           {icon && inputIcon}
         </div>
-      }
+      )}
 
       {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}
     </div>

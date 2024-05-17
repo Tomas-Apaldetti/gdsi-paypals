@@ -5,8 +5,6 @@ import NotFound from './pages/NotFound';
 import { Login } from './pages/Authentication/Login';
 import { Register } from 'pages/Authentication/Register';
 import { NeedsAuth } from 'logic-components/NeedsAuth';
-import GroupCreation from './pages/Groups/Creation';
-import TicketCreate from './pages/Ticket/TicketCreate';
 import { Logout } from 'pages/Authentication/Logout';
 import { Test } from 'pages/Test';
 
@@ -20,22 +18,6 @@ function App() {
             element={
               <NeedsAuth redirect='/login'>
                 <Home />
-              </NeedsAuth>
-            }
-          />
-          <Route
-            path='/group/create'
-            element={
-              <NeedsAuth redirect='/login'>
-                <GroupCreation />
-              </NeedsAuth>
-            }
-          />
-          <Route
-            path='/ticket/create'
-            element={
-              <NeedsAuth redirect='/login'>
-                <TicketCreate />
               </NeedsAuth>
             }
           />
