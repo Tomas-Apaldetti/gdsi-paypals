@@ -18,7 +18,7 @@ const Button = ({ type = 'button', secondary, onClick, children, disabled = fals
           sm:text-base
           rounded-sm
           py-2
-          w-full
+          ${className.includes("w-") ? "" : "w-full"}
 
           transition
           duration-150

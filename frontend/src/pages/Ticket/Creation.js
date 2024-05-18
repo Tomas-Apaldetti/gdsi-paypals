@@ -42,7 +42,7 @@ export const TicketCreation = ({ onCancel }) => {
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
         return (
-          <Form className='h-full w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
+          <Form className='h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
 
             <LabeledInput
               icon={<CurrencyDollarIcon />}
