@@ -3,6 +3,7 @@ const { createGroup, getGroups } = require("../controllers/groups.controller");
 const express = require('express');
 const { tokenTypes } = require("../config/tokens");
 const router = express.Router();
+const { createTicket } = require('../validations/ticket.validation');
 
 router.post('/create', async (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -57,6 +58,11 @@ router.get('/groups', async (req, res, next) => {
   } catch (error) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
+})
+
+router.post('/:groupId/ticket', auth('TODO'), validate(createTicket), async (req, res, next) => {
+  const groupId = req.params.groupId;
+  
 })
 
 module.exports = router;

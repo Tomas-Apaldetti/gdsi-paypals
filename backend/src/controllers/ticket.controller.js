@@ -1,7 +1,14 @@
 const Ticket = require('../models/ticket.model');
 
-const createTicket = async (args) => {
+const createTicket = async (req, res, next) => {
+  const groupId = req.params.groupId || null;
+  const userId = req.user.id;
 
+  const savedTicket = await new Ticket({
+    ...req.body,
+    groupId, 
+    userId,
+  }).save()
 
   try {
     const newTicket = new Ticket({
@@ -20,4 +27,4 @@ const createTicket = async (args) => {
   }
 };
 
-module.exports = createTicket;
+module.exports = {createTicket};

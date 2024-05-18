@@ -12,9 +12,9 @@ const { tokenTypes } = require('../config/tokens');
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (user, expires, type, payloadExtra = {}, secret = config.jwt.secret) => {
+const generateToken = (userId, expires, type, payloadExtra = {}, secret = config.jwt.secret) => {
   const payload = {
-    sub: user.id,
+    sub: userId,
     iat: moment().unix(),
     exp: expires.unix(),
     type,
