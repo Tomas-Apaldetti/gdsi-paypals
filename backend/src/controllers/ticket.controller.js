@@ -1,30 +1,36 @@
 const Ticket = require('../models/ticket.model');
+const mongoose = require('mongoose');
 
 const createTicket = async (req, res, next) => {
-  const groupId = req.params.groupId || null;
-  const userId = req.user.id;
-
-  const savedTicket = await new Ticket({
-    ...req.body,
-    groupId, 
-    userId,
-  }).save()
 
   try {
     const newTicket = new Ticket({
-      amount: args.amount,
-      category: args.category,
-      debtor: args.debtor,
-      comments: args.comments
+      ...req
     });
 
     const savedTicket = await newTicket.save();
 
     return savedTicket;
+  
   } catch (error) {
     console.error('Error creating ticket:', error);
     throw error;
   }
 };
 
-module.exports = {createTicket};
+const getGroupTickets = async (req) => {
+
+  const group_id = mongoose.Types.ObjectId(req.group_id)
+
+  try {
+    const tickets = await Ticket.find({ group_id: { $in: [group_id]}})
+
+    return tickets
+  } catch (error) {
+    console.error('Error fetching group tickets', error)
+    throw error
+  }
+
+}
+
+module.exports = {createTicket, getGroupTickets};

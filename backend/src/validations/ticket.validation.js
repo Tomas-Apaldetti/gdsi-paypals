@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 
-const createTicket = Joi.object().keys({
+const ticketValidation = Joi.object().keys({
     name: Joi.string().required().max(255),
     category: Joi.string().required().max(25),
     amount: Joi.number().required().min(0.01),
@@ -15,5 +15,5 @@ const createTicket = Joi.object().keys({
 })
 
 module.exports = {
-    createTicket
+    ticketValidation
 }
