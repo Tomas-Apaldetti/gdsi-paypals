@@ -15,7 +15,6 @@ export const Ticket = ({ ticket }) => {
             /
             <span className='text-green-500 pl-1'>
               {`${getCurrencySymbol(ticket.value.converted.currency)}${ticket.payments.reduce((acc, payment) => {
-                console.log(payment);
                 return acc + payment.amount.amount;
               }, 0)}`}
             </span>
