@@ -28,7 +28,7 @@ export const Modal = ({ title, open, setOpen, onClose, children }) => {
           leaveTo="opacity-0 scale-95"
           className='fixed inset-0 flex w-screen items-center justify-center px-4'
         >
-          <Dialog.Panel className='relative bg-slate-100 max-w-full md:max-w-2xl xl:max-w-xl 2xl:max-w-2xl max-h-full rounded-sm ring-1 ring-slate-600 shadow-lg flex flex-col'>
+          <Dialog.Panel className='relative bg-slate-100 max-w-full md:max-w-2xl xl:max-w-xl 2xl:max-w-2xl max-h-full rounded-sm ring-1 ring-slate-600 shadow-lg flex flex-col transition'>
             {title ? (
               <div className='bg-slate-900 rounded-t-sm border-b-2 border-b-purple-500 px-4 py-2 text-xl font-semibold tracking-wider uppercase text-slate-50 flex justify-between'>
                 <Dialog.Title>{title}</Dialog.Title>
@@ -52,7 +52,7 @@ export const Modal = ({ title, open, setOpen, onClose, children }) => {
               </button>
             )}
 
-            <div className='h-full mx-2 my-4 overflow-auto'>{children}</div>
+            <div className='max-h-full mx-2 my-4 overflow-auto transition'>{children}</div>
           </Dialog.Panel>
         </Transition.Child>
       </Dialog>

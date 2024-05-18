@@ -8,41 +8,84 @@ import { debtors } from 'utils/debtors';
 import { ticketCreate } from 'services/tickets';
 
 import { Form, Formik } from 'formik';
-import { CurrencyDollarIcon } from '@heroicons/react/20/solid';
+import { CurrencyDollarIcon, TagIcon } from '@heroicons/react/20/solid';
+import * as Yup from 'yup';
+import { DebtorList } from './DebtorList';
+import { groupUsers } from './groupUsers.test.data';
 
 const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
   const ticket = {
+    name: values.name,
     amount: values.amount,
-    debtor: JSON.parse(values.debtor).id,
+    debtors: JSON.parse(values.debtors).map((debtor) => debtor.id),
     category: JSON.parse(values.category).id,
-    comments: values.comments,
+    comments: values.comment,
   };
+  console.log(ticket);
 
-  await ticketCreate(ticket);
+  // await ticketCreate(ticket);
 
   setSubmitting(false);
 };
 
+Yup.addMethod(Yup.string, 'jsonArray', function (message) {
+  return this.test('jsonArray', message, function (value) {
+    const { path, createError } = this;
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return true;
+      }
+      if (parsed.length === 0) {
+        return createError({ path, message: message || 'There must be at least one item' });
+      }
+      return createError({ path, message: message || 'The field must be a valid JSON array' });
+    } catch (err) {
+      return createError({ path, message: message || 'The field must be a valid JSON' });
+    }
+  });
+});
+
 export const TicketCreation = ({ onCancel }) => {
+  const defaultCategory = categories.find(({ id }) => id === 'home');
+  const defaultDebtors = groupUsers;
   return (
     <Formik
       initialValues={{
+        name: '',
         amount: 0,
-        category: '',
-        debtor: '',
-        comments: '',
+        category: JSON.stringify(defaultCategory),
+        debtors: JSON.stringify(defaultDebtors),
+        comment: '',
       }}
-      // validationSchema={
-      //   Yup.object().shape({
-      //     email: Yup.string().email('Must be a valid email').max(255).required(),
-      //     password: Yup.string.max(30).required('Password is required'),
-      //   })
-      // }
+      validationSchema={Yup.object().shape({
+        name: Yup.string().max(255).required('A ticket name is required'),
+        amount: Yup.number().min(0.01, 'The amount must be a positive amount').required('An amount is required'),
+        category: Yup.object()
+          .json()
+          .shape({
+            id: Yup.string()
+              .oneOf(categories.map((c) => c.id))
+              .required(),
+          }),
+        comment: Yup.string().max(255, 'The comment must be less than 255 chars'),
+        debtors: Yup.string().jsonArray('There must be at least one debtor'),
+      })}
       onSubmit={handleSubmit}
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
         return (
-          <Form className='h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
+          <Form className='max-h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4 transition'>
+            <LabeledInput
+              icon={<TagIcon />}
+              id='name'
+              placeholder='Ticket Name'
+              label='Name'
+              onChange={handleChange}
+              error={errors}
+              touched={touched}
+              handleBlur={handleBlur}
+            />
 
             <LabeledInput
               icon={<CurrencyDollarIcon />}
@@ -61,7 +104,7 @@ export const TicketCreation = ({ onCancel }) => {
               id='category'
               label='Category'
               options={categories}
-              initial={categories.find(({ id }) => id === 'home')}
+              initial={defaultCategory}
               renderOption={(option, isSelected, _) => {
                 return (
                   <span className={classNames(isSelected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
@@ -78,30 +121,17 @@ export const TicketCreation = ({ onCancel }) => {
                 );
               }}
             />
-
-            <DropdownList
-              id='debtor'
-              label='Debtor'
-              options={debtors}
+            <DebtorList
+              options={groupUsers}
+              defaultSelected={groupUsers}
               onChange={handleChange}
+              handleBlur={handleBlur}
               error={errors}
               touched={touched}
-              handleBlur={handleBlur}
-              initial={debtors.find(({ id }) => id === 'lu')}
-              renderOption={(option, isSelected, _) => {
-                return (
-                  <span className={classNames(isSelected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}>
-                    {option.name}
-                  </span>
-                );
-              }}
-              renderDisplay={(selected) => {
-                return <span className='ml-3 block truncate'> {selected.name}</span>;
-              }}
             />
 
             <LabeledInput
-              id='comments'
+              id='comment'
               label='Comment'
               textarea
               placeholder='Enter your comment'

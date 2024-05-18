@@ -15,7 +15,7 @@ export const TopBar = () => {
         <PlusIcon className='h-6 w-6' />
       </Button>
 
-      <Modal open={showCreate} setOpen={setShowCreate} title={'Create Group'} onClose={() => setShowCreate(false)}>
+      <Modal open={showCreate} setOpen={setShowCreate} title={'Create Ticket'} onClose={() => setShowCreate(false)}>
         <TicketCreation onSuccesfullSubmit={() => {}} onCancel={() => setShowCreate(false)} />
       </Modal>
     </div>

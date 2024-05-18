@@ -10,16 +10,16 @@ export const Ticket = ({ ticket }) => {
         </div>
 
         <div className='grow'>
-          <div className='text-slate-800 font-bold uppercase text-end'>
+          <div className='text-slate-800 font-bold uppercase text-end text-4xl'>
             <span className='text-purple-500 pr-1'>{`${getCurrencySymbol(ticket.value.converted.currency)}${ticket.value.converted.amount}`}</span>
-            /
+            <span className='font-normal text-slate-500'>/</span>
             <span className='text-green-500 pl-1'>
               {`${getCurrencySymbol(ticket.value.converted.currency)}${ticket.payments.reduce((acc, payment) => {
                 return acc + payment.amount.amount;
               }, 0)}`}
             </span>
           </div>
-          <div className='flex w-full h-full flex-row-reverse gap-1 pt-1'>
+          <div className='flex w-full h-full flex-row-reverse gap-1 pt-2'>
             {ticket.debtors.map((debtor) => (
               <UserTag
                 key={debtor.id}

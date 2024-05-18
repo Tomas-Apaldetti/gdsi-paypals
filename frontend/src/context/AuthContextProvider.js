@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import { authCookie, purge, refreshCookie } from 'utils/auth';
 
 

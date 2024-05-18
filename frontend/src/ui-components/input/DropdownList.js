@@ -56,7 +56,7 @@ export const DropdownList = ({ id,
                 px-2
                 py-2
                 border
-                ${showError ? 'border-red-400' : 'border-slate-500'}
+                ${showError ? 'border-red-400' : 'border-slate-300'}
                 focus:ring-2
                 focus:ring-purple-500
                 `}>
@@ -66,7 +66,7 @@ export const DropdownList = ({ id,
                   </span>
                 }
                 <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
-                  <ChevronUpDownIcon className='h-5 w-5 text-purple-500' aria-hidden='true' />
+                  <ChevronUpDownIcon className='h-5 w-5 text-slate-500' aria-hidden='true' />
                 </span>
               </Listbox.Button>
 
@@ -84,7 +84,7 @@ export const DropdownList = ({ id,
                 max-h-56
                 w-full
                 overflow-auto
-                rounded-md
+                rounded-sm
                 bg-white
                 py-1
                 text-base
