@@ -1,4 +1,4 @@
-const Group = require('../models/group.model');
+const Group = require('../models/group.model')
 const mongoose = require('mongoose');
 
 
@@ -25,7 +25,6 @@ const getGroups = async (args) => {
     var userId = mongoose.Types.ObjectId(args.userId);
     const groups = await Group.find({ users: { $in: [userId]}})
 
-
     return groups
   } catch (error) {
     console.error('Error fetching the groups', error)
@@ -33,7 +32,24 @@ const getGroups = async (args) => {
   }
 }
 
+const getGroupUsers = async (req) => {
+  const group_id = mongoose.Types.ObjectId(req.group_id)
+
+  try {
+    const users = await Group.find(
+      { _id: { $in: [group_id] } },
+      { users: 1, _id: 0 }
+    );
+
+    return users[0]?.users
+  } catch (error) {
+    console.error('Error fetching group users', error)
+    throw error
+  }
+}
+
 module.exports = {
   createGroup,
-  getGroups
+  getGroups,
+  getGroupUsers
 };

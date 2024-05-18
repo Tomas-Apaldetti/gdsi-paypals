@@ -2,7 +2,7 @@ const createTicket = require("../controllers/ticket.controller");
 const express = require('express');
 const router = express.Router();
 
-router.post('/create', async (req, res) => {
+router.post('/', async (req, res) => {
 
     try {
         const newTicket = await createTicket({
@@ -17,5 +17,6 @@ router.post('/create', async (req, res) => {
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 module.exports = router;

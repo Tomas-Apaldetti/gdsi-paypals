@@ -3,7 +3,7 @@ const GroupSchema = mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, default: "" },
   category: { type: String, default: "" },
-  users: { type: Array }
+  users: [mongoose.Types.ObjectId]
 });
 
 module.exports = mongoose.model("group", GroupSchema);
