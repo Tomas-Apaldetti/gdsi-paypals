@@ -14,17 +14,14 @@ const getGroupForUser = async (userId) => {
   return Group.find({
     members: mongoose.Types.ObjectId(userId)
   })
-    .populate({
-      path: 'members',
-      select: '_id username'
-    });
+  .populate({
+     path: 'members',
+     select: '_id username'
+  });
 
 };
 
 const getGroupMembers = async (groupId, forUser) => {
-  console.log('groupId: ' + groupId)
-  console.log('forUser:', forUser)
-
   if (!groupId || !forUser) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
   }
@@ -33,7 +30,7 @@ const getGroupMembers = async (groupId, forUser) => {
     members: mongoose.Types.ObjectId(forUser),
     _id: mongoose.Types.ObjectId(groupId),
   }).populate({
-    path: 'users',
+    path: 'members',
     select: '_id username',
   });
 
@@ -41,7 +38,7 @@ const getGroupMembers = async (groupId, forUser) => {
     throw new ApiError(httpStatus.NOT_FOUND, `Group ${groupId} not found for user ${forUser}`);
   }
 
-  return list.users;
+  return list.members;
 };
 
 module.exports = {

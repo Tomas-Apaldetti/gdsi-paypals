@@ -24,7 +24,7 @@ export const useAPIData = (fetcher, defaultData = null, backupData = null) => {
         const body = await response.json();
         // Great!, we have the information, put it in data so the user can use it
         setData(body);
-
+        setError(null);
       } catch (e) {
         // Let the user decide if the data is still valid
         backupData && setData(backupData)
@@ -37,8 +37,7 @@ export const useAPIData = (fetcher, defaultData = null, backupData = null) => {
     }
 
     fetchInformation()
-
-  }, [stale, fetching, fetcher, backupData])
+  },[stale, fetching, fetcher, backupData])
 
   return {
     data,

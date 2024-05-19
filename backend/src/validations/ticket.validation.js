@@ -12,7 +12,7 @@ const createTicket = {
       }),
     ),
     split_type: Joi.string().valid('PERCENTAGE').required(),
-    comment: Joi.string().max(255),
+    comment: Joi.string().allow(null, '').max(255),
   }),
 };
 

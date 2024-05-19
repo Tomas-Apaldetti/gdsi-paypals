@@ -5,7 +5,7 @@ export const Ticket = ({ ticket }) => {
       <div className='w-full p-2 flex justify-between'>
         <div className='max-w-72 overflow-clip text-ellipsis mr-10'>
           <h2 className='text-lg font-medium text-slate-800 tracking-normal'>{ticket.name}</h2>
-          <p className='text-sm text-slate-400 text-ellipsis'>{ticket.description}</p>
+          <p className='text-sm text-slate-400 text-ellipsis'>{ticket.comment}</p>
         </div>
 
         <div className='grow'>
@@ -13,20 +13,23 @@ export const Ticket = ({ ticket }) => {
             <span className='text-purple-500 pr-1'>{`$${ticket.amount}`}</span>
             <span className='font-normal text-slate-500'>/</span>
             <span className='text-green-500 pl-1'>
-              {`$${ticket.payments.reduce((acc, payment) => {
+              {`$${ticket.payments ? ticket.payments.reduce((acc, payment) => {
                 return acc + payment.amount;
-              }, 0)}`}
+              }, 0) : 0}`}
             </span>
           </div>
           <div className='flex w-full h-full flex-row-reverse gap-1 pt-2'>
             {ticket.debtors.map((debtor) => (
               <UserTag
-                key={debtor.id}
-                name={debtor.name}
+                key={debtor._id}
+                name={debtor.username}
                 amount={debtor.amount}
-                paid={ticket.payments
+                paid={ticket.payments ?
+                  ticket.payments
                   .filter((payment) => payment.from.id === debtor.id)
-                  .reduce((acc, payment) => payment.amount + acc, 0)}
+                  .reduce((acc, payment) => payment.amount + acc, 0)
+                  : 0
+                }
               />
             ))}
           </div>

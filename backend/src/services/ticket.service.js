@@ -15,6 +15,9 @@ const getTicketsByGroup = async (group) => {
   }
   return Ticket.find({
     group_id: mongoose.Types.ObjectId(group)
+  }).populate({
+    path: 'debtors._id',
+    select: '_id username',
   })
 }
 
@@ -25,6 +28,9 @@ const getIndividualTickets = async (creator) => {
   return Ticket.find({
     creator: mongoose.Types.ObjectId(creator),
     group_id: null
+  }).populate({
+    path: 'debtors._id',
+    select: '_id username',
   })
 }
 

@@ -5,7 +5,7 @@ const groupValidation = require('../../validations/group.validation');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 
 router.
   route('/')
@@ -17,6 +17,6 @@ router.
   .get(auth('TODO'), validate(groupValidation.getMembers), groupController.getGroupMembers)
 
 router.
-  use('/:groupId/tickets', validate(groupValidation.groupIdParam), ticketRoute.maybeGroupRouter)
+  use('/:groupId/tickets', validate(groupValidation.groupIdParam),ticketRoute.maybeGroupRouter)
 
 module.exports = router;

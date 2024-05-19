@@ -1,5 +1,5 @@
 import { Modal } from 'ui-components/modal/Modal';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'react-router-dom';
@@ -52,7 +52,8 @@ export const GroupsInfo = () => {
             <li
               key={group.id}
               className={`text-md font-normal
-              ${queryparams.get('group') === String(group.id)
+              ${
+                queryparams.get('group') === String(group.id)
                   ? 'text-purple-500 border-l-2 border-purple-500 under pointer-events-none px-1'
                   : 'text-slate-800 hover:text-purple-500 px-1'
                 }

@@ -48,7 +48,12 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
       const response = await ticketCreate(
         {
           ...values,
-          debtors: JSON.parse(values.debtors).map((debtor) => debtor._id),
+          debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
+            return {
+              _id: debtor._id,
+              cut: 100/arr.length
+            }
+          }),
           category: JSON.parse(values.category).id,
           split_type: 'PERCENTAGE',
         },
