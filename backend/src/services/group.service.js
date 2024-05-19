@@ -22,6 +22,9 @@ const getGroupForUser = async (userId) => {
 };
 
 const getGroupMembers = async (groupId, forUser) => {
+  console.log('groupId: ' + groupId)
+  console.log('forUser:', forUser)
+
   if (!groupId || !forUser) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
   }

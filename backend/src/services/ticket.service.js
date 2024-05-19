@@ -5,11 +5,12 @@ const mongoose = require('mongoose');
 
 
 const createTicket = async (ticketInfo) => {
+  console.log('TICKET INFO IS: ' + ticketInfo)
   return Ticket.create(ticketInfo)
 }
 
 const getTicketsByGroup = async (group) => {
-  if(!group){
+  if (!group) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
   }
   return Ticket.find({
@@ -18,7 +19,7 @@ const getTicketsByGroup = async (group) => {
 }
 
 const getIndividualTickets = async (creator) => {
-  if(!creator){
+  if (!creator) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
   }
   return Ticket.find({

@@ -144,8 +144,8 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
             />
 
             <DebtorList
-              options={groupUsers}
-              defaultSelected={groupUsers}
+              options={possibleDebtors}
+              defaultSelected={possibleDebtors}
               onChange={handleChange}
               handleBlur={handleBlur}
               error={errors}

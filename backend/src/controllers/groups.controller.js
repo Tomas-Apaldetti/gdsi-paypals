@@ -29,8 +29,9 @@ const getGroups = catchAsync(async (req, res) => {
 const getGroupMembers = catchAsync(async (req, res) => {
 
   const groupId = req.params.groupId;
+  const userId = req.user._id;
 
-  const members = await groupService.getGroupMembers(groupId);
+  const members = await groupService.getGroupMembers(groupId, userId);
 
   return res.status(httpStatus.OK).send(members);
 })
