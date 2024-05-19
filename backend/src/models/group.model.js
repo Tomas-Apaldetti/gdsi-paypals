@@ -1,9 +1,19 @@
-const mongoose = require("mongoose");
-const GroupSchema = mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String, default: "" },
-  category: { type: String, default: "" },
-  users: [mongoose.Types.ObjectId]
-});
+const mongoose = require('mongoose');
+const { toJSON } = require('./plugins');
 
-module.exports = mongoose.model("group", GroupSchema);
+const groupSchema = mongoose.Schema(
+  {
+    name: { type: String, required: true, maxlength: 30, trim: true },
+    description: { type: String, default: '', maxlength: 255, trim: true },
+    category: { type: String, default: '', maxlength: 255, trim: true },
+    creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
+    memebers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+  },
+  {
+    timestamps: true,
+  },
+);
+
+ticketSchema.plugin(toJSON);
+
+module.exports = mongoose.model('Group', groupSchema);

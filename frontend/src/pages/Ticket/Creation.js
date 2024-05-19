@@ -1,32 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
 import Button from 'ui-components/button/Button';
 import { classNames } from 'utils/classNames';
 import { DropdownList } from 'ui-components/input/DropdownList';
 import { categories } from 'utils/categories';
-import { debtors } from 'utils/debtors';
 import { ticketCreate } from 'services/tickets';
-
 import { Form, Formik } from 'formik';
 import { CurrencyDollarIcon, TagIcon } from '@heroicons/react/20/solid';
 import * as Yup from 'yup';
 import { DebtorList } from './DebtorList';
 import { groupUsers } from './groupUsers.test.data';
-
-const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-  const ticket = {
-    name: values.name,
-    amount: values.amount,
-    debtors: JSON.parse(values.debtors).map((debtor) => debtor.id),
-    category: JSON.parse(values.category).id,
-    comments: values.comment,
-  };
-  console.log(ticket);
-
-  // await ticketCreate(ticket);
-
-  setSubmitting(false);
-};
+import { useSearchParams } from 'react-router-dom';
+import { getGroupMembers, getSelfAsDebtor } from 'services/groups';
 
 Yup.addMethod(Yup.string, 'jsonArray', function (message) {
   return this.test('jsonArray', message, function (value) {
@@ -46,9 +31,52 @@ Yup.addMethod(Yup.string, 'jsonArray', function (message) {
   });
 });
 
-export const TicketCreation = ({ onCancel }) => {
+export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
   const defaultCategory = categories.find(({ id }) => id === 'home');
   const defaultDebtors = groupUsers;
+
+  const [queryparams,] = useSearchParams();
+  const [possibleDebtors, setPossibleDebtors] = useState([]);
+
+  useEffect(() => {
+    (async() => {
+      if(setPossibleDebtors.length === 0) return;
+      try{
+        setPossibleDebtors(await getGroupMembers(queryparams.get('group')));
+
+      }catch(e){
+        setPossibleDebtors(getSelfAsDebtor())
+      }
+    })();
+  }, [possibleDebtors, queryparams])
+
+  const handleSubmit = async (values, { setStatus, setSubmitting }) => {
+    try {
+      const response = await ticketCreate(
+        {
+          ...values,
+          debtors: JSON.parse(values.debtors).map((debtor) => debtor._id),
+          category: JSON.parse(values.category).id,
+          split_type: 'PERCENTAGE',
+        },
+        queryparams.get('group'),
+      );
+
+      if (!response.ok) {
+        const body = await response.json();
+        throw new Error(body.message);
+      }
+
+      const body = await response.json();
+      onSuccesfullSubmit(body);
+
+    } catch (e) {
+      setStatus(e.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -121,6 +149,7 @@ export const TicketCreation = ({ onCancel }) => {
                 );
               }}
             />
+
             <DebtorList
               options={groupUsers}
               defaultSelected={groupUsers}

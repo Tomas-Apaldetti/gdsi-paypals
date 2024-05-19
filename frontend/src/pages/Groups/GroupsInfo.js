@@ -5,55 +5,6 @@ import { PlusIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'react-router-dom';
 import { getGroups } from 'services/groups';
 
-const groups = [
-  {
-    id: 1,
-    name: 'Un grupo',
-    members: [
-      {
-        id: 1,
-        username: 'pepe',
-      },
-      {
-        id: 2,
-        username: 'juana',
-      },
-      {
-        id: 3,
-        username: 'josefa',
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: 'Otro grupo',
-    members: [
-      {
-        id: 1,
-        username: 'pepe',
-      },
-      {
-        id: 2,
-        username: 'juana',
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: 'Mas grupos',
-    members: [
-      {
-        id: 2,
-        username: 'juana',
-      },
-      {
-        id: 3,
-        username: 'josefa',
-      },
-    ],
-  },
-];
-
 export const GroupsInfo = () => {
   const [groups, setGroups] = useState([])
   const [showCreate, setShowCreate] = useState(false);
@@ -67,7 +18,7 @@ export const GroupsInfo = () => {
   }
 
   const groupSuccessfullyCreated = () => {
-    setShowCreate(false) 
+    setShowCreate(false)
     fetchGroups()
   }
   useEffect(() => {
@@ -150,7 +101,7 @@ const GroupMembers = ({ group }) => {
 
       <ul className='mx-2 px-2 pt-2'>
         {group?.members?.map((member) => (
-          <li key={member.id} className={`text-md font-normal text-slate-800 px-1`}>
+          <li key={member._id} className={`text-md font-normal text-slate-800 px-1`}>
             {member.username}
           </li>
         )) ?? ['No members']}

@@ -4,12 +4,14 @@ import Button from 'ui-components/button/Button';
 import * as Yup from 'yup';
 import { groupCreate } from 'services/groups';
 import { TagIcon, UserGroupIcon } from '@heroicons/react/20/solid';
+import { user } from 'utils/auth';
 
 function GroupCreation({ onSuccesfullSubmit, onCancel }) {
   const initialValues = {
     name: '',
     description: '',
     category: '',
+    members: [user().sub]
   };
 
   async function handleSubmit(values, { setStatus, setSubmitting }) {
@@ -30,7 +32,7 @@ function GroupCreation({ onSuccesfullSubmit, onCancel }) {
       validationSchema={Yup.object().shape({
         name: Yup.string().max(30).required('Name for the group is required'),
         description: Yup.string().max(255).nullable(),
-        category: Yup.string().max(255).nullable(),
+        category: Yup.string().max(128).required(),
       })}
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {

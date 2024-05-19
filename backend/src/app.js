@@ -10,14 +10,9 @@ const config = require('./config/config');
 // const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
-const authmdlw = require('./middlewares/auth');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
-
-
-const groupRoutes = require('./routes/groups.route')
-const ticketRoutes = require('./routes/ticket.route')
 
 const app = express();
 
@@ -59,10 +54,6 @@ if (config.env === 'production') {
 
 // v1 api routes
 app.use('/v1', routes);
-
-// Paypals Routes
-app.use('/group', groupRoutes)
-app.use('/ticket', ticketRoutes)
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {

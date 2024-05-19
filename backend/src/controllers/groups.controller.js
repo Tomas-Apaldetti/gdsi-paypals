@@ -1,55 +1,41 @@
-const Group = require('../models/group.model')
-const mongoose = require('mongoose');
+const httpStatus = require('http-status');
+const groupService = require('../services/group.service');
+const catchAsync = require('../utils/catchAsync');
 
+const createGroup = catchAsync(async (req, res) => {
+  const creator = req.user._id;
 
-const createGroup = async (args) => {
-  try {
-    const newGroup = new Group({
-      name: args.name,
-      description: args.description,
-      category: args.category,
-      users: [args.user]
-    });
-
-    const savedGroup = await newGroup.save();
-
-    return savedGroup;
-  } catch (error) {
-    console.error('Error creating group:', error);
-    throw error;
+  if(!req.body.members.includes(creator)){
+    return res.status(httpStatus.BAD_REQUEST, 'The creator must be a member of the group')
   }
-};
 
-const getGroups = async (args) => {
-  try {
-    var userId = mongoose.Types.ObjectId(args.userId);
-    const groups = await Group.find({ users: { $in: [userId]}})
+  const group = await groupService.createGroup({
+    ...req.body,
+    creator
+  })
 
-    return groups
-  } catch (error) {
-    console.error('Error fetching the groups', error)
-    throw error
-  }
-}
+  return res.status(httpStatus.CREATED).send(group);
+});
 
-const getGroupUsers = async (req) => {
-  const group_id = mongoose.Types.ObjectId(req.group_id)
+const getGroups = catchAsync(async (req, res) => {
+  const forUser = req.user._id;
 
-  try {
-    const users = await Group.find(
-      { _id: { $in: [group_id] } },
-      { users: 1, _id: 0 }
-    );
+  const groups = await groupService.getGroupForUser(forUser);
 
-    return users[0]?.users
-  } catch (error) {
-    console.error('Error fetching group users', error)
-    throw error
-  }
-}
+  return res.status(httpStatus.OK).send(groups);
+});
+
+const getGroupMembers = catchAsync(async (req, res) => {
+
+  const groupId = req.params.groupId;
+
+  const members = await groupService.getGroupMembers(groupId);
+
+  return res.status(httpStatus.OK).send(members);
+})
 
 module.exports = {
   createGroup,
   getGroups,
-  getGroupUsers
+  getGroupMembers
 };

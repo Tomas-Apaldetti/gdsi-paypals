@@ -1,36 +1,26 @@
-const Ticket = require('../models/ticket.model');
-const mongoose = require('mongoose');
+const httpStatus = require('http-status');
+const ticketService = require('../services/ticket.service');
+const catchAsync = require('../utils/catchAsync');
 
-const createTicket = async (req, res, next) => {
+const createTicket = catchAsync(async (req, res) => {
 
-  try {
-    const newTicket = new Ticket({
-      ...req
-    });
+  const group = req.params.groupId || null;
+  const creator = req.user._id;
 
-    const savedTicket = await newTicket.save();
+  const ticket = await ticketService.createTicket({...req.body, group_id: group, creator})
 
-    return savedTicket;
-  
-  } catch (error) {
-    console.error('Error creating ticket:', error);
-    throw error;
-  }
-};
+  return res.status(httpStatus.CREATED).send(ticket);
+});
 
-const getGroupTickets = async (req) => {
+const getTickets = catchAsync(async (req, res) => {
 
-  const group_id = mongoose.Types.ObjectId(req.group_id)
+  const groupId = req.params.groupId || null;
+  const creator = req.user._id;
+  const tickets = groupId ?
+    await ticketService.getTicketsByGroup(groupId) :
+    await ticketService.getIndividualTickets(creator);
 
-  try {
-    const tickets = await Ticket.find({ group_id: { $in: [group_id]}})
+  return res.status(httpStatus.OK).send(tickets);
+});
 
-    return tickets
-  } catch (error) {
-    console.error('Error fetching group tickets', error)
-    throw error
-  }
-
-}
-
-module.exports = {createTicket, getGroupTickets};
+module.exports = {createTicket, getTickets};

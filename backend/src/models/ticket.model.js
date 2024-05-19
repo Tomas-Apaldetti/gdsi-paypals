@@ -1,19 +1,24 @@
 const mongoose = require("mongoose");
+const { toJSON } = require("./plugins");
 
-const DebtorSchema = mongoose.Schema({
-  _id: { type: mongoose.Types.ObjectId, required: true },
+const debtorSchema = mongoose.Schema({
+  _id: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
   cut: { type: Number, required: true },
 });
 
-const TicketSchema = mongoose.Schema({
-  name: { type: String, default: "" },
-  amount: { type: Number, required: true },
-  creator: { type: mongoose.Types.ObjectId, required: true },
-  group_id: { type: mongoose.Types.ObjectId, required: true },
-  debtors: [DebtorSchema],
-  split_type: { type: String, required: true },
+
+const ticketSchema = mongoose.Schema({
+  name: { type: String, required: true, maxlength:  255, trim: true},
+  amount: { type: Number, required: true , min: 0.01, },
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User'},
+  group_id: { type: mongoose.Types.ObjectId, default: null, ref: 'Group' },
+  debtors: [debtorSchema],
+  split_type: { type: String, enum: ['PERCENTAGE'], required: true },
   category: { type: String, default: "" },
-  description: { type: String, default: "" },
+  comment: { type: String, default: "" },
 });
 
-module.exports = mongoose.model("ticket", TicketSchema);
+// add plugin that converts mongoose to json
+ticketSchema.plugin(toJSON);
+
+module.exports = mongoose.model("Ticket", ticketSchema);

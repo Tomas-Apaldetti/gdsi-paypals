@@ -81,7 +81,7 @@ export const DebtorList = ({ options, defaultSelected = [], onChange, handleBlur
                   {options.map((option) =>
                     selected.includes(option) ? null : (
                       <Listbox.Option
-                        key={option.id}
+                        key={option._id}
                         value={option}
                         className='text-md px-4 border-b py-1 last:border-b-0 border-slate-300 hover:bg-purple-500 hover:text-slate-50 transition'
                       >

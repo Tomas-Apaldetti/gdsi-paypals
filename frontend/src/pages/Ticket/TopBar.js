@@ -5,7 +5,7 @@ import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
 import { Modal } from 'ui-components/modal/Modal';
 import { TicketCreation } from './Creation';
 
-export const TopBar = () => {
+export const TopBar = ({ onCreation }) => {
   const [showCreate, setShowCreate] = useState(false);
 
   return (
@@ -16,7 +16,13 @@ export const TopBar = () => {
       </Button>
 
       <Modal open={showCreate} setOpen={setShowCreate} title={'Create Ticket'} onClose={() => setShowCreate(false)}>
-        <TicketCreation onSuccesfullSubmit={() => {}} onCancel={() => setShowCreate(false)} />
+        <TicketCreation
+          onSuccesfullSubmit={(respBody) => {
+            onCreation && onCreation(respBody);
+            setShowCreate(false);
+          }}
+          onCancel={() => setShowCreate(false)}
+        />
       </Modal>
     </div>
   );

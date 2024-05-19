@@ -1,5 +1,4 @@
 import React from 'react';
-import { getCurrencySymbol } from 'utils/currencySymbol';
 export const Ticket = ({ ticket }) => {
   return (
     <div className='flex mx-4 my-2 bg-slate-50 shadow-sm rounded-sm h-24 hover:shadow-md hover:shadow-purple-100 transition'>
@@ -11,11 +10,11 @@ export const Ticket = ({ ticket }) => {
 
         <div className='grow'>
           <div className='text-slate-800 font-bold uppercase text-end text-4xl'>
-            <span className='text-purple-500 pr-1'>{`${getCurrencySymbol(ticket.value.converted.currency)}${ticket.value.converted.amount}`}</span>
+            <span className='text-purple-500 pr-1'>{`$${ticket.amount}`}</span>
             <span className='font-normal text-slate-500'>/</span>
             <span className='text-green-500 pl-1'>
-              {`${getCurrencySymbol(ticket.value.converted.currency)}${ticket.payments.reduce((acc, payment) => {
-                return acc + payment.amount.amount;
+              {`$${ticket.payments.reduce((acc, payment) => {
+                return acc + payment.amount;
               }, 0)}`}
             </span>
           </div>
@@ -24,10 +23,10 @@ export const Ticket = ({ ticket }) => {
               <UserTag
                 key={debtor.id}
                 name={debtor.name}
-                amount={debtor.amount.amount}
+                amount={debtor.amount}
                 paid={ticket.payments
                   .filter((payment) => payment.from.id === debtor.id)
-                  .reduce((acc, payment) => payment.amount.amount + acc, 0)}
+                  .reduce((acc, payment) => payment.amount + acc, 0)}
               />
             ))}
           </div>
