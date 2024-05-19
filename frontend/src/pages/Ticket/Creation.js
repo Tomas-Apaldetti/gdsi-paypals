@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
 import Button from 'ui-components/button/Button';
 import { classNames } from 'utils/classNames';
@@ -12,6 +12,7 @@ import { DebtorList } from './DebtorList';
 import { groupUsers } from './groupUsers.test.data';
 import { useSearchParams } from 'react-router-dom';
 import { getGroupMembers, getSelfAsDebtor } from 'services/groups';
+import { useAPIData } from 'hooks/useAPIData';
 
 Yup.addMethod(Yup.string, 'jsonArray', function (message) {
   return this.test('jsonArray', message, function (value) {
@@ -33,22 +34,14 @@ Yup.addMethod(Yup.string, 'jsonArray', function (message) {
 
 export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
   const defaultCategory = categories.find(({ id }) => id === 'home');
-  const defaultDebtors = groupUsers;
+  const debtorMyself = getSelfAsDebtor();
+  const [queryparams] = useSearchParams();
 
-  const [queryparams,] = useSearchParams();
-  const [possibleDebtors, setPossibleDebtors] = useState([]);
-
-  useEffect(() => {
-    (async() => {
-      if(setPossibleDebtors.length === 0) return;
-      try{
-        setPossibleDebtors(await getGroupMembers(queryparams.get('group')));
-
-      }catch(e){
-        setPossibleDebtors(getSelfAsDebtor())
-      }
-    })();
-  }, [possibleDebtors, queryparams])
+  const { data: possibleDebtors } = useAPIData(
+    async () => await getGroupMembers(queryparams.get('group')),
+    debtorMyself,
+    debtorMyself,
+  );
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
@@ -69,7 +62,6 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
 
       const body = await response.json();
       onSuccesfullSubmit(body);
-
     } catch (e) {
       setStatus(e.message);
     } finally {
@@ -83,7 +75,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
         name: '',
         amount: 0,
         category: JSON.stringify(defaultCategory),
-        debtors: JSON.stringify(defaultDebtors),
+        debtors: JSON.stringify(possibleDebtors),
         comment: '',
       }}
       validationSchema={Yup.object().shape({
@@ -101,9 +93,10 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
       })}
       onSubmit={handleSubmit}
     >
-      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
+      {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
         return (
           <Form className='max-h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4 transition'>
+            <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
             <LabeledInput
               icon={<TagIcon />}
               id='name'

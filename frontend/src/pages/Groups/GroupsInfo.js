@@ -1,29 +1,22 @@
 import { Modal } from 'ui-components/modal/Modal';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'react-router-dom';
 import { getGroups } from 'services/groups';
+import { useAPIData } from 'hooks/useAPIData';
+import { Loading } from 'logic-components/Loading';
 
 export const GroupsInfo = () => {
-  const [groups, setGroups] = useState([])
   const [showCreate, setShowCreate] = useState(false);
   const [queryparams, setQueryParams] = useSearchParams();
 
-
-  const fetchGroups = async() => {
-    const response = await getGroups()
-    const fetchedGroups = await response.json()
-    setGroups(fetchedGroups.data)
-  }
+  const { data: groups, loading, error, setStale } = useAPIData(getGroups, [], null);
 
   const groupSuccessfullyCreated = () => {
-    setShowCreate(false)
-    fetchGroups()
-  }
-  useEffect(() => {
-    fetchGroups()
-  }, [])
+    setShowCreate(false);
+    setStale(true);
+  };
 
   return (
     <>
@@ -54,38 +47,40 @@ export const GroupsInfo = () => {
         </Modal>
       </span>
 
-      <ul className='mx-2 px-2 pt-2'>
-        {groups.map((group) => (
-          <li
-            key={group._id}
-            className={`text-md font-normal
+      <Loading loading={loading} error={error}>
+        <ul className='mx-2 px-2 pt-2'>
+          {groups.map((group) => (
+            <li
+              key={group._id}
+              className={`text-md font-normal
               ${
                 queryparams.get('group') === String(group._id)
                   ? 'text-purple-500 border-l-2 border-purple-500 under pointer-events-none px-1'
                   : 'text-slate-800 hover:text-purple-500 px-1'
               }
               `}
-          >
-            <button
-              onClick={() => {
-                queryparams.set('group', group._id);
-                setQueryParams(queryparams);
-              }}
             >
-              {' '}
-              {group.name}{' '}
-            </button>
-          </li>
-        ))}
-      </ul>
+              <button
+                onClick={() => {
+                  queryparams.set('group', group._id);
+                  setQueryParams(queryparams);
+                }}
+              >
+                {' '}
+                {group.name}{' '}
+              </button>
+            </li>
+          ))}
+        </ul>
 
-      {queryparams.get('group') ? (
-        <>
-          <span className='flex my-4 mx-2 border-b border-slate-300 shadow-sm' />
+        {queryparams.get('group') ? (
+          <>
+            <span className='flex my-4 mx-2 border-b border-slate-300 shadow-sm' />
 
-          <GroupMembers group={groups.filter((g) => String(g._id) === queryparams.get('group'))[0]} />
-        </>
-      ) : null}
+            <GroupMembers group={groups.filter((g) => String(g._id) === queryparams.get('group'))[0]} />
+          </>
+        ) : null}
+      </Loading>
     </>
   );
 };

@@ -11,7 +11,7 @@ function GroupCreation({ onSuccesfullSubmit, onCancel }) {
     name: '',
     description: '',
     category: '',
-    members: [user().sub]
+    members: [user().sub],
   };
 
   async function handleSubmit(values, { setStatus, setSubmitting }) {
@@ -35,53 +35,54 @@ function GroupCreation({ onSuccesfullSubmit, onCancel }) {
         category: Yup.string().max(128).required(),
       })}
     >
-      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
+      {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
         return (
           <Form className='h-full  w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
-              <LabeledInput
-                icon={<UserGroupIcon />}
-                id='name'
-                label='Name'
-                onChange={handleChange}
-                handleBlur={handleBlur}
-                error={errors}
-                touched={touched}
-              />
-              <LabeledInput
-                icon={<TagIcon />}
-                id='category'
-                label='Category'
-                onChange={handleChange}
-                handleBlur={handleBlur}
-                error={errors}
-                touched={touched}
-              />
+            <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
+            <LabeledInput
+              icon={<UserGroupIcon />}
+              id='name'
+              label='Name'
+              onChange={handleChange}
+              handleBlur={handleBlur}
+              error={errors}
+              touched={touched}
+            />
+            <LabeledInput
+              icon={<TagIcon />}
+              id='category'
+              label='Category'
+              onChange={handleChange}
+              handleBlur={handleBlur}
+              error={errors}
+              touched={touched}
+            />
 
-              <LabeledInput
-                id='description'
-                label='Description'
-                textarea
-                onChange={handleChange}
-                handleBlur={handleBlur}
-                error={errors}
-                touched={touched}
-              />
+            <LabeledInput
+              id='description'
+              label='Description'
+              textarea
+              onChange={handleChange}
+              handleBlur={handleBlur}
+              error={errors}
+              touched={touched}
+            />
 
-              <div className='flex pt-10'>
-                <div className='w-full'></div>
+            <div className='flex pt-10'>
+              <div className='w-full'></div>
 
-                <div className='w-full px-4'>
-                  <Button secondary type='cancel' onClick={onCancel} disabled={isSubmitting}>
-                    <span className='text-md font-semibold tracking-wider'>Cancel</span>
-                  </Button>
-                </div>
-
-                <div className='w-full pl-4'>
-                  <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                    <span className='text-md font-semibold tracking-wider'>Create</span>
-                  </Button>
-                </div>
+              <div className='w-full px-4'>
+                <Button secondary type='cancel' onClick={onCancel} disabled={isSubmitting}>
+                  <span className='text-md font-semibold tracking-wider'>Cancel</span>
+                </Button>
               </div>
+
+              <div className='w-full pl-4'>
+                <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
+                  <span className='text-md font-semibold tracking-wider'>Create</span>
+                </Button>
+              </div>
+            </div>
           </Form>
         );
       }}
