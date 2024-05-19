@@ -14,10 +14,10 @@ const getGroupForUser = async (userId) => {
   return Group.find({
     members: mongoose.Types.ObjectId(userId)
   })
-  .populate({
-     path: 'users',
-     select: '_id username'
-  });
+    .populate({
+      path: 'members',
+      select: '_id username'
+    });
 
 };
 

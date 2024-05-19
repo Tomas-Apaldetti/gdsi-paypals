@@ -1,5 +1,5 @@
 import { Modal } from 'ui-components/modal/Modal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'react-router-dom';
@@ -10,7 +10,6 @@ import { Loading } from 'logic-components/Loading';
 export const GroupsInfo = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [queryparams, setQueryParams] = useSearchParams();
-
   const { data: groups, loading, error, setStale } = useAPIData(getGroups, [], null);
 
   const groupSuccessfullyCreated = () => {
@@ -49,20 +48,19 @@ export const GroupsInfo = () => {
 
       <Loading loading={loading} error={error}>
         <ul className='mx-2 px-2 pt-2'>
-          {groups.map((group) => (
+          {groups?.map((group) => (
             <li
-              key={group._id}
+              key={group.id}
               className={`text-md font-normal
-              ${
-                queryparams.get('group') === String(group._id)
+              ${queryparams.get('group') === String(group.id)
                   ? 'text-purple-500 border-l-2 border-purple-500 under pointer-events-none px-1'
                   : 'text-slate-800 hover:text-purple-500 px-1'
-              }
+                }
               `}
             >
               <button
                 onClick={() => {
-                  queryparams.set('group', group._id);
+                  queryparams.set('group', group.id);
                   setQueryParams(queryparams);
                 }}
               >
@@ -77,7 +75,7 @@ export const GroupsInfo = () => {
           <>
             <span className='flex my-4 mx-2 border-b border-slate-300 shadow-sm' />
 
-            <GroupMembers group={groups.filter((g) => String(g._id) === queryparams.get('group'))[0]} />
+            <GroupMembers group={groups.filter((g) => String(g.id) === queryparams.get('group'))[0]} />
           </>
         ) : null}
       </Loading>
@@ -96,7 +94,7 @@ const GroupMembers = ({ group }) => {
 
       <ul className='mx-2 px-2 pt-2'>
         {group?.members?.map((member) => (
-          <li key={member._id} className={`text-md font-normal text-slate-800 px-1`}>
+          <li key={member.id} className={`text-md font-normal text-slate-800 px-1`}>
             {member.username}
           </li>
         )) ?? ['No members']}

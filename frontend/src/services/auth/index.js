@@ -7,15 +7,16 @@ const PATHS = {
   register: `v1/auth/register`,
 }
 
-export async function login(body){
+export async function login(body) {
+  console.log('BASE_URL: ' + BASE_URL)
   return post(`${BASE_URL}/${PATHS.login}`, body);
 }
 
-export async function logout(){
+export async function logout() {
   const refreshToken = refreshCookie();
-  return post(`${BASE_URL}/${PATHS.logout}`, {refreshToken})
+  return post(`${BASE_URL}/${PATHS.logout}`, { refreshToken })
 }
 
-export async function register(body){
+export async function register(body) {
   return post(`${BASE_URL}/${PATHS.register}`, body)
 }

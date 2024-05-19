@@ -3,10 +3,11 @@ const groupService = require('../services/group.service');
 const catchAsync = require('../utils/catchAsync');
 
 const createGroup = catchAsync(async (req, res) => {
-  const creator = req.user._id;
 
-  if(!req.body.members.includes(creator)){
-    return res.status(httpStatus.BAD_REQUEST, 'The creator must be a member of the group')
+  const creator = req.user._id.toString();
+
+  if (!req.body.members.includes(creator)) {
+    return res.status(httpStatus.BAD_REQUEST, 'The creator must be a member of the group').send()
   }
 
   const group = await groupService.createGroup({

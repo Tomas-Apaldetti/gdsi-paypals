@@ -3,16 +3,15 @@ import { useEffect, useState } from 'react';
 export const useAPIData = (fetcher, defaultData = null, backupData = null) => {
   const [data, setData] = useState(defaultData);
   const [stale, setStale] = useState(true);
-  const [fetching, setFetching] = useState(true);
+  const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
 
-
-
   useEffect(() => {
-    if(!stale) return; // If we already have the correct information, then do not hit endpoint
-    if(fetching) return; // If we are already searching for it, then do not hit endpoint
+    if (!stale) return; // If we already have the correct information, then do not hit endpoint
+    if (fetching) return; // If we are already searching for it, then do not hit endpoint
 
     setFetching(true);
+
     async function fetchInformation() {
       try {
         const response = await fetcher();
@@ -24,7 +23,7 @@ export const useAPIData = (fetcher, defaultData = null, backupData = null) => {
 
         const body = await response.json();
         // Great!, we have the information, put it in data so the user can use it
-        setData(body.data);
+        setData(body);
 
       } catch (e) {
         // Let the user decide if the data is still valid
@@ -39,7 +38,7 @@ export const useAPIData = (fetcher, defaultData = null, backupData = null) => {
 
     fetchInformation()
 
-  },[stale,fetching, fetcher, backupData])
+  }, [stale, fetching, fetcher, backupData])
 
   return {
     data,

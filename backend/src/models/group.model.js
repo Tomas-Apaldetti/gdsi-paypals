@@ -7,13 +7,13 @@ const groupSchema = mongoose.Schema(
     description: { type: String, default: '', maxlength: 255, trim: true },
     category: { type: String, default: '', maxlength: 255, trim: true },
     creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
-    memebers: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    members: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
   },
   {
     timestamps: true,
   },
 );
 
-ticketSchema.plugin(toJSON);
+groupSchema.plugin(toJSON);
 
 module.exports = mongoose.model('Group', groupSchema);
