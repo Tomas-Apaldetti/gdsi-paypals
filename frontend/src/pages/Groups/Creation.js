@@ -4,6 +4,9 @@ import Button from 'ui-components/button/Button';
 import * as Yup from 'yup';
 import { groupCreate } from 'services/groups';
 import { TagIcon, UserGroupIcon } from '@heroicons/react/20/solid';
+import { useAPIData } from 'hooks/useAPIData';
+import { getUsers } from 'services/users';
+import { MultipleDropwDownList } from 'ui-components/input/MultipleDropwDownList';
 import { user } from 'utils/auth';
 
 function GroupCreation({ onSuccesfullSubmit, onCancel }) {
@@ -11,12 +14,14 @@ function GroupCreation({ onSuccesfullSubmit, onCancel }) {
     name: '',
     description: '',
     category: '',
-    members: [user().sub],
+    members: JSON.stringify([]),
   };
+
+  const { data: users } = useAPIData(getUsers, { results: [] }, { results: [] });
 
   async function handleSubmit(values, { setStatus, setSubmitting }) {
     try {
-      await groupCreate(values);
+      await groupCreate({...values, members: JSON.parse(values.members).map(u => u.id)});
       onSuccesfullSubmit();
     } catch (e) {
       setStatus(e.message);
@@ -32,7 +37,8 @@ function GroupCreation({ onSuccesfullSubmit, onCancel }) {
       validationSchema={Yup.object().shape({
         name: Yup.string().max(30).required('Name for the group is required'),
         description: Yup.string().max(255).nullable(),
-        category: Yup.string().max(128).required(),
+        category: Yup.string().max(128).required('A category for the group is required'),
+        members: Yup.string().jsonArray('There must be at least one other member besides you'),
       })}
     >
       {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
@@ -52,6 +58,31 @@ function GroupCreation({ onSuccesfullSubmit, onCancel }) {
               icon={<TagIcon />}
               id='category'
               label='Category'
+              onChange={handleChange}
+              handleBlur={handleBlur}
+              error={errors}
+              touched={touched}
+            />
+
+            <MultipleDropwDownList
+              id={'members'}
+              label={'Members'}
+              options={users.results.filter(u => u.id !== user().sub)}
+              initial={[]}
+              inputRender={({ selected }) => `${selected.map((u) => u.username).join(' - ')}`}
+              optionRender={({ value, isSelected }) => (
+                <>
+                  <span
+                    className={`
+                    w-full block text-md px-4 border-b py-1 last:border-b-0 border-slate-300
+                      ${isSelected ? 'bg-purple-500 text-slate-50' : ''}
+                      ${isSelected ? 'hover:bg-red-700' : 'hover:bg-purple-500 hover:text-slate-50'}
+                    transition`}
+                  >
+                    {value.username}
+                  </span>
+                </>
+              )}
               onChange={handleChange}
               handleBlur={handleBlur}
               error={errors}

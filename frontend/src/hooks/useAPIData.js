@@ -15,7 +15,6 @@ export const useAPIData = (fetcher, defaultData = null, backupData = null) => {
     async function fetchInformation() {
       try {
         const response = await fetcher();
-
         if (!response.ok) {
           const body = await response.json();
           throw new Error(body.message);

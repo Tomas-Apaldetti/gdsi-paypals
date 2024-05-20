@@ -26,7 +26,7 @@ export default function List() {
       <TopBar onCreation={() => setStale(true)} />
       <Loading loading={loading} error={error}>
         {tickets.map((ticket) => (
-          <Ticket ticket={ticket} key={ticket.id} />
+          <Ticket ticket={ticket} key={ticket._id} />
         ))}
       </Loading>
     </div>
