@@ -9,7 +9,6 @@ import { Form, Formik } from 'formik';
 import { CurrencyDollarIcon, TagIcon } from '@heroicons/react/20/solid';
 import * as Yup from 'yup';
 import { DebtorList } from './DebtorList';
-import { groupUsers } from './groupUsers.test.data';
 import { useSearchParams } from 'react-router-dom';
 import { getGroupMembers, getSelfAsDebtor } from 'services/groups';
 import { useAPIData } from 'hooks/useAPIData';
@@ -98,7 +97,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
       })}
       onSubmit={handleSubmit}
     >
-      {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
+      {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched}) => {
         return (
           <Form className='max-h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4 transition'>
             <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
@@ -146,12 +145,17 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
                   </span>
                 );
               }}
+              onChange={handleChange}
+              handleBlur={handleBlur}
+              error={errors}
+              touched={touched}
             />
+
 
             <DebtorList
               options={possibleDebtors}
-              defaultSelected={possibleDebtors}
-              onChange={handleChange}
+              initial={possibleDebtors}
+              handleChange={handleChange}
               handleBlur={handleBlur}
               error={errors}
               touched={touched}
@@ -162,7 +166,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
               label='Comment'
               textarea
               placeholder='Enter your comment'
-              onChange={handleChange}
+              handleChange={handleChange}
               error={errors}
               touched={touched}
               handleBlur={handleBlur}

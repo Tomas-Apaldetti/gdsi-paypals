@@ -1,114 +1,40 @@
-import { Listbox, Transition } from '@headlessui/react';
-import { ChevronUpDownIcon, XMarkIcon } from '@heroicons/react/20/solid';
-import React, { useRef, useState } from 'react';
-import { triggerOnChange } from 'utils/triggerOnChange';
+import { XMarkIcon } from '@heroicons/react/20/solid';
+import { MultipleDropwDownList } from 'ui-components/input/MultipleDropwDownList';
+import React from 'react';
 
-export const DebtorList = ({ options, defaultSelected = [], onChange, handleBlur, error = false, touched = false }) => {
-  const isTouched = typeof touched === 'object' ? touched['debtors'] : touched;
-  const errorDesc = typeof error === 'object' ? error['debtors'] : error;
-  const showError = isTouched && errorDesc;
-
-  const [selected, setSelected] = useState(defaultSelected);
-  const inputRef = useRef(null);
-  const selectedWrapper = (newValue) => {
-    triggerOnChange('input', inputRef, JSON.stringify(newValue));
-    setSelected(newValue);
-  };
-
+export const DebtorList = ({ options, initial, handleChange, handleBlur, error = false, touched = false }) => {
   return (
     <div className='flex flex-col py-2 w-full'>
-      <Listbox value={selected} onChange={selectedWrapper} multiple name='debtors'>
-        {({ open }) => (
+      <MultipleDropwDownList
+        id={'debtors'}
+        label={'Debtors'}
+        options={options}
+        initial={initial}
+        inputRender={({ selected }) => `${selected.length} debtors selected`}
+        optionRender={({ value, isSelected }) => (
           <>
-            <Listbox.Label htmlFor={'debtors'} className='text-md sm:text-sm tracking-wide text-slate-700'>
-              Debtors
-            </Listbox.Label>
-            <div className='relative'>
-              <Listbox.Button
-                className={`
-                relative
-                mt-2
-                cursor-default
-                text-md
-                sm:text-sm
-                w-full
-                rounded-sm
-                bg-white
-                px-2
-                py-2
-                border
-                ${showError ? 'border-red-400' : 'border-slate-300'}
-                focus:ring-2
-                focus:ring-purple-500
-                text-left
-                `}
+            {isSelected ? null : (
+              <span
+                className={`w-full block text-md px-4 border-b py-1 last:border-b-0 border-slate-300 hover:bg-purple-500 hover:text-slate-50 transition`}
               >
-                <span className='px-2'>{`${selected.length} selected debtors`}</span>
-                <span className='pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2'>
-                  <ChevronUpDownIcon className='h-5 w-5 text-slate-500' aria-hidden='true' />
-                </span>
-              </Listbox.Button>
-
-              <Transition
-                show={open}
-                enter='transition duration-200 ease-out'
-                enterFrom='transform scale-y-0 opacity-0'
-                enterTo='transform scale-y-100 opacity-100'
-                leave='transition duration-200 ease-out'
-                leaveFrom='transform scale-y-100 opacity-100'
-                leaveTo='transform scale-y-0 opacity-0'
-              >
-                <Listbox.Options
-                  className='
-                absolute
-                z-10
-                mt-1
-                max-h-56
-                w-full
-                overflow-auto
-                rounded-sm
-                bg-white
-                py-1
-                text-base
-                shadow-lg
-                ring-2
-                ring-slate-800
-                ring-opacity-5
-                focus:outline-none
-                sm:text-sm
-              '
-                >
-                  {options.map((option) =>
-                    selected.includes(option) ? null : (
-                      <Listbox.Option
-                        key={option._id}
-                        value={option}
-                        className='text-md px-4 border-b py-1 last:border-b-0 border-slate-300 hover:bg-purple-500 hover:text-slate-50 transition'
-                      >
-                        {option.username}
-                      </Listbox.Option>
-                    ),
-                  )}
-                </Listbox.Options>
-              </Transition>
-            </div>
-            <input
-              id={'debtors'}
-              name={'debtors'}
-              ref={inputRef}
-              className='hidden'
-              onChange={onChange}
-              onBlur={handleBlur}
-            />
+                {value.username}
+              </span>
+            )}
           </>
         )}
-      </Listbox>
-      {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}
-      <div className='flex w-full mt-2 gap-2'>
-        {selected.map((debtor) => (
-          <DebtorBtn key={debtor.id} value={debtor} selected={selected} setSelected={selectedWrapper} />
-        ))}
-      </div>
+        selectedRender={({ selected, setSelected }) => (
+          <div className='flex w-full mt-2 gap-2'>
+            {selected.map((debtor) => (
+              <DebtorBtn key={debtor.id} value={debtor} selected={selected} setSelected={setSelected} />
+            ))}
+          </div>
+        )}
+
+        onChange={handleChange}
+        handleBlur={handleBlur}
+        error={error}
+        touched={touched}
+      />
     </div>
   );
 };
