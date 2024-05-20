@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from 'ui-components/button/Button';
 import { Card } from 'ui-components/card/Card';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
@@ -8,31 +8,51 @@ import * as Yup from 'yup';
 import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { Form, Formik } from 'formik';
 import { password } from './password.yup';
-import { login } from 'services/auth';
+import { login, refresh } from 'services/auth';
 import { useAuth } from 'context/AuthContextProvider';
 import { AtSymbolIcon, KeyIcon } from '@heroicons/react/20/solid';
+import { refreshCookie } from 'utils/auth';
 
 export const Login = () => {
-
   const navigate = useNavigate();
   const auth = useAuth();
 
+  useEffect(() => {
+    async function tryRefresh() {
+      if (!refreshCookie()) {
+        return;
+      }
+      try {
+        const response = await refresh();
+        if (!response.ok) {
+          // do nothing, lol, let the user login again
+          return;
+        }
+        const body = await response.json();
+        auth.login(body);
+        navigate('/');
+      } catch (_) {}
+    }
+
+    tryRefresh();
+  }, [auth, navigate]);
+
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
-    try{
+    try {
       const response = await login(values);
-      if(!response.ok){
+      if (!response.ok) {
         const body = await response.json();
         throw new Error(body.message);
       }
       const body = await response.json();
       auth.login(body.tokens);
       navigate('/');
-    }catch(e){
-      setStatus(e.message)
-    }finally{
-      setSubmitting(false)
+    } catch (e) {
+      setStatus(e.message);
+    } finally {
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
     <BaseBackground>

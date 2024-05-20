@@ -25,7 +25,7 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, error =
         selectedRender={({ selected, setSelected }) => (
           <div className='flex w-full mt-2 gap-2'>
             {selected.map((debtor) => (
-              <DebtorBtn key={debtor.id} value={debtor} selected={selected} setSelected={setSelected} />
+              <DebtorBtn key={debtor.id} value={debtor} amount={`${100/selected.length} %`} selected={selected} setSelected={setSelected} />
             ))}
           </div>
         )}
@@ -39,10 +39,11 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, error =
   );
 };
 
-const DebtorBtn = ({ value, selected, setSelected }) => {
+const DebtorBtn = ({ value, amount, selected, setSelected }) => {
   return (
     <div className='flex items-center justify-center w-fit rounded-sm border border-slate-400 text-slate-500 has-[button:hover]:border-red-400 has-[button:hover]:text-red-400 transition'>
       <span className='pl-2'>{value.username}</span>
+      <span className='ml-2 pl-2 border-l border-slate-400'>{amount}</span>
       <button
         onClick={(e) => {
           e.preventDefault();

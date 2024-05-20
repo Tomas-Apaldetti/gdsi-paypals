@@ -16,7 +16,7 @@ export async function stdFetch(url, config = {}) {
   if (!config.headers['Content-Type']) {
     config.headers['Content-Type'] = 'application/json';
   }
-  if (!config.headers['Authorization']) {
+  if (!config.headers['Authorization'] && auth) {
     config.headers['Authorization'] = `Bearer ${auth}`;
   }
 
