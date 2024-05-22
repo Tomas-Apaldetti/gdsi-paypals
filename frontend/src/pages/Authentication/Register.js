@@ -52,9 +52,13 @@ export const Register = () => {
   return (
     <BaseBackground>
       <Card>
-        <div className='font-medium self-center text-3xl sm:text-3xl text-slate-700'>Welcome to PayPals</div>
-
-        <div className='mt-10'>
+        <div className='font-bold self-center text-3xl sm:text-3xl text-slate-700'> 
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-500">Welcome!</span>
+        </div>
+        <div className='mt-4 self-center text-xl text-center sm:text-sm text-slate-700'>
+          Enter your data to create your account
+        </div>
+        <div className='mt-5'>
           <Formik
             initialValues={{
               username: '',
@@ -152,7 +156,7 @@ export const Register = () => {
                     touched={touched}
                   />
 
-                  <div className='mt-10' />
+                  <div className='mt-3' />
 
                   <LabeledInput
                     icon={<AtSymbolIcon />}
@@ -190,7 +194,7 @@ export const Register = () => {
 
                   <div className='flex w-full mt-3'>
                     <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                      <span className='mr-2 text-lg sm:text-md'>Register</span>
+                      <span className='mr-2 font-semibold text-lg sm:text-md'>Register</span>
                     </Button>
                   </div>
                 </Form>
@@ -201,7 +205,7 @@ export const Register = () => {
 
         <Link to='/login' className='mt-10 text-sm font-normal text-center'>
           Already have an account?
-          <span className='ml-2 font-bold text-purple-500'>Sign In</span>
+          <span className='ml-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-600'>Sign In</span>
         </Link>
       </Card>
     </BaseBackground>

@@ -42,7 +42,7 @@ export const LabeledInput = ({
 
   return (
     <div className='flex flex-col py-2 w-full'>
-      <label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700'>
+      <label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>
         {label}
       </label>
       {

@@ -42,7 +42,7 @@ export const DropdownList = ({ id,
       }}>
         {({ open }) => (
           <>
-            <Listbox.Label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700'>{label}</Listbox.Label>
+            <Listbox.Label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>{label}</Listbox.Label>
             <div className='relative'>
               <Listbox.Button className={`
                 relative

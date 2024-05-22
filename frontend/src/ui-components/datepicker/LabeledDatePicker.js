@@ -19,8 +19,8 @@ export const LabeledDatePicker = ({id, label, value, onChange, handleBlur, error
   const showError = isTouched && errorDesc;
 
   return (
-    <div className='flex flex-col mb-5'>
-      <label id={id} className='mb-1 text-md sm:text-sm tracking-wide text-slate-700'>
+    <div className='flex flex-col mt-3 mb-3'>
+      <label id={id} className='mb-1 text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>
         {label}
       </label>
       <input id={id} name={id} ref={inputRef} type='text' className='hidden' onChange={onChange} onBlur={handleBlur}/>

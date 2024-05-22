@@ -57,7 +57,9 @@ export const Login = () => {
   return (
     <BaseBackground>
       <Card>
-        <div className='font-medium self-center text-3xl sm:text-3xl text-slate-700'>Welcome Back</div>
+        <div className='font-bold self-center text-3xl sm:text-3xl text-slate-700'> 
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-500">Welcome Back!</span>
+        </div>
         <div className='mt-4 self-center text-xl text-center sm:text-sm text-slate-700'>
           Enter your credentials to access your account
         </div>
@@ -76,7 +78,7 @@ export const Login = () => {
           >
             {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
               return (
-                <Form>
+                <Form >
                   <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
                   <LabeledInput
                     icon={<AtSymbolIcon />}
@@ -102,8 +104,8 @@ export const Login = () => {
                   />
 
                   <div className='flex w-full mt-3'>
-                    <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                      <span className='mr-2 text-lg sm:text-md'>Sign In</span>
+                    <Button type='submit' onClick={handleSubmit} disabled={isSubmitting} >
+                      <span className='mr-2 font-semibold text-lg sm:text-md'>Sign In</span>
                       <span>
                         <svg
                           className='h-6 w-6'
@@ -127,7 +129,7 @@ export const Login = () => {
 
         <Link to='/register' className='mt-10 text-sm font-normal text-center'>
           Don't have an account yet?
-          <span className='ml-2 font-bold text-purple-500'>Register Now</span>
+          <span className='ml-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-600'>Register Now</span>
         </Link>
       </Card>
     </BaseBackground>
