@@ -152,7 +152,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
                 label='Comment'
                 textarea
                 placeholder='Enter your comment'
-                handleChange={handleChange}
+                onChange={handleChange}
                 error={errors}
                 touched={touched}
                 handleBlur={handleBlur}

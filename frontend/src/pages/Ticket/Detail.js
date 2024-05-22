@@ -68,7 +68,6 @@ export const TicketDetail = ({ ticket }) => {
       <LabeledInput
         id='comment'
         label='Comment'
-        textarea
         placeholder='Enter your comment'
         defaultValue={ticket.comment}
         setDisabled={'disabled'}

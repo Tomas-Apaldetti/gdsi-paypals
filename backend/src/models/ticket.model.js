@@ -15,7 +15,7 @@ const ticketSchema = mongoose.Schema({
   debtors: [debtorSchema],
   split_type: { type: String, enum: ['PERCENTAGE'], required: true },
   category: { type: String, default: "" },
-  comment: { type: String, default: "" },
+  comment: { type: String, default: '', maxlength: 255, trim: true },
 });
 
 // add plugin that converts mongoose to json
