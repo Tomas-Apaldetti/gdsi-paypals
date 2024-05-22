@@ -17,6 +17,10 @@ router.
   .get(auth('TODO'), validate(groupValidation.getMembers), groupController.getGroupMembers)
 
 router.
+  route('/:groupId/members')
+  .post(auth('TODO'), validate(groupValidation.addMembers), groupController.addMembersToGroups)
+
+router.
   use('/:groupId/tickets', validate(groupValidation.groupIdParam),ticketRoute.maybeGroupRouter)
 
 module.exports = router;

@@ -1,6 +1,7 @@
 import { Modal } from 'ui-components/modal/Modal';
 import React, { useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
+import AddMembersForm from 'pages/Groups/AddMembersForm';
 import { PlusIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'react-router-dom';
 import { getGroups } from 'services/groups';
@@ -16,6 +17,10 @@ export const GroupsInfo = () => {
     setShowCreate(false);
     setStale(true);
   };
+
+  const fetchGroupInformation = () => {
+    setStale(true)
+  }
 
   return (
     <>
@@ -76,21 +81,33 @@ export const GroupsInfo = () => {
           <>
             <span className='flex my-4 mx-2 border-b border-slate-300 shadow-sm' />
 
-            <GroupMembers group={groups.filter((g) => String(g.id) === queryparams.get('group'))[0]} />
+            <GroupMembers group={groups.filter((g) => String(g.id) === queryparams.get('group'))[0]} onNewMembersAdded={fetchGroupInformation}/>
           </>
         ) : null}
       </Loading>
     </>
   );
 };
-const GroupMembers = ({ group }) => {
+const GroupMembers = ({ group, onNewMembersAdded }) => {
+  const [addMembers, setAddMembers] = useState(false)
+  const [queryparams, _setQueryParams] = useSearchParams();
+  const groupId = queryparams.get('group')
+  const membersUpdated = () => {
+    onNewMembersAdded()
+    setAddMembers(false)
+  }
+  const membersIds = group?.members?.map(x => x.id)
+
   return (
     <>
       <span className='flex justify-between mx-2 px-2 pt-4 pb-2 border-b border-purple-500'>
         <h2 className='text-xltext-slate-800 font-medium '>Members</h2>
-        <button className='text-slate-800 transition hover:text-purple-500'>
+        <button className='text-slate-800 transition hover:text-purple-500' onClick={() => setAddMembers(!addMembers)}>
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
+        <Modal open={addMembers} setOpen={setAddMembers} title={'Add Members'} onClose={() => setAddMembers(false)}>
+          <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={membersIds}/>
+        </Modal>
       </span>
 
       <ul className='mx-2 px-2 pt-2'>

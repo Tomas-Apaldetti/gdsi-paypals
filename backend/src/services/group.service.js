@@ -41,8 +41,24 @@ const getGroupMembers = async (groupId, forUser) => {
   return list.members;
 };
 
+const addMembersToGroup = async (groupId, members) => {
+  if (!groupId || members.length == 0) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
+  }
+
+  const updatedGroup = await Group.updateOne({ _id: mongoose.Types.ObjectId(groupId) }, { $push: { members: { $each: members } } })
+
+  if (!updatedGroup) {
+
+    throw new ApiError(httpStatus.NOT_FOUND, `Group ${groupId} not found for user ${forUser}`);
+  }
+
+  return updatedGroup.members
+}
+
 module.exports = {
   createGroup,
   getGroupForUser,
   getGroupMembers,
+  addMembersToGroup
 };

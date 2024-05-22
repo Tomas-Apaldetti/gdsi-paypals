@@ -35,8 +35,17 @@ const getGroupMembers = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).send(members);
 })
 
+const addMembersToGroups = catchAsync(async (req, res) => {
+  const groupId = req.params.groupId;
+
+  const members = await groupService.addMembersToGroup(groupId, req.body.members);
+
+  return res.status(httpStatus.OK).send(members); 
+})
+
 module.exports = {
   createGroup,
   getGroups,
-  getGroupMembers
+  getGroupMembers,
+  addMembersToGroups 
 };

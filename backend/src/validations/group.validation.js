@@ -18,6 +18,13 @@ const groupIdParam = {
   })
 }
 
+const addMembers = {
+  body: Joi.object().keys({
+    members: Joi.array().required().min(1).items(
+      Joi.string().custom(objectId)
+    ).unique() 
+  })
+}
 const getMembers = {
   ...groupIdParam
 }
@@ -25,5 +32,6 @@ const getMembers = {
 module.exports = {
   groupIdParam,
   getMembers,
-  createGroup
+  createGroup,
+  addMembers
 }
