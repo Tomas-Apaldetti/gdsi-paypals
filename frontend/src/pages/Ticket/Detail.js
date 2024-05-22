@@ -60,7 +60,7 @@ export const TicketDetail = ({ ticket }) => {
       </label>
         <div className='flex w-full mt-2 gap-2'>
           {ticket.debtors.map((debtor) => (
-            <DebtorBtn key={debtor.id} value={debtor} amount={`${100/ticket.debtors.length} %`} />
+            <DebtorBtn key={debtor.id} value={debtor} amount={`${Math.round(100/ticket.debtors.length)} %`} />
           ))}
         </div>
       </div>

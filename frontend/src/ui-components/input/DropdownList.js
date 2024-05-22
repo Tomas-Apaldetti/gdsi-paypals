@@ -55,14 +55,13 @@ export const DropdownList = ({ id,
                 sm:text-sm
                 w-full
                 rounded-sm
-                bg-white
                 px-2
                 py-2
                 border
                 ${showError ? 'border-red-400' : 'border-slate-300'}
-                ${setDisabled !== '' ? 'bg-[#f1f3f6]' : ''}
                 focus:ring-2
                 focus:ring-purple-500
+                ${setDisabled !== '' ? 'bg-[#f1f3f6]' : 'bg-white'}
                 `}>
                 {
                   <span className='flex items-center'>
