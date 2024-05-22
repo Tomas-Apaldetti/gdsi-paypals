@@ -1,7 +1,17 @@
-import React from 'react';
-export const Ticket = ({ ticket }) => {
+import React, { useState } from 'react';
+import { Modal } from 'ui-components/modal/Modal';
+import { TicketDetail } from './Detail';
+
+export const Ticket = ({ ticket, onClick = '' }) => {
+  const [showView, setShowView] = useState(false);
+
   return (
-    <div className='flex mx-4 my-2 bg-slate-50 shadow-sm rounded-sm h-24 hover:shadow-md hover:shadow-purple-100 transition'>
+    <>
+    <Modal open={showView} setOpen={setShowView} title={'Ticket Detail'} onClose={() => setShowView(false)}>
+      <TicketDetail ticket={ticket}/>
+    </Modal>
+    
+    <div onClick={() => setShowView(true)} className='flex mx-4 my-2 bg-slate-50 shadow-sm rounded-sm h-24 hover:shadow-md hover:shadow-purple-100 transition cursor-pointer'>
       <div className='w-full p-2 flex justify-between'>
         <div className='max-w-72 overflow-clip text-ellipsis mr-10'>
           <h2 className='text-lg font-medium text-slate-800 tracking-normal'>{ticket.name}</h2>
@@ -35,7 +45,7 @@ export const Ticket = ({ ticket }) => {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
   );
 };
 

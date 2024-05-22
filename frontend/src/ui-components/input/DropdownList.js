@@ -26,6 +26,7 @@ export const DropdownList = ({ id,
   renderOption = defaultRenderOption,
   handleBlur,
   error = false,
+  setDisabled = '',
   touched = false }) => {
   const [selected, setSelected] = useState(initial);
   const inputRef = useRef(null);
@@ -39,7 +40,9 @@ export const DropdownList = ({ id,
       <Listbox name={id} value={selected} onChange={(newValue) => {
         triggerOnChange('input', inputRef, JSON.stringify(newValue))
         setSelected(newValue);
-      }}>
+      }}
+      disabled={setDisabled}
+      >
         {({ open }) => (
           <>
             <Listbox.Label htmlFor={id} className='text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>{label}</Listbox.Label>
@@ -57,6 +60,7 @@ export const DropdownList = ({ id,
                 py-2
                 border
                 ${showError ? 'border-red-400' : 'border-slate-300'}
+                ${setDisabled !== '' ? 'bg-[#f1f3f6]' : ''}
                 focus:ring-2
                 focus:ring-purple-500
                 `}>
@@ -131,7 +135,7 @@ export const DropdownList = ({ id,
                 </Listbox.Options>
               </Transition>
             </div>
-            <input id={id} name={id} ref={inputRef} className='hidden' onChange={onChange} onBlur={handleBlur}/>
+            <input id={id} name={id} ref={inputRef} className='hidden' onChange={onChange} onBlur={handleBlur} />
           </>
         )}
       </Listbox>

@@ -13,6 +13,8 @@ export const LabeledInput = ({
   handleBlur,
   error,
   touched,
+  defaultValue = '',
+  setDisabled = ''
 }) => {
   const isTouched = typeof touched === 'object' ? touched[id] : touched;
   const errorDesc = typeof error === 'object' ? error[id] : error;
@@ -54,6 +56,7 @@ export const LabeledInput = ({
           onChange={onChange}
           onBlur={handleBlur}
           className={`${inputStyle} resize-y max-h-96 min-h-10 overflow-y-auto`}
+          disabled={setDisabled}
         />
         :
         <div className='relative'>
@@ -66,6 +69,8 @@ export const LabeledInput = ({
             placeholder={placeholder}
             onChange={onChange}
             onBlur={handleBlur}
+            defaultValue={defaultValue}
+            disabled={setDisabled}
           />
           {icon && inputIcon}
         </div>
