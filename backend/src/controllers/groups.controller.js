@@ -35,17 +35,34 @@ const getGroupMembers = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).send(members);
 })
 
-const addMembersToGroups = catchAsync(async (req, res) => {
+const createInvitesForGroup = catchAsync(async (req, res) => {
   const groupId = req.params.groupId;
+  const inviter = req.user._id;
 
-  const members = await groupService.addMembersToGroup(groupId, req.body.members);
+  await groupService.createInvitesForMembers(groupId, inviter, req.body.members);
 
-  return res.status(httpStatus.OK).send(members); 
+  return res.status(httpStatus.NO_CONTENT).send({});
+})
+
+const respondInvite = catchAsync(async (req, res) => {
+  const groupId = req.params.groupId;
+  const inviteId = req.params.inviteId;
+  const whoAnswers = req.user._id;
+  const response = req.body.answer;
+
+  if(response === "ACCEPT"){
+    await groupService.acceptInvite(groupId, whoAnswers, inviteId);
+  }else{
+    await groupService.rejectInvite(groupId, whoAnswers, inviteId);
+  }
+
+  return res.status(httpStatus.NO_CONTENT).send({})
 })
 
 module.exports = {
   createGroup,
   getGroups,
   getGroupMembers,
-  addMembersToGroups 
+  createInvitesForGroup,
+  respondInvite
 };

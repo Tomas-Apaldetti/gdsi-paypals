@@ -2,6 +2,7 @@ const express = require('express');
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const ticketRoute = require('./ticket.route');
+const notificationRouter = require('./notifications.route');
 const groupRouter = require('./groups.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/groups',
     route: groupRouter
+  },
+  {
+    path: '/notifications',
+    route: notificationRouter
   }
 ];
 

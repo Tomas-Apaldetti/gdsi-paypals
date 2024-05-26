@@ -1,5 +1,5 @@
 import { Modal } from 'ui-components/modal/Modal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
 import AddMembersForm from 'pages/Groups/AddMembersForm';
 import { PlusIcon } from '@heroicons/react/20/solid';
@@ -7,11 +7,21 @@ import { useSearchParams } from 'react-router-dom';
 import { getGroups } from 'services/groups';
 import { useAPIData } from 'hooks/useAPIData';
 import { Loading } from 'logic-components/Loading';
+import { useNotifications } from 'context/NotificationContextProvider';
 
 export const GroupsInfo = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [queryparams, setQueryParams] = useSearchParams();
   const { data: groups, loading, error, setStale } = useAPIData(getGroups, [], null);
+
+  const {subscribe, unsuscribe} = useNotifications();
+
+  useEffect(()=>{
+    subscribe('GROUP_REQUEST', 'GROUP-INFO', () => {
+      setStale(true)
+    })
+    return () => unsuscribe('GROUP_REQUEST', 'GROUP-INFO')
+  }, [setStale])
 
   const groupSuccessfullyCreated = () => {
     setShowCreate(false);
@@ -90,7 +100,7 @@ export const GroupsInfo = () => {
 };
 const GroupMembers = ({ group, onNewMembersAdded }) => {
   const [addMembers, setAddMembers] = useState(false)
-  const [queryparams, _setQueryParams] = useSearchParams();
+  const [queryparams] = useSearchParams();
   const groupId = queryparams.get('group')
   const membersUpdated = () => {
     onNewMembersAdded()
