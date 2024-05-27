@@ -99,6 +99,7 @@ export const GroupsInfo = () => {
   );
 };
 const GroupMembers = ({ group, onNewMembersAdded }) => {
+
   const [addMembers, setAddMembers] = useState(false)
   const [queryparams] = useSearchParams();
   const groupId = queryparams.get('group')
@@ -106,8 +107,20 @@ const GroupMembers = ({ group, onNewMembersAdded }) => {
     onNewMembersAdded()
     setAddMembers(false)
   }
-  const membersIds = group?.members?.map(x => x.id)
+  if(!group){
+    return <></>
+  }
 
+  const membersIds = group?.members?.map(x => x.id);
+
+  const involvedIds = membersIds?.concat(
+    group?.invites?.filter(invite => {
+        return (invite.type === 'PERSONAL' && invite.status === 'PENDING')
+      })
+      .map(invite => invite.for) || []
+  );
+
+  console.log(membersIds, involvedIds);
   return (
     <>
       <span className='flex justify-between mx-2 px-2 pt-4 pb-2 border-b border-purple-500'>
@@ -116,7 +129,7 @@ const GroupMembers = ({ group, onNewMembersAdded }) => {
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
         <Modal open={addMembers} setOpen={setAddMembers} title={'Add Members'} onClose={() => setAddMembers(false)}>
-          <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={membersIds}/>
+          <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={involvedIds}/>
         </Modal>
       </span>
 

@@ -5,7 +5,8 @@ const PATHS = {
   create: 'v1/groups',
   get: 'v1/groups',
   getMembersForGroup: (group) => `v1/groups/${group}/members`,
-  addMembertToGroup: (group) => `v1/groups/${group}/members`
+  addMembertToGroup: (group) => `v1/groups/${group}/members`,
+  answerInvite: (group,invite) => `v1/groups/${group}/invites/${invite}/response`
 };
 
 export async function groupCreate(body) {
@@ -26,7 +27,7 @@ export async function getGroupMembers(group) {
 export async function addMembersToGroup(members, group) {
   console.log(members)
   console.log(group)
-  return post(`${BASE_URL}/${PATHS.addMembertToGroup(group)}`, members) 
+  return post(`${BASE_URL}/${PATHS.addMembertToGroup(group)}`, members)
 }
 
 export function getSelfAsDebtor() {
@@ -38,3 +39,12 @@ export function getSelfAsDebtor() {
       },
     ]
 }
+
+export async function acceptInvite(groupId, inviteId){
+  return post(`${BASE_URL}/${PATHS.answerInvite(groupId, inviteId)}`, {answer: 'ACCEPT'})
+}
+
+export async function denyInvite(groupId, inviteId){
+  return post(`${BASE_URL}/${PATHS.answerInvite(groupId, inviteId)}`, {answer: 'DENY'})
+}
+

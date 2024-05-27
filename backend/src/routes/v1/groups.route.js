@@ -19,7 +19,7 @@ router
 
 router
   .route('/:groupId/invites/:inviteId/response')
-  .post(auth('TODO'), validate(groupValidation.inviteResponse), groupController.respondInvite);
+  .post(auth('TODO'),validate(groupValidation.inviteResponse), groupController.respondInvite);
 
 router.use('/:groupId/tickets', validate(groupValidation.groupIdParam), ticketRoute.maybeGroupRouter);
 

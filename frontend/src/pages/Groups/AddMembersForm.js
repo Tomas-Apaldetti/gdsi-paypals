@@ -12,7 +12,7 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
   };
 
   const { data: users } = useAPIData(getUsers, { results: [] }, { results: [] });
-
+  console.log(users);
   async function handleSubmit(values, { setStatus, setSubmitting }) {
     try {
       await addMembersToGroup({ members: JSON.parse(values.members).map(u => u.id)}, groupId);
@@ -30,12 +30,12 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={Yup.object().shape({
-        members: Yup.string().jsonArray('There must be at least one other member besides you'),
+        members: Yup.string().jsonArray('You must add at least one extra member'),
       })}
     >
       {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched }) => {
         return (
-          <Form className='h-full  w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
+          <Form className='max-h-72 w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4'>
             <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
             <MultipleDropwDownList
               id={'members'}

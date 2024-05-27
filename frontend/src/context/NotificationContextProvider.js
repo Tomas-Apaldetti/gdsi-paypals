@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useReducer} from 'react';
-import { notifications } from './notifications.test';
+import { getNotifications } from 'services/notifications';
 
 const NotificationContext = createContext();
 
@@ -49,7 +49,9 @@ const actors = {
       ...state,
       notifications: state.notifications.filter((notification) => notification !== action.notification)
     };
-    state.subscribers[action.notification.notificationType]?.forEach(sub => sub.cb())
+    console.log(state.subscribers);
+    console.log(action.notification.type);
+    state.subscribers[action.notification.type]?.forEach(sub => sub.cb())
     return newState;
   },
   ADD: function(state, action){
@@ -71,18 +73,29 @@ export const NotificationProvider = ({children}) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    async function getNotifications(){
-      dispatch({
-        type: actions.ADD,
-        notifications: notifications
-      })
+    async function fetchNotifications(){
+      try{
+        const response = await getNotifications();
+        if (!response.ok) {
+          const body = await response.json();
+          throw new Error(body.message);
+        }
+
+        const notifications = await response.json();
+        dispatch({
+          type: actions.ADD,
+          notifications
+        })
+      }catch(e){
+        console.error("Error while getting notifications", e)
+      }
     }
 
     const id = setInterval(async () => {
-      await getNotifications()
+      await fetchNotifications()
     }, 15000)
 
-    getNotifications()
+    fetchNotifications()
     return () => clearInterval(id)
   }, [])
 

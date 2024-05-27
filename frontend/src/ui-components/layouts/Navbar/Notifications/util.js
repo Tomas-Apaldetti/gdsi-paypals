@@ -6,10 +6,7 @@ const mapper = {
 };
 
 function renderGroupRequestNotification(groupNotification){
-  console.log("Called with", groupNotification)
-  return groupNotification.data.invites.map(invite => {
-    return <GroupNotification key={invite._id} notification={groupNotification} invite={invite} />
-  })
+  return <GroupNotification notification={groupNotification} invite={groupNotification.data.invite} />
 }
 
 export const notificationRenderer = (notifications) => {

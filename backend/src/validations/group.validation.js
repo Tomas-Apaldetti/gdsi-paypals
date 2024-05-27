@@ -27,10 +27,10 @@ const addMembers = {
 }
 
 const inviteResponse = {
-  params: {
-    ...groupIdParam.params,
+  params: Joi.object().keys({
+    groupId: Joi.required().custom(objectId),
     inviteId: Joi.required().custom(objectId)
-  },
+  }),
   body: {
     answer: Joi.string().required().valid('ACCEPT', 'DENY')
   }

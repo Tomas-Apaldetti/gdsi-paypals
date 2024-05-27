@@ -1,30 +1,53 @@
-import { Modal } from "ui-components/modal/Modal";
-import { useNotifications } from "context/NotificationContextProvider";
-import { useState } from "react";
-import Button from "ui-components/button/Button";
+import { Modal } from 'ui-components/modal/Modal';
+import { useNotifications } from 'context/NotificationContextProvider';
+import { useState } from 'react';
+import Button from 'ui-components/button/Button';
+import { acceptInvite, denyInvite } from 'services/groups';
 
 export const GroupNotification = ({ notification, invite }) => {
-  console.log("Called with invite: ", invite, "notification", notification)
   const [showDecision, setShowDecision] = useState(false);
+  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
   const { remove } = useNotifications();
 
-  const handleDecine = (groupId, inviteId) => {
-    setShowDecision(false);
-    remove(notification);
-    console.log(`Declining ${groupId} - ${inviteId}`);
+  const handleDecine = async (groupId, inviteId) => {
+    try {
+      const response = await denyInvite(groupId, inviteId);
+      if(!response.ok){
+        throw new Error("equisde");
+      }
+      setShowDecision(false);
+      remove(notification);
+    } catch (e) {
+      setError(e.message);
+    } finally{
+      setSubmitting(false);
+    }
   };
 
-  const handleAccept = (groupId, inviteId) => {
-    setShowDecision(false);
-    remove(notification);
-    console.log(`Accepting ${groupId} - ${inviteId}`);
+  const handleAccept = async (groupId, inviteId) => {
+    try {
+      const response = await acceptInvite(groupId, inviteId);
+      if(!response.ok){
+        throw new Error("equisde");
+      }
+      setShowDecision(false);
+      remove(notification);
+    } catch (e) {
+      setError(e.message);
+    } finally{
+      setSubmitting(false);
+    }
   };
 
   return (
     <>
       <button
         className='text-start px-4 py-2 w-full hover:bg-purple-500 border border-slate-200 group'
-        onClick={(e) => {e.preventDefault(); setShowDecision(true)}}
+        onClick={(e) => {
+          e.preventDefault();
+          setShowDecision(true);
+        }}
       >
         <h2 className='text-sm font-medium tracking-wider group-hover:text-slate-50 text-purple-500'>
           {`${invite.createdBy.username} invited you to ${notification.data.name}`}
@@ -39,25 +62,28 @@ export const GroupNotification = ({ notification, invite }) => {
         }}
       >
         <div className='w-96 max-h-92 px-4'>
+          <p className='text-md font-semibold text-red-400 text-center'>{error}</p>
           <h2 className='text-lg font-bold text-purple-500 max-w-80 pb-2'>{`${invite.createdBy.username} invited you to join ${notification.data.name}`}</h2>
           <p className='text-md font-light text-slate-500'>{notification.data.description}</p>
           <div className='pt-8 flex gap-4'>
             <Button
               secondary
               type='button'
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                handleDecine(notification.data._id, invite._id);
+                await handleDecine(notification.data._id, invite._id);
               }}
+              disabled={submitting}
             >
               Decline
             </Button>
             <Button
               type='button'
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                handleAccept(notification.data._id, invite._id);
+                await handleAccept(notification.data._id, invite._id);
               }}
+              disabled={submitting}
             >
               Accept
             </Button>

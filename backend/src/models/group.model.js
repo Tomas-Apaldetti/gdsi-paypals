@@ -3,12 +3,6 @@ const { toJSON } = require('./plugins');
 
 
 const inviteSchema = mongoose.Schema({
-  _id: {
-    type: mongoose.Types.ObjectId,
-    index: true,
-    required: true,
-    auto: true
-  },
   type: {
     type: String,
     enum: ['PERSONAL', 'LINK'],
