@@ -24,6 +24,14 @@ const getUser = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getUserId = catchAsync(async (req, res) => {
+  const userId = req.params.userId;
+  if (!userId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'UserId not found');
+  }
+  res.send(userId);
+});
+
 module.exports = {
   createUser,
   getUsers,

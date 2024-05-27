@@ -11,6 +11,15 @@ const createTicket = catchAsync(async (req, res) => {
   return res.status(httpStatus.CREATED).send(ticket);
 });
 
+const editTicket = catchAsync(async (req, res) => {
+  const group = req.params.groupId || null;
+  const creator = req.user._id;
+
+  const ticket = await ticketService.editTicket(req.params.ticketId, { ...req.body, group_id: group, creator });
+
+  return res.status(httpStatus.OK).send(ticket);
+});
+
 const getTickets = catchAsync(async (req, res) => {
 
   const groupId = req.params.groupId || null;
@@ -37,4 +46,4 @@ function transformTickets(tickets) {
   });
 }
 
-module.exports = { createTicket, getTickets };
+module.exports = { createTicket, editTicket, getTickets };

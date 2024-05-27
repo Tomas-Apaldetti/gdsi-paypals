@@ -22,7 +22,7 @@ export const LabeledInput = ({
 
   const inputIcon = icon && React.cloneElement(
     icon,
-    {className: 'absolute top-1/2 -translate-y-1/2 mt-1 mx-2 h-4 w-4 text-slate-500' }
+    { className: 'absolute top-1/2 -translate-y-1/2 mt-1 mx-2 h-4 w-4 text-slate-500' }
   )
 
   const inputStyle = `
@@ -49,31 +49,32 @@ export const LabeledInput = ({
       </label>
       {
         textarea ?
-        <textarea
-          id={id}
-          name={id}
-          placeholder={placeholder}
-          onChange={onChange}
-          onBlur={handleBlur}
-          className={`${inputStyle} resize-y max-h-96 min-h-10 overflow-y-auto`}
-          disabled={setDisabled}
-        />
-        :
-        <div className='relative'>
-          <input
+          <textarea
             id={id}
-            type={type}
-            step={step}
             name={id}
-            className={inputStyle}
             placeholder={placeholder}
             onChange={onChange}
             onBlur={handleBlur}
-            defaultValue={defaultValue}
+            className={`${inputStyle} resize-y max-h-96 min-h-10 overflow-y-auto`}
             disabled={setDisabled}
+            defaultValue={defaultValue}
           />
-          {icon && inputIcon}
-        </div>
+          :
+          <div className='relative'>
+            <input
+              id={id}
+              type={type}
+              step={step}
+              name={id}
+              className={inputStyle}
+              placeholder={placeholder}
+              onChange={onChange}
+              onBlur={handleBlur}
+              defaultValue={defaultValue}
+              disabled={setDisabled}
+            />
+            {icon && inputIcon}
+          </div>
       }
 
       {showError && <p className='text-sm text-red-400 px-2'> {errorDesc} </p>}

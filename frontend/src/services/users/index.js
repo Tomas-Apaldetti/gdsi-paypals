@@ -1,9 +1,9 @@
 import { BASE_URL, get } from "services/utils"
 
 const PATHS = {
-  get: 'v1/users'
+  get: 'v1/users',
 }
 
-export function getUsers(){
+export function getUsers() {
   return get(`${BASE_URL}/${PATHS.get}`)
 }

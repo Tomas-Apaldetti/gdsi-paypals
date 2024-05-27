@@ -1,51 +1,62 @@
 import React, { useState } from 'react';
 import { Modal } from 'ui-components/modal/Modal';
 import { TicketDetail } from './Detail';
+import { TicketCreation } from './Creation';
+import { user } from 'utils/auth';
 
-export const Ticket = ({ ticket, onClick = '' }) => {
+export const Ticket = ({ ticket, onClick = '', onEdition }) => {
   const [showView, setShowView] = useState(false);
+
+  const userId = user().sub;
 
   return (
     <>
-    <Modal open={showView} setOpen={setShowView} title={'Ticket Detail'} onClose={() => setShowView(false)}>
-      <TicketDetail ticket={ticket}/>
-    </Modal>
-    
-    <div onClick={() => setShowView(true)} className='flex mx-4 my-2 bg-slate-50 shadow-sm rounded-sm h-24 hover:shadow-md hover:shadow-purple-100 transition cursor-pointer'>
-      <div className='w-full p-2 flex justify-between'>
-        <div className='max-w-72 overflow-clip text-ellipsis mr-10'>
-          <h2 className='text-lg font-medium text-slate-800 tracking-normal'>{ticket.name}</h2>
-          <p className='text-sm text-slate-400 text-ellipsis'>{ticket.comment}</p>
-        </div>
+      <Modal open={showView} setOpen={setShowView} title={userId === ticket.creator ? 'Edit Ticket' : 'View Ticket'} onClose={() => setShowView(false)}>
+        {
+          (userId === ticket.creator) ? <TicketCreation ticket={ticket} onSuccesfullSubmit={(respBody) => {
+            onEdition && onEdition(respBody);
+            setShowView(false);
+          }}
+            onCancel={() => setShowView(false)}
+          /> : <TicketDetail ticket={ticket} />
+        }
+      </Modal>
 
-        <div className='grow'>
-          <div className='text-slate-800 font-bold uppercase text-end text-4xl'>
-            <span className='text-purple-500 pr-1'>{`$${ticket.amount}`}</span>
-            <span className='font-normal text-slate-500'>/</span>
-            <span className='text-green-500 pl-1'>
-              {`$${ticket.payments ? ticket.payments.reduce((acc, payment) => {
-                return acc + payment.amount;
-              }, 0) : 0}`}
-            </span>
+      <div onClick={() => setShowView(true)} className='flex mx-4 my-2 bg-slate-50 shadow-sm rounded-sm h-24 hover:shadow-md hover:shadow-purple-100 transition cursor-pointer'>
+        <div className='w-full p-2 flex justify-between'>
+          <div className='max-w-72 overflow-clip text-ellipsis mr-10'>
+            <h2 className='text-lg font-medium text-slate-800 tracking-normal'>{ticket.name}</h2>
+            <p className='text-sm text-slate-400 text-ellipsis'>{ticket.comment}</p>
           </div>
-          <div className='flex w-full h-full flex-row-reverse gap-1 pt-2'>
-            {ticket.debtors.map((debtor) => (
-              <UserTag
-                key={debtor._id}
-                name={debtor.username}
-                amount={debtor.amount}
-                paid={ticket.payments ?
-                  ticket.payments
-                  .filter((payment) => payment.from.id === debtor.id)
-                  .reduce((acc, payment) => payment.amount + acc, 0)
-                  : 0
-                }
-              />
-            ))}
+
+          <div className='grow'>
+            <div className='text-slate-800 font-bold uppercase text-end text-4xl'>
+              <span className='text-purple-500 pr-1'>{`$${ticket.amount}`}</span>
+              <span className='font-normal text-slate-500'>/</span>
+              <span className='text-green-500 pl-1'>
+                {`$${ticket.payments ? ticket.payments.reduce((acc, payment) => {
+                  return acc + payment.amount;
+                }, 0) : 0}`}
+              </span>
+            </div>
+            <div className='flex w-full h-full flex-row-reverse gap-1 pt-2'>
+              {ticket.debtors.map((debtor) => (
+                <UserTag
+                  key={debtor._id}
+                  name={debtor.username}
+                  amount={debtor.amount}
+                  paid={ticket.payments ?
+                    ticket.payments
+                      .filter((payment) => payment.from.id === debtor.id)
+                      .reduce((acc, payment) => payment.amount + acc, 0)
+                    : 0
+                  }
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </div></>
+      </div></>
   );
 };
 

@@ -5,9 +5,22 @@ const mongoose = require('mongoose');
 
 
 const createTicket = async (ticketInfo) => {
-  console.log('TICKET INFO IS: ' + ticketInfo)
   return Ticket.create(ticketInfo)
 }
+
+const editTicket = async (ticketId, ticketInfo) => {
+  try {
+    const updatedTicket = await Ticket.findOneAndUpdate(
+      { _id: ticketId },
+      ticketInfo,
+      { new: true }
+    );
+    return updatedTicket;
+  } catch (error) {
+    console.error('Error updating ticket:', error);
+    throw error;
+  }
+};
 
 const getTicketsByGroup = async (group) => {
   if (!group) {
@@ -37,7 +50,7 @@ const getIndividualTickets = async (creator) => {
 
 module.exports = {
   createTicket,
+  editTicket,
   getTicketsByGroup,
   getIndividualTickets
-
 }

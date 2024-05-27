@@ -4,7 +4,7 @@ import Button from 'ui-components/button/Button';
 import { classNames } from 'utils/classNames';
 import { DropdownList } from 'ui-components/input/DropdownList';
 import { categories } from 'utils/categories';
-import { ticketCreate } from 'services/tickets';
+import { ticketCreate, ticketEdit } from 'services/tickets';
 import { Form, Formik } from 'formik';
 import { CurrencyDollarIcon, TagIcon } from '@heroicons/react/20/solid';
 import * as Yup from 'yup';
@@ -14,8 +14,8 @@ import { getGroupMembers, getSelfAsDebtor } from 'services/groups';
 import { useAPIData } from 'hooks/useAPIData';
 import { Loading } from 'logic-components/Loading';
 
-export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
-  const defaultCategory = categories.find(({ id }) => id === 'home');
+export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) => {
+  const defaultCategory = categories.find(({ id }) => id === (ticket?.category || 'home'));
   const debtorMyself = getSelfAsDebtor();
   const [queryparams] = useSearchParams();
 
@@ -27,7 +27,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
-      const response = await ticketCreate(
+      const response = await (ticket ? ticketEdit : ticketCreate)(
         {
           ...values,
           debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
@@ -40,6 +40,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
           split_type: 'PERCENTAGE',
         },
         queryparams.get('group'),
+        ticket?._id
       );
 
       if (!response.ok) {
@@ -60,11 +61,11 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
     <Loading loading={loading}>
       <Formik
         initialValues={{
-          name: '',
-          amount: 0,
+          name: ticket?.name || '',
+          amount: ticket?.amount || 0,
           category: JSON.stringify(defaultCategory),
-          debtors: JSON.stringify(possibleDebtors),
-          comment: '',
+          debtors: JSON.stringify(ticket?.debtors?.map(debtor => ({ ...debtor, id: debtor._id }))) || JSON.stringify(possibleDebtors),
+          comment: ticket?.comment || '',
         }}
         validationSchema={Yup.object().shape({
           name: Yup.string().max(255).required('A ticket name is required'),
@@ -82,7 +83,6 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
         onSubmit={handleSubmit}
       >
         {({ errors, status, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => {
-          console.log(values)
           return (
             <Form className='max-h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4 transition'>
               <p className='text-md font-semibold text-red-400 text-center'>{status}</p>
@@ -95,6 +95,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
                 error={errors}
                 touched={touched}
                 handleBlur={handleBlur}
+                defaultValue={values.name}
               />
 
               <LabeledInput
@@ -108,6 +109,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
                 error={errors}
                 touched={touched}
                 handleBlur={handleBlur}
+                defaultValue={values.amount}
               />
 
               <DropdownList
@@ -139,7 +141,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
               <Loading loading={loading}>
                 <DebtorList
                   options={possibleDebtors}
-                  initial={possibleDebtors}
+                  initial={JSON.parse(values.debtors)}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   error={errors}
@@ -156,6 +158,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
                 error={errors}
                 touched={touched}
                 handleBlur={handleBlur}
+                defaultValue={values.comment}
               />
 
               <div className='flex pt-10'>
@@ -169,7 +172,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit }) => {
 
                 <div className='w-full pl-4'>
                   <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                    <span className='text-md font-semibold tracking-wider'>Create</span>
+                    <span className='text-md font-semibold tracking-wider'>Save</span>
                   </Button>
                 </div>
               </div>
