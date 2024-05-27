@@ -57,8 +57,8 @@ export const Login = () => {
   return (
     <BaseBackground>
       <Card>
-        <div className='font-bold self-center text-3xl sm:text-3xl text-slate-700'> 
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-500">Welcome Back!</span>
+        <div className='font-bold self-center text-3xl sm:text-3xl text-slate-700'>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-500">Welcome Back!</span>
         </div>
         <div className='mt-4 self-center text-xl text-center sm:text-sm text-slate-700'>
           Enter your credentials to access your account

@@ -4,13 +4,16 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { user } from 'utils/auth';
 import { classNames } from 'utils/classNames';
+import * as Notifications from './Notifications/Notifications';
 
 const userNavigation = [{ name: 'Sign out', href: '/logout' }];
 
 const Desktop = () => {
+
   return (
     <div className='hidden md:block'>
       <div className='ml-4 flex items-center md:ml-6'>
+        <Notifications.Desktop />
 
         <Menu as='div' className='relative ml-3'>
           <div>
@@ -18,7 +21,7 @@ const Desktop = () => {
               <span className='absolute -inset-1.5' />
               <span className='sr-only'>Open user menu</span>
               <p className='tracking-wider text-slate-50 text-lg font-semibold'>{user().username}</p>
-              <ChevronDownIcon className='h-6 w-6 text-slate-50'/>
+              <ChevronDownIcon className='h-6 w-6 text-slate-50' />
             </Menu.Button>
           </div>
 
@@ -39,7 +42,8 @@ const Desktop = () => {
                       to={item.href}
                       className={classNames(
                         active ? 'bg-purple-500 text-slate-50' : 'text-slate-800',
-                        'block px-4 py-2 text-sm rounded-sm font-normal tracking-wide')}
+                        'block px-4 py-2 text-sm rounded-sm font-normal tracking-wide',
+                      )}
                     >
                       {item.name}
                     </Link>

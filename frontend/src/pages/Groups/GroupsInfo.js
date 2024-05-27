@@ -1,5 +1,5 @@
 import { Modal } from 'ui-components/modal/Modal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
 import AddMembersForm from 'pages/Groups/AddMembersForm';
 import { PlusIcon } from '@heroicons/react/20/solid';
@@ -7,11 +7,21 @@ import { useSearchParams } from 'react-router-dom';
 import { getGroups } from 'services/groups';
 import { useAPIData } from 'hooks/useAPIData';
 import { Loading } from 'logic-components/Loading';
+import { useNotifications } from 'context/NotificationContextProvider';
 
 export const GroupsInfo = () => {
   const [showCreate, setShowCreate] = useState(false);
   const [queryparams, setQueryParams] = useSearchParams();
   const { data: groups, loading, error, setStale } = useAPIData(getGroups, [], null);
+
+  const {subscribe, unsuscribe} = useNotifications();
+
+  useEffect(()=>{
+    subscribe('GROUP_REQUEST', 'GROUP-INFO', () => {
+      setStale(true)
+    })
+    return () => unsuscribe('GROUP_REQUEST', 'GROUP-INFO')
+  }, [setStale])
 
   const groupSuccessfullyCreated = () => {
     setShowCreate(false);
@@ -89,15 +99,28 @@ export const GroupsInfo = () => {
   );
 };
 const GroupMembers = ({ group, onNewMembersAdded }) => {
+
   const [addMembers, setAddMembers] = useState(false)
-  const [queryparams, _setQueryParams] = useSearchParams();
+  const [queryparams] = useSearchParams();
   const groupId = queryparams.get('group')
   const membersUpdated = () => {
     onNewMembersAdded()
     setAddMembers(false)
   }
-  const membersIds = group?.members?.map(x => x.id)
+  if(!group){
+    return <></>
+  }
 
+  const membersIds = group?.members?.map(x => x.id);
+
+  const involvedIds = membersIds?.concat(
+    group?.invites?.filter(invite => {
+        return (invite.type === 'PERSONAL' && invite.status === 'PENDING')
+      })
+      .map(invite => invite.for) || []
+  );
+
+  console.log(membersIds, involvedIds);
   return (
     <>
       <span className='flex justify-between mx-2 px-2 pt-4 pb-2 border-b border-purple-500'>
@@ -106,7 +129,7 @@ const GroupMembers = ({ group, onNewMembersAdded }) => {
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
         <Modal open={addMembers} setOpen={setAddMembers} title={'Add Members'} onClose={() => setAddMembers(false)}>
-          <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={membersIds}/>
+          <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={involvedIds}/>
         </Modal>
       </span>
 

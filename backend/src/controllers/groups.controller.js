@@ -1,20 +1,21 @@
 const httpStatus = require('http-status');
 const groupService = require('../services/group.service');
 const catchAsync = require('../utils/catchAsync');
+const ApiError = require('../utils/ApiError');
 
 const createGroup = catchAsync(async (req, res) => {
-
   const creator = req.user._id;
+  const invite = req.body.members.filter(user => user !== creator.toString())
+  req.body.members = [creator.toString()]
 
   if(!req.body.members.includes(creator.toString())){
-    return res.status(httpStatus.BAD_REQUEST, 'The creator must be a member of the group')
+    throw new ApiError(httpStatus.BAD_REQUEST, 'The creator must be a member of the group')
   }
-
   const group = await groupService.createGroup({
     ...req.body,
     creator
   })
-
+  await groupService.createInvitesForMembers(group.id, creator, invite);
   return res.status(httpStatus.CREATED).send(group);
 });
 
@@ -35,17 +36,34 @@ const getGroupMembers = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).send(members);
 })
 
-const addMembersToGroups = catchAsync(async (req, res) => {
+const createInvitesForGroup = catchAsync(async (req, res) => {
   const groupId = req.params.groupId;
+  const inviter = req.user._id;
 
-  const members = await groupService.addMembersToGroup(groupId, req.body.members);
+  await groupService.createInvitesForMembers(groupId, inviter, req.body.members);
 
-  return res.status(httpStatus.OK).send(members); 
+  return res.status(httpStatus.NO_CONTENT).send({});
+})
+
+const respondInvite = catchAsync(async (req, res) => {
+  const groupId = req.params.groupId;
+  const inviteId = req.params.inviteId;
+  const whoAnswers = req.user._id;
+  const response = req.body.answer;
+
+  if(response === "ACCEPT"){
+    await groupService.acceptInvite(groupId, whoAnswers, inviteId);
+  }else{
+    await groupService.rejectInvite(groupId, whoAnswers, inviteId);
+  }
+
+  return res.status(httpStatus.NO_CONTENT).send({})
 })
 
 module.exports = {
   createGroup,
   getGroups,
   getGroupMembers,
-  addMembersToGroups 
+  createInvitesForGroup,
+  respondInvite
 };
