@@ -49,8 +49,6 @@ const actors = {
       ...state,
       notifications: state.notifications.filter((notification) => notification !== action.notification)
     };
-    console.log(state.subscribers);
-    console.log(action.notification.type);
     state.subscribers[action.notification.type]?.forEach(sub => sub.cb())
     return newState;
   },

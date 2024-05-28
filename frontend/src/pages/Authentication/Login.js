@@ -1,41 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Button from 'ui-components/button/Button';
 import { Card } from 'ui-components/card/Card';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 
 import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { Form, Formik } from 'formik';
 import { password } from './password.yup';
-import { login, refresh } from 'services/auth';
+import { login } from 'services/auth';
 import { useAuth } from 'context/AuthContextProvider';
 import { AtSymbolIcon, KeyIcon } from '@heroicons/react/20/solid';
-import { refreshCookie } from 'utils/auth';
+import { useLoggedInRedirect } from 'hooks/useLoggedInRedirect';
+import { useNavigateBack } from 'hooks/useNavigateBack';
 
 export const Login = () => {
-  const navigate = useNavigate();
   const auth = useAuth();
+  const [navigateBack, conserveSearchParams] = useNavigateBack();
 
-  useEffect(() => {
-    async function tryRefresh() {
-      if (!refreshCookie()) {
-        return;
-      }
-      try {
-        const response = await refresh();
-        if (!response.ok) {
-          // do nothing, lol, let the user login again
-          return;
-        }
-        const body = await response.json();
-        auth.login(body);
-        navigate('/');
-      } catch (_) {}
-    }
 
-    tryRefresh();
-  }, [auth, navigate]);
+  useLoggedInRedirect();
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
     try {
@@ -46,7 +30,7 @@ export const Login = () => {
       }
       const body = await response.json();
       auth.login(body.tokens);
-      navigate('/');
+      navigateBack()
     } catch (e) {
       setStatus(e.message);
     } finally {
@@ -127,7 +111,7 @@ export const Login = () => {
           </Formik>
         </div>
 
-        <Link to='/register' className='mt-10 text-sm font-normal text-center'>
+        <Link to={conserveSearchParams('/register')} className='mt-10 text-sm font-normal text-center'>
           Don't have an account yet?
           <span className='ml-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-600'>Register Now</span>
         </Link>

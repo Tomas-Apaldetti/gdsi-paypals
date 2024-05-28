@@ -60,10 +60,40 @@ const respondInvite = catchAsync(async (req, res) => {
   return res.status(httpStatus.NO_CONTENT).send({})
 })
 
+const createInviteLink = catchAsync(async (req, res) => {
+  const groupId = req.params.groupId;
+  const inviter = req.user._id;
+
+  const {_id} = await groupService.createInviteLink(groupId, inviter);
+
+  return res.status(httpStatus.OK).send({inviteId:_id})
+});
+
+const acceptInviteLink = catchAsync(async (req, res) => {
+  const groupId = req.params.groupId;
+  const inviteId = req.params.inviteId;
+  const answerer = req.user._id;
+
+  await groupService.acceptInviteLink(groupId, inviteId, answerer);
+
+  return res.status(httpStatus.NO_CONTENT).send({})
+});
+
+const getGroupForInviteLink = catchAsync(async (req, res) => {
+  const inviteId = req.params.inviteId;
+
+  const groupInfo = await groupService.getGroupForInviteLink(inviteId);
+
+  return res.status(httpStatus.OK).send(groupInfo)
+})
+
 module.exports = {
   createGroup,
   getGroups,
   getGroupMembers,
   createInvitesForGroup,
-  respondInvite
+  respondInvite,
+  createInviteLink,
+  acceptInviteLink,
+  getGroupForInviteLink
 };

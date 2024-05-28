@@ -36,6 +36,29 @@ const inviteResponse = {
   }
 }
 
+const inviteLinkCreate = {
+  params: Joi.object().keys({
+    groupId: Joi.required().custom(objectId),
+  }),
+}
+
+const inviteLinkAccept = {
+  params: Joi.object().keys({
+    groupId: Joi.required().custom(objectId),
+    inviteId: Joi.required().custom(objectId)
+  }),
+  body: {
+    answer: Joi.string().required().valid('ACCEPT')
+  }
+}
+
+const inviteLinkInfo = {
+  params: Joi.object().keys({
+    inviteId: Joi.required().custom(objectId)
+  }),
+}
+
+
 const getMembers = {
   ...groupIdParam
 }
@@ -45,5 +68,8 @@ module.exports = {
   getMembers,
   createGroup,
   addMembers,
-  inviteResponse
+  inviteResponse,
+  inviteLinkCreate,
+  inviteLinkAccept,
+  inviteLinkInfo
 }
