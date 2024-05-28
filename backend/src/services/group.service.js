@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const moment = require('moment');
 const { Group, Invite } = require('../models');
 const ApiError = require('../utils/ApiError');
 const mongoose = require('mongoose');
@@ -51,10 +52,16 @@ const createInvitesForMembers = async (groupId, inviter, users) => {
   }
 
   users.forEach((user) => {
-    if (group.invites?.find((invite) => {
-      // Avoid creating invites for users that already have/had invites and accepted them
-      return mongoose.Types.ObjectId(user) === mongoose.Types.ObjectId(invite.for) && (invite.status === "PENDING" || invite.status === "ACCEPTED")
-    })) return;
+    if (
+      group.invites?.find((invite) => {
+        // Avoid creating invites for users that already have/had invites and accepted them
+        return (
+          mongoose.Types.ObjectId(user) === mongoose.Types.ObjectId(invite.for) &&
+          (invite.status === 'PENDING' || invite.status === 'ACCEPTED')
+        );
+      })
+    )
+      return;
 
     group.invites.push(
       new Invite({
@@ -68,6 +75,33 @@ const createInvitesForMembers = async (groupId, inviter, users) => {
   await group.save();
 };
 
+const createInviteLink = async (groupId, inviter) => {
+  if (!groupId || !inviter) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad Service Usage');
+  }
+
+  const group = await Group.findById(groupId);
+
+  if (!group) {
+    throw new ApiError(httpStatus.NOT_FOUND, `Group ${groupId} does not exists`);
+  }
+
+  if(!group.members.includes(mongoose.Types.ObjectId(inviter))){
+    throw new ApiError(httpStatus.UNAUTHORIZED, `You must belong to the group to create an invite link`);
+  }
+
+  const invite = new Invite({
+    type: 'LINK',
+    validUntil: moment().add(60, 'minutes'),
+    createdBy: inviter,
+  });
+
+  group.invites.push(invite);
+  await group.save();
+
+  return invite;
+};
+
 const addMembersToGroup = async (groupId, members) => {
   if (!groupId || members.length == 0) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
@@ -75,7 +109,7 @@ const addMembersToGroup = async (groupId, members) => {
 
   const updatedGroup = await Group.updateOne(
     { _id: mongoose.Types.ObjectId(groupId) },
-    { $push: { members: { $each: members } } },
+    { $addToSet: { members: { $each: members } } },
   );
 
   if (!updatedGroup) {
@@ -133,6 +167,59 @@ const rejectInvite = async (groupId, forUser, inviteId) => {
   }
 };
 
+const acceptInviteLink = async (groupId, inviteId, forUser) => {
+  if (!groupId || !forUser || !inviteId) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
+  }
+
+  const group = await Group.findOne(
+    {
+      '_id': mongoose.Types.ObjectId(groupId),
+      'invites._id': mongoose.Types.ObjectId(inviteId),
+      'invites.type': 'LINK',
+      'invites.status': 'PENDING',
+    },
+    {
+      'invites.$': 1,
+    },
+  );
+  if (!group || !group.invites[0]) {
+    throw new ApiError(httpStatus.NOT_FOUND, `Invite ${inviteId} does not exists for group ${groupId} or is expired`);
+  }
+
+  const invite = group.invites[0];
+
+  if (invite.validUntil < moment()) {
+    await Group.updateOne({ 'invites._id': mongoose.Types.ObjectId(inviteId) }, { $set: { 'invites.$.status': 'EXPIRED' } });
+    throw new ApiError(httpStatus.NOT_FOUND, `Invite ${inviteId} does not exists for group ${groupId} or is expired`);
+  }
+
+  await Group.updateOne(
+    { _id: mongoose.Types.ObjectId(groupId) },
+    { $addToSet: { members: forUser } },
+  );
+};
+
+const getGroupForInviteLink = async (inviteId) => {
+  const group = await Group.findOne({
+    'invites._id': mongoose.Types.ObjectId(inviteId),
+    'invites.type': 'LINK',
+    'invites.status': 'PENDING',
+    'invites.validUntil': { $gt: moment() }
+  }, {
+    '_id': 1,
+    'name': 1,
+    'description': 1,
+    'category': 1,
+  });
+
+  if (!group) {
+    throw new ApiError(httpStatus.NOT_FOUND, `No invite link found for ${inviteId}`);
+  }
+
+  return group;
+}
+
 const getPendingInvites = async (forUser) => {
   if (!forUser) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Bad service usage');
@@ -179,12 +266,12 @@ const getPendingInvites = async (forUser) => {
         description: 1,
         category: 1,
         invite: {
-          _id: "$invites._id",
+          _id: '$invites._id',
           createdBy: {
             _id: { $arrayElemAt: ['$inviters._id', 0] },
             username: { $arrayElemAt: ['$inviters.username', 0] },
           },
-        }
+        },
       },
     },
   ]);
@@ -201,4 +288,7 @@ module.exports = {
   acceptInvite,
   rejectInvite,
   getPendingInvites,
+  createInviteLink,
+  acceptInviteLink,
+  getGroupForInviteLink
 };

@@ -5,6 +5,8 @@ export const Input = ({
   id,
   type = 'text',
   textarea = false,
+  disabled = false,
+  value = null,
   step = 0,
   placeholder = '',
   onChange,
@@ -48,6 +50,8 @@ export const Input = ({
           onChange={onChange}
           onBlur={handleBlur}
           className={`${inputStyle} resize-y max-h-96 min-h-10 overflow-y-auto`}
+          disabled={disabled}
+          value={value}
         ></textarea>
       ) : (
         <div className='relative'>
@@ -60,6 +64,9 @@ export const Input = ({
             placeholder={placeholder}
             onChange={onChange}
             onBlur={handleBlur}
+            disabled={disabled}
+            value={value}
+
           />
           {icon && inputIcon}
         </div>

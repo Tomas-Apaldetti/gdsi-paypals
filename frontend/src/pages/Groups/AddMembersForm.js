@@ -1,10 +1,14 @@
 import { Form, Formik } from 'formik';
 import Button from 'ui-components/button/Button';
 import * as Yup from 'yup';
-import { addMembersToGroup } from 'services/groups';
+import { addMembersToGroup, getInviteLink } from 'services/groups';
 import { useAPIData } from 'hooks/useAPIData';
 import { getUsers } from 'services/users';
 import { MultipleDropwDownList } from 'ui-components/input/MultipleDropwDownList';
+import { Input } from 'ui-components/input/Input';
+import { LinkIcon } from '@heroicons/react/20/solid';
+import { Loading } from 'logic-components/Loading';
+import { createInviteLink } from 'utils/href';
 
 function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembersInGroup }) {
   const initialValues = {
@@ -12,10 +16,9 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
   };
 
   const { data: users } = useAPIData(getUsers, { results: [] }, { results: [] });
-  console.log(users);
   async function handleSubmit(values, { setStatus, setSubmitting }) {
     try {
-      await addMembersToGroup({ members: JSON.parse(values.members).map(u => u.id)}, groupId);
+      await addMembersToGroup({ members: JSON.parse(values.members).map((u) => u.id) }, groupId);
       onSuccesfullSubmit();
     } catch (e) {
       setStatus(e.message);
@@ -23,7 +26,6 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
       setSubmitting(false);
     }
   }
-
 
   return (
     <Formik
@@ -40,7 +42,7 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
             <MultipleDropwDownList
               id={'members'}
               label={'Members'}
-              options={users.results.filter(u => !existingMembersInGroup?.includes(u.id))}
+              options={users.results.filter((u) => !existingMembersInGroup?.includes(u.id))}
               initial={[]}
               inputRender={({ selected }) => `${selected.map((u) => u.username).join(' - ')}`}
               optionRender={({ value, isSelected }) => (
@@ -61,6 +63,8 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
               error={errors}
               touched={touched}
             />
+
+            <InviteLink groupId={groupId}/>
 
             <div className='flex pt-10'>
               <div className='w-full'></div>
@@ -83,5 +87,21 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
     </Formik>
   );
 }
+
+const InviteLink = ({groupId}) => {
+  const { data: invite, loading, error } = useAPIData(async() => await getInviteLink(groupId));
+  return (
+    <Loading loading={loading} error={error}>
+      <div className='flex flex-row-reverse gap-10 justify-center items-center pt-10'>
+        <Input
+          disabled
+          icon={<LinkIcon />}
+          value={createInviteLink(invite?.inviteId)}
+          className='text-slate-500 hover:text-purple-500 transition'
+        ></Input>
+      </div>
+    </Loading>
+  );
+};
 
 export default AddMembersForm;

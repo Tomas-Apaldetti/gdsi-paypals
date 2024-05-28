@@ -18,8 +18,20 @@ router
   .post(auth('TODO'), validate(groupValidation.addMembers), groupController.createInvitesForGroup);
 
 router
-  .route('/:groupId/invites/:inviteId/response')
+  .route('/:groupId/invites/:inviteId/responses')
   .post(auth('TODO'),validate(groupValidation.inviteResponse), groupController.respondInvite);
+
+router
+  .route('/:groupId/invite-link')
+  .get(auth('TODO'), validate(groupValidation.inviteLinkCreate), groupController.createInviteLink);
+
+router
+  .route('/invite-link/:inviteId')
+  .get(auth('TODO'), validate(groupValidation.inviteLinkInfo), groupController.getGroupForInviteLink)
+
+router
+  .route('/:groupId/invite-link/:inviteId/responses')
+  .post(auth('TODO'), validate(groupValidation.inviteLinkAccept), groupController.acceptInviteLink);
 
 router.use('/:groupId/tickets', validate(groupValidation.groupIdParam), ticketRoute.maybeGroupRouter);
 

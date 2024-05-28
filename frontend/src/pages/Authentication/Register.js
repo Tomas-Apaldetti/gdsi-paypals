@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from 'ui-components/button/Button';
 import { Card } from 'ui-components/card/Card';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
 import { DropdownList } from 'ui-components/input/DropdownList';
 import { LabeledDatePicker } from 'ui-components/datepicker/LabeledDatePicker';
-
 import BaseBackground from 'ui-components/layouts/BaseBackground';
 import { countries } from 'utils/countries';
 import { classNames } from 'utils/classNames';
@@ -16,6 +15,8 @@ import { password } from './password.yup';
 import { useAuth } from 'context/AuthContextProvider';
 import { register } from 'services/auth';
 import { AtSymbolIcon, FingerPrintIcon, KeyIcon, UserIcon } from '@heroicons/react/20/solid';
+import { useLoggedInRedirect } from 'hooks/useLoggedInRedirect';
+import { useNavigateBack } from 'hooks/useNavigateBack';
 
 export const Register = () => {
   const minBirth = new Date();
@@ -24,8 +25,10 @@ export const Register = () => {
   const maxBirth = new Date();
   maxBirth.setFullYear(maxBirth.getFullYear() - 100);
 
-  const navigate = useNavigate();
+  const [navigateBack, conserveSearchParams] = useNavigateBack();
   const auth = useAuth();
+
+  useLoggedInRedirect();
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
     const cpy = {
@@ -41,7 +44,7 @@ export const Register = () => {
       }
       const body = await response.json();
       auth.login(body.tokens);
-      navigate('/');
+      navigateBack()
     } catch (e) {
       setStatus(e.message);
     } finally {
@@ -203,7 +206,7 @@ export const Register = () => {
           </Formik>
         </div>
 
-        <Link to='/login' className='mt-10 text-sm font-normal text-center'>
+        <Link to={conserveSearchParams('/login')} className='mt-10 text-sm font-normal text-center'>
           Already have an account?
           <span className='ml-2 font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-900 to-indigo-600'>Sign In</span>
         </Link>

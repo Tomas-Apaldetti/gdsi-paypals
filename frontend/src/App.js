@@ -6,7 +6,7 @@ import { Login } from './pages/Authentication/Login';
 import { Register } from 'pages/Authentication/Register';
 import { NeedsAuth } from 'logic-components/NeedsAuth';
 import { Logout } from 'pages/Authentication/Logout';
-import { Test } from 'pages/Test';
+import { InviteLink } from 'pages/Invite/InviteLink';
 
 function App() {
   return (
@@ -21,11 +21,25 @@ function App() {
               </NeedsAuth>
             }
           />
+          <Route
+            path='/invite'
+            element={
+              <NeedsAuth redirect='/login'>
+                <InviteLink />
+              </NeedsAuth>
+            }
+          />
           <Route path='/login' element={<Login />} />
           <Route path='/logout' element={<Logout />} />
           <Route path='/register' element={<Register />} />
-          <Route path='/test' element={<Test />} />
-          <Route path='*' element={<NotFound />} />
+          <Route
+            path='*'
+            element={
+              <NeedsAuth redirect='/login'>
+                <NotFound />
+              </NeedsAuth>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>

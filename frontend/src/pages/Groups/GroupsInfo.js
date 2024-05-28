@@ -120,7 +120,6 @@ const GroupMembers = ({ group, onNewMembersAdded }) => {
       .map(invite => invite.for) || []
   );
 
-  console.log(membersIds, involvedIds);
   return (
     <>
       <span className='flex justify-between mx-2 px-2 pt-4 pb-2 border-b border-purple-500'>

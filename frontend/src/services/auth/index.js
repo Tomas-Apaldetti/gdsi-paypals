@@ -9,7 +9,6 @@ const PATHS = {
 }
 
 export async function login(body) {
-  console.log('BASE_URL: ' + BASE_URL)
   return post(`${BASE_URL}/${PATHS.login}`, body);
 }
 
