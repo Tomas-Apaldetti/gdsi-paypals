@@ -130,8 +130,8 @@ const acceptInvite = async (groupId, forUser, inviteId) => {
   };
 
   const updated = await Group.findOneAndUpdate(
-    { _id: groupId, 'invites._id': inviteId, 'invites.for': forUser, 'invites.status': 'PENDING' },
-    { $set: updateQuery, $push: { members: { $each: [forUser] } } },
+    { _id: groupId, 'invites._id': inviteId, 'invites.for': forUser, 'invites.status': 'PENDING', 'invites.type': 'PERSONAL' },
+    { $set: updateQuery, $addToSet: { members: mongoose.Types.ObjectId(forUser) } },
     { new: true, runValidators: true },
   );
 
@@ -154,7 +154,7 @@ const rejectInvite = async (groupId, forUser, inviteId) => {
   };
 
   const updated = await Group.findOneAndUpdate(
-    { _id: groupId, 'invites._id': inviteId, 'invites.for': forUser, 'invites.status': 'PENDING' },
+    { _id: groupId, 'invites._id': inviteId, 'invites.for': forUser, 'invites.status': 'PENDING', 'invites.type': 'PERSONAL'  },
     { $set: updateQuery },
     { new: true, runValidators: true },
   );
@@ -196,7 +196,7 @@ const acceptInviteLink = async (groupId, inviteId, forUser) => {
 
   await Group.updateOne(
     { _id: mongoose.Types.ObjectId(groupId) },
-    { $addToSet: { members: forUser } },
+    { $addToSet: { members: mongoose.Types.ObjectId(forUser) } },
   );
 };
 
@@ -228,6 +228,7 @@ const getPendingInvites = async (forUser) => {
   const groupAndInvites = await Group.aggregate([
     {
       $match: {
+        'members': {$ne: mongoose.Types.ObjectId(forUser)},
         'invites.for': mongoose.Types.ObjectId(forUser),
         'invites.status': 'PENDING',
       },
