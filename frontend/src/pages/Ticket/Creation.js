@@ -26,6 +26,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
   );
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
+    console.log(JSON.parse(values.debtors));
     try {
       const response = await (ticket ? ticketEdit : ticketCreate)(
         {
@@ -33,11 +34,11 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
           debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
             return {
               _id: debtor.id,
-              cut: 100 / arr.length,
+              cut: debtor.amount,
             };
           }),
           category: JSON.parse(values.category).id,
-          split_type: 'PERCENTAGE',
+          split_type: 'FIXED',
         },
         queryparams.get('group'),
         ticket?._id

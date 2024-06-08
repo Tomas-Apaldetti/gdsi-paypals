@@ -25,7 +25,7 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, error =
         selectedRender={({ selected, setSelected }) => (
           <div className='flex w-full mt-2 gap-2'>
             {selected.map((debtor) => (
-              <DebtorBtn key={debtor.id} value={debtor} amount={`${Math.round(100/selected.length)} %`} selected={selected} setSelected={setSelected} />
+              <DebtorBtn key={debtor.id} debtor={debtor} selected={selected} setSelected={setSelected} handleChange={handleChange} debtors={initial} />
             ))}
           </div>
         )}
