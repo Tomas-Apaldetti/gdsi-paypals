@@ -13,7 +13,7 @@ const ticketSchema = mongoose.Schema({
   creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User'},
   group_id: { type: mongoose.Types.ObjectId, default: null, ref: 'Group' },
   debtors: [debtorSchema],
-  split_type: { type: String, enum: ['PERCENTAGE', 'FIXED'], required: true },
+  split_type: { type: String, enum: ['PERCENTAGE', 'FIXED', 'EQUALLY'], required: true },
   category: { type: String, default: "" },
   comment: { type: String, default: '', maxlength: 255, trim: true },
 });

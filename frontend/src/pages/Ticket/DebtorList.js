@@ -1,8 +1,15 @@
+import React, { useState } from 'react';
 import { DebtorBtn } from './DebtorBtn';
 import { MultipleDropwDownList } from 'ui-components/input/MultipleDropwDownList';
-import React from 'react';
 
-export const DebtorList = ({ options, initial, handleChange, handleBlur, error = false, touched = false }) => {
+export const DebtorList = ({ options, initial, handleChange, handleBlur, onButtonSelectionChange, error = false, touched = false }) => {
+  const [selectedButton, setSelectedButton] = useState(1); //Default: Equally
+
+  const handleButtonClick = (buttonIndex) => {
+    setSelectedButton(buttonIndex);
+    onButtonSelectionChange(buttonIndex);
+  };
+
   return (
     <div className='flex flex-col py-2 w-full'>
       <MultipleDropwDownList
@@ -35,7 +42,19 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, error =
         error={error}
         touched={touched}
       />
+      <div className='flex mt-2 justify-center'>
+        {['Exact amounts', 'Equally', 'Percentages'].map((buttonLabel, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={() => handleButtonClick(index)}
+            className={`px-4 py-2 mx-1 ${selectedButton === index ? 'bg-purple-500 text-white' : 'bg-gray-200 text-black'}`}
+          >
+            {buttonLabel}
+          </button>
+        ))}
+      </div>
     </div>
-  );
+);
 };
 
