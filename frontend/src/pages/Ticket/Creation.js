@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useState } from 'react';
 import { LabeledInput } from 'ui-components/input/LabeledInput';
 import Button from 'ui-components/button/Button';
 import { classNames } from 'utils/classNames';
@@ -18,6 +18,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
   const defaultCategory = categories.find(({ id }) => id === (ticket?.category || 'home'));
   const debtorMyself = getSelfAsDebtor();
   const [queryparams] = useSearchParams();
+  const [selectedButton, setSelectedButton] = useState(1); //Default: Equally
 
   const { data: possibleDebtors, loading } = useAPIData(
     async () => await getGroupMembers(queryparams.get('group')),
@@ -26,6 +27,24 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
   );
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
+    console.log(JSON.parse(values.debtors));
+    console.log(values.amount)
+
+    let total = 0;
+    JSON.parse(values.debtors).forEach(debtor => {
+      total += debtor.amount;
+    });
+
+    if (total < values.amount) {
+      setStatus('The total amount payed by the debtors must be greater than the ticket amount');
+      setSubmitting(false);
+      return;
+    } else if (total > values.amount) {
+      setStatus('The total amount payed by the debtors must be less than the ticket amount');
+      setSubmitting(false);
+      return;
+    }
+
     try {
       const response = await (ticket ? ticketEdit : ticketCreate)(
         {
@@ -33,11 +52,11 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
           debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
             return {
               _id: debtor.id,
-              cut: 100 / arr.length,
+              cut: debtor.amount,
             };
           }),
           category: JSON.parse(values.category).id,
-          split_type: 'PERCENTAGE',
+          split_type: 'FIXED',
         },
         queryparams.get('group'),
         ticket?._id
@@ -144,6 +163,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
                   initial={JSON.parse(values.debtors)}
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  onButtonSelectionChange={setSelectedButton}
                   error={errors}
                   touched={touched}
                 />

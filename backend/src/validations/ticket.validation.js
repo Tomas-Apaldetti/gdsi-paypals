@@ -12,7 +12,7 @@ const createTicket = {
         cut: Joi.number().required().min(0.01),
       }),
     ),
-    split_type: Joi.string().valid('PERCENTAGE').required(),
+    split_type: Joi.string().valid('PERCENTAGE', 'FIXED', 'EQUALLY').required(),
     comment: Joi.string().allow(null, '').max(255),
   }),
 };
@@ -28,7 +28,7 @@ const editTicket = {
         cut: Joi.number().required().min(0.01),
       }),
     ),
-    split_type: Joi.string().valid('PERCENTAGE').required(),
+    split_type: Joi.string().valid('PERCENTAGE', 'FIXED', 'EQUALLY').required(),
     comment: Joi.string().allow(null, '').max(255),
   }),
   params: Joi.object().keys({

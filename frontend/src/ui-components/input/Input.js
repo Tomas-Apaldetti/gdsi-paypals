@@ -6,7 +6,7 @@ export const Input = ({
   type = 'text',
   textarea = false,
   disabled = false,
-  value = null,
+  value = '',
   step = 0,
   placeholder = '',
   onChange,
