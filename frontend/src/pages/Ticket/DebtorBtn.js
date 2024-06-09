@@ -17,7 +17,7 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
           <span className='absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500'>$</span>
           <input
             className='text-right pr-2 w-20 ml-2 pl-2 border-l border-slate-400'
-            defaultValue={debtor.amount ?? ''}
+            defaultValue={parseFloat(debtor.amount).toFixed(2) ?? ''}
             onChange={(e) => {
               const updatedDebtors = debtors.map(x =>
                 x.id === debtor.id ? { ...x, amount: parseFloat(e.target.value).toFixed(2) } : x
@@ -34,17 +34,16 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
       )}
       {selectedButton === EQUALLY && (
         <div className='relative w-20'>
-          <span className='absolute left-14 top-1/2 transform -translate-y-1/2 text-slate-500'>$</span>
-          <span className='w-16 ml-2 pl-2 border-l border-slate-400'>
-            {calculateEqually() ?? ''}
+          <span className='w-20 ml-2 pl-2 border-l border-slate-400'>
+            {`$${calculateEqually()}` ?? ''}
           </span>
         </div>
       )}
       {selectedButton === PERCENTAGE && (
         <div className='relative'>
-          <span className='absolute left-14 top-1/2 transform -translate-y-1/2 text-slate-500'>%</span>
+          <span className='absolute left-16 top-1/2 transform -translate-y-1/2 text-slate-500'>%</span>
           <input
-            className='w-16 ml-2 pl-2 border-l border-slate-400'
+            className='w-20 ml-2 pl-2 border-l border-slate-400'
             defaultValue={calculatePercentage(debtor.amount) ?? ''}
             onChange={(e) => {
               const updatedDebtors = debtors.map(x =>
@@ -62,9 +61,8 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
       )}
       {selectedButton === undefined && (
         <div className='relative w-20'>
-          <span className='absolute left-14 top-1/2 transform -translate-y-1/2 text-slate-500'>$</span>
-          <span className='w-16 ml-2 pl-2 border-l bordedr-slate-400'>
-            {debtor.amount ?? ''}
+          <span className='w-20 ml-2 pl-2 border-l bordedr-slate-400'>
+            {`$${parseFloat(debtor.amount).toFixed(2)}` ?? ''}
           </span>
         </div> 
       )}

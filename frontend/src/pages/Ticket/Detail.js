@@ -59,7 +59,7 @@ export const TicketDetail = ({ ticket }) => {
         <label className='text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>
         Debtors
       </label>
-        <div className='flex w-full mt-2 gap-2'>
+        <div className='flex w-full mt-2 gap-2 flex-wrap'>
           {ticket.debtors.map((debtor) => (
             <DebtorBtn key={debtor.id} debtor={debtor} />
           ))}
