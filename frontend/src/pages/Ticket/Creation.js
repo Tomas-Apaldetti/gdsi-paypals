@@ -15,11 +15,10 @@ import { useAPIData } from 'hooks/useAPIData';
 import { Loading } from 'logic-components/Loading';
 
 export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) => {
-  // console.log(ticket)
   const defaultCategory = categories.find(({ id }) => id === (ticket?.category || 'home'));
   const debtorMyself = getSelfAsDebtor();
   const [queryparams] = useSearchParams();
-  const [selectedButton, setSelectedButton] = useState(ticket.split_type == "FIXED" ? 0 : ticket.split_type == "EQUALLY" ? 1 : 2 ); //Default: Equally
+  const [selectedButton, setSelectedButton] = useState(!ticket ? 1 : (ticket?.split_type == "FIXED" ? 0 : ticket?.split_type == "EQUALLY" ? 1 : 2 )); //Default: Equally
 
   const { data: possibleDebtors, loading } = useAPIData(
     async () => await getGroupMembers(queryparams.get('group')),
