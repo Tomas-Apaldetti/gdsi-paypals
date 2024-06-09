@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DebtorBtn } from './DebtorBtn';
 import { MultipleDropwDownList } from 'ui-components/input/MultipleDropwDownList';
 
-export const DebtorList = ({ options, initial, handleChange, handleBlur, onButtonSelectionChange, error = false, touched = false }) => {
-  const [selectedButton, setSelectedButton] = useState(1); //Default: Equally
+export const DebtorList = ({ options, initial, handleChange, handleBlur, onButtonSelectionChange, selectedButton, ticketAmount, error = false, touched = false }) => {
+  // const [selectedButton, setSelectedButton] = useState(1); //Default: Equally
 
   const handleButtonClick = (buttonIndex) => {
-    setSelectedButton(buttonIndex);
+    // setSelectedButton(buttonIndex);
     onButtonSelectionChange(buttonIndex);
   };
 
@@ -32,7 +32,7 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, onButto
         selectedRender={({ selected, setSelected }) => (
           <div className='flex w-full mt-2 gap-2'>
             {selected.map((debtor) => (
-              <DebtorBtn key={debtor.id} debtor={debtor} selected={selected} setSelected={setSelected} handleChange={handleChange} debtors={initial} selectedButton={selectedButton}/>
+              <DebtorBtn key={debtor.id} debtor={debtor} selected={selected} setSelected={setSelected} handleChange={handleChange} debtors={initial} selectedButton={selectedButton} ticketAmount={ticketAmount}/>
             ))}
           </div>
         )}

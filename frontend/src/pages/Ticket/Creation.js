@@ -15,10 +15,11 @@ import { useAPIData } from 'hooks/useAPIData';
 import { Loading } from 'logic-components/Loading';
 
 export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) => {
+  // console.log(ticket)
   const defaultCategory = categories.find(({ id }) => id === (ticket?.category || 'home'));
   const debtorMyself = getSelfAsDebtor();
   const [queryparams] = useSearchParams();
-  const [selectedButton, setSelectedButton] = useState(1); //Default: Equally
+  const [selectedButton, setSelectedButton] = useState(ticket.split_type == "FIXED" ? 0 : ticket.split_type == "EQUALLY" ? 1 : 2 ); //Default: Equally
 
   const { data: possibleDebtors, loading } = useAPIData(
     async () => await getGroupMembers(queryparams.get('group')),
@@ -43,16 +44,19 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
       setStatus(`Debtors's payments are greater in total than the amount. Decrease payments!`);
       setSubmitting(false);
       return;
-    }
+    } 
 
     try {
       const response = await (ticket ? ticketEdit : ticketCreate)(
         {
           ...values,
           debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
+            console.log('debtor amount', debtor.amount)
+            console.log('values amount', values.amount)
+            console.log('total amount', parseFloat(((debtor.amount / 100) * values.amount).toFixed(2)))
             return {
               _id: debtor.id,
-              cut: debtor.amount,
+              cut: selectedButton == 1 ? parseFloat((values.amount / JSON.parse(values.debtors).length).toFixed(2)) : debtor.amount
             };
           }),
           category: JSON.parse(values.category).id,
@@ -164,8 +168,10 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   onButtonSelectionChange={setSelectedButton}
+                  selectedButton={selectedButton}
                   error={errors}
                   touched={touched}
+                  ticketAmount={values.amount}
                 />
               </Loading>
 
