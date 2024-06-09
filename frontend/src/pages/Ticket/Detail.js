@@ -8,6 +8,7 @@ import { DebtorBtn } from './DebtorBtn';
 
 export const TicketDetail = ({ ticket }) => {
   const defaultCategory = categories.find(({ id }) => id === ticket.category);
+  console.log(ticket)
 
   return (
     <div className='max-h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4 transition'>
@@ -60,7 +61,7 @@ export const TicketDetail = ({ ticket }) => {
       </label>
         <div className='flex w-full mt-2 gap-2'>
           {ticket.debtors.map((debtor) => (
-            <DebtorBtn key={debtor.id} value={debtor} amount={`${Math.round(100/ticket.debtors.length)} %`} />
+            <DebtorBtn key={debtor.id} debtor={debtor} />
           ))}
         </div>
       </div>

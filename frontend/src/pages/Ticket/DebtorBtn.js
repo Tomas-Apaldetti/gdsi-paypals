@@ -60,6 +60,14 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
           />
         </div>
       )}
+      {selectedButton === undefined && (
+        <div className='relative w-20'>
+          <span className='absolute left-14 top-1/2 transform -translate-y-1/2 text-slate-500'>$</span>
+          <span className='w-16 ml-2 pl-2 border-l bordedr-slate-400'>
+            {debtor.amount ?? ''}
+          </span>
+        </div> 
+      )}
       {selected && setSelected && (
         <button
           onClick={(e) => {
