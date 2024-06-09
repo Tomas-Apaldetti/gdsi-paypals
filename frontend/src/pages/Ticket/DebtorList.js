@@ -32,7 +32,7 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, onButto
         selectedRender={({ selected, setSelected }) => (
           <div className='flex w-full mt-2 gap-2'>
             {selected.map((debtor) => (
-              <DebtorBtn key={debtor.id} debtor={debtor} selected={selected} setSelected={setSelected} handleChange={handleChange} debtors={initial} />
+              <DebtorBtn key={debtor.id} debtor={debtor} selected={selected} setSelected={setSelected} handleChange={handleChange} debtors={initial} selectedButton={selectedButton}/>
             ))}
           </div>
         )}
@@ -43,7 +43,7 @@ export const DebtorList = ({ options, initial, handleChange, handleBlur, onButto
         touched={touched}
       />
       <div className='flex mt-2 justify-center'>
-        {['Exact amounts', 'Equally', 'Percentages'].map((buttonLabel, index) => (
+        {['Fixed', 'Equally', 'Percentages'].map((buttonLabel, index) => (
           <button
             key={index}
             type="button"

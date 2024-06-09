@@ -39,7 +39,7 @@ function transformTickets(tickets) {
       debtors: ticket.debtors.map((debtor) => ({
         _id: debtor._id.id,
         username: debtor._id.username,
-        amount: ticket.split_type == 'PERCENTAGE' ? (debtor.cut / 100) * ticket.amount : ticket.amount == 'EQUALLY' ? ticket.amount / ticket.debtors.length * 100 : debtor.cut,
+        amount: ticket.split_type == 'PERCENTAGE' ? (debtor.cut / 100) * ticket.amount : ticket.split_type == 'EQUALLY' ? ticket.amount / ticket.debtors.length * 100 : debtor.cut,
       })),
       payments: [],
     };

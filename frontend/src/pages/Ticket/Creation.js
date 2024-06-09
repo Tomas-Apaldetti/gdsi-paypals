@@ -36,11 +36,11 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
     });
 
     if (total < values.amount) {
-      setStatus('The total amount payed by the debtors must be greater than the ticket amount');
+      setStatus(`Debtors's payments are less in total than the amount. Increase payments!`);
       setSubmitting(false);
       return;
     } else if (total > values.amount) {
-      setStatus('The total amount payed by the debtors must be less than the ticket amount');
+      setStatus(`Debtors's payments are greater in total than the amount. Decrease payments!`);
       setSubmitting(false);
       return;
     }
@@ -56,7 +56,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
             };
           }),
           category: JSON.parse(values.category).id,
-          split_type: 'FIXED',
+          split_type: selectedButton === 0 ? 'FIXED' : selectedButton == 1 ? 'EQUALLY' : 'PERCENTAGE',
         },
         queryparams.get('group'),
         ticket?._id
