@@ -60,7 +60,7 @@ export const Ticket = ({ ticket, onClick = '', onEdition }) => {
               <div className='flex flex-row items-end gap-2 py-1'>
                 <span className='text-slate-600 text-sm font-medium'>
                   <p>
-                    Total:{' '}
+                    Total paid:{' '}
                     <span className='text-purple-500 font-extrabold tracking-wide'>
                       $
                       {ticket.payments?.reduce((acc, payment) => {
@@ -71,14 +71,14 @@ export const Ticket = ({ ticket, onClick = '', onEdition }) => {
                 </span>
                 <span className='text-slate-600 text-sm font-medium'>
                   <p>
-                    You:{' '}
+                    Paid by you:{' '}
                     <span className='text-purple-500 font-extrabold tracking-wide'>
                       $
                       {ticket.payments?.reduce((acc, payment) => {
                         if (payment.from._id === user().sub) {
-                          return acc;
+                          return acc + payment.amount;
                         }
-                        return acc + payment.amount;
+                        return acc;
                       }, 0) || 0}
                     </span>
                   </p>
