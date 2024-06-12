@@ -29,9 +29,11 @@ export default function List() {
     <div className='w-full h-full'>
       <TopBar onCreation={() => setStale(true)} searchTicket={searchTicket}/>
       <Loading loading={loading} error={error}>
-        {tickets.filter((x) => x.name.toLowerCase().includes(searchText)).map((ticket, index) => (
-          <Ticket ticket={ticket} key={index} onEdition={() => setStale(true)} />
-        ))}
+        <div className='h-[calc(100vh-100px)] overflow-y-auto overflow-x-hidden p-4'>
+          {tickets.filter((x) => x.name.toLowerCase().includes(searchText)).map((ticket, index) => (
+            <Ticket ticket={ticket} key={index} onEdition={() => setStale(true)} />
+          ))}
+        </div>
       </Loading>
     </div>
   );

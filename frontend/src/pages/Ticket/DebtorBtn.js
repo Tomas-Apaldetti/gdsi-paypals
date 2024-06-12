@@ -33,7 +33,7 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
         </div>
       )}
       {selectedButton === EQUALLY && (
-        <div className='relative w-20'>
+        <div className='relative w-20 mr-4'>
           <span className='w-20 ml-2 pl-2 border-l border-slate-400'>
             {`$${calculateEqually()}` ?? ''}
           </span>
@@ -60,7 +60,7 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
         </div>
       )}
       {selectedButton === undefined && (
-        <div className='relative w-20'>
+        <div className='relative w-20 mr-4'>
           <span className='w-20 ml-2 pl-2 border-l bordedr-slate-400'>
             {`$${parseFloat(debtor.amount).toFixed(2)}` ?? ''}
           </span>

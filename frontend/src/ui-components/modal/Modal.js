@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/20/solid';
 import React, { Fragment } from 'react';
 
-export const Modal = ({ title, open, setOpen, onClose, children }) => {
+export const Modal = ({ title, open, setOpen, onClose, icon, children }) => {
   return (
     <Transition show={open} as={Fragment}>
       <Dialog onClose={onClose} className='relative z-50'>
@@ -32,6 +32,7 @@ export const Modal = ({ title, open, setOpen, onClose, children }) => {
             {title ? (
               <div className='bg-slate-900 rounded-t-sm border-b-2 border-b-purple-500 px-4 py-2 text-xl font-semibold tracking-wider uppercase text-slate-50 flex justify-between'>
                 <Dialog.Title>{title}</Dialog.Title>
+                {icon}
                 <button
                   onClick={() => {
                     onClose();

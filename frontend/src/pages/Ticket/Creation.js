@@ -18,7 +18,7 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
   const defaultCategory = categories.find(({ id }) => id === (ticket?.category || 'home'));
   const debtorMyself = getSelfAsDebtor();
   const [queryparams] = useSearchParams();
-  const [selectedButton, setSelectedButton] = useState(!ticket ? 1 : (ticket?.split_type == "FIXED" ? 0 : ticket?.split_type == "EQUALLY" ? 1 : 2 )); //Default: Equally
+  const [selectedButton, setSelectedButton] = useState(!ticket ? 1 : (ticket?.split_type === "FIXED" ? 0 : ticket?.split_type === "EQUALLY" ? 1 : 2 )); //Default: Equally
 
   const { data: possibleDebtors, loading } = useAPIData(
     async () => await getGroupMembers(queryparams.get('group')),
@@ -49,11 +49,11 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
           debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
             return {
               _id: debtor.id,
-              cut: selectedButton == 1 ? parseFloat((values.amount / JSON.parse(values.debtors).length).toFixed(2)) : debtor.amount
+              cut: selectedButton === 1 ? parseFloat((values.amount / JSON.parse(values.debtors).length).toFixed(2)) : debtor.amount
             };
           }),
           category: JSON.parse(values.category).id,
-          split_type: selectedButton === 0 ? 'FIXED' : selectedButton == 1 ? 'EQUALLY' : 'PERCENTAGE',
+          split_type: selectedButton === 0 ? 'FIXED' : selectedButton === 1 ? 'EQUALLY' : 'PERCENTAGE',
         },
         queryparams.get('group'),
         ticket?._id

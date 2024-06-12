@@ -1,7 +1,7 @@
 import { Input } from 'ui-components/input/Input';
 import React, { useState } from 'react';
 import Button from 'ui-components/button/Button';
-import { MagnifyingGlassIcon, PlusIcon } from '@heroicons/react/20/solid';
+import { MagnifyingGlassIcon, PlusIcon, SparklesIcon } from '@heroicons/react/20/solid';
 import { Modal } from 'ui-components/modal/Modal';
 import { TicketCreation } from './Creation';
 
@@ -15,7 +15,7 @@ export const TopBar = ({ onCreation, searchTicket }) => {
         <PlusIcon className='h-6 w-6' />
       </Button>
 
-      <Modal open={showCreate} setOpen={setShowCreate} title={'Create Ticket'} onClose={() => setShowCreate(false)}>
+      <Modal open={showCreate} setOpen={setShowCreate} title={'Create Ticket'} icon={<SparklesIcon class="h-6 w-6 mr-72 mt-0.5 text-gray-100"/>} onClose={() => setShowCreate(false)}>
         <TicketCreation
           onSuccesfullSubmit={(respBody) => {
             onCreation && onCreation(respBody);

@@ -2,7 +2,7 @@ import { Modal } from 'ui-components/modal/Modal';
 import React, { useEffect, useState } from 'react';
 import GroupCreation from 'pages/Groups/Creation';
 import AddMembersForm from 'pages/Groups/AddMembersForm';
-import { PlusIcon } from '@heroicons/react/20/solid';
+import { PlusIcon, UserGroupIcon, UserPlusIcon } from '@heroicons/react/20/solid';
 import { useSearchParams } from 'react-router-dom';
 import { getGroups } from 'services/groups';
 import { useAPIData } from 'hooks/useAPIData';
@@ -56,7 +56,8 @@ export const GroupsInfo = () => {
         <button onClick={() => setShowCreate(!showCreate)} className='text-slate-800 transition hover:text-purple-500'>
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
-        <Modal open={showCreate} setOpen={setShowCreate} title={'Create Group'} onClose={() => setShowCreate(false)}>
+        <Modal open={showCreate} setOpen={setShowCreate} title={'Create Group'} icon={<UserGroupIcon class="h-6 w-6 mr-64 mt-0.5 text-gray-100"/>}
+        onClose={() => setShowCreate(false)}>
           <GroupCreation onSuccesfullSubmit={groupSuccessfullyCreated} onCancel={() => setShowCreate(false)} />
         </Modal>
       </span>
@@ -127,7 +128,7 @@ const GroupMembers = ({ group, onNewMembersAdded }) => {
         <button className='text-slate-800 transition hover:text-purple-500' onClick={() => setAddMembers(!addMembers)}>
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
-        <Modal open={addMembers} setOpen={setAddMembers} title={'Add Members'} onClose={() => setAddMembers(false)}>
+        <Modal open={addMembers} setOpen={setAddMembers} title={'Add Members'} icon={<UserPlusIcon class="h-6 w-6 mr-64 mt-0.5 text-gray-100"/>} onClose={() => setAddMembers(false)}>
           <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={involvedIds}/>
         </Modal>
       </span>

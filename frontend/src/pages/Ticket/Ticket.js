@@ -4,7 +4,7 @@ import { TicketDetail } from './Detail';
 import { TicketCreation } from './Creation';
 import { user } from 'utils/auth';
 import Button from 'ui-components/button/Button';
-import { BanknotesIcon } from '@heroicons/react/20/solid';
+import { BanknotesIcon, PencilSquareIcon, EyeIcon } from '@heroicons/react/20/solid';
 import { PaymentDetails } from './Payments';
 export const Ticket = ({ ticket, onClick = '', onEdition }) => {
   const [showView, setShowView] = useState(false);
@@ -13,7 +13,10 @@ export const Ticket = ({ ticket, onClick = '', onEdition }) => {
   const userId = user().sub;
   return (
     <>
-      <Modal open={showView} setOpen={setShowView} onClose={() => setShowView(false)}>
+      <Modal open={showView} setOpen={setShowView} 
+      title={userId === ticket.creator ? 'Edit Ticket' : 'View Ticket'}
+      icon={userId === ticket.creator ? <PencilSquareIcon  class="h-6 w-6 mr-80 mt-0.5 text-gray-100"/> : <EyeIcon class="h-6 w-6 mr-72 mt-0.5 text-gray-100"/>}
+      onClose={() => setShowView(false)}>
         {userId === ticket.creator ? (
           <TicketCreation
             ticket={ticket}
