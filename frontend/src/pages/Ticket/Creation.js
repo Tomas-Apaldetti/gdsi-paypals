@@ -27,11 +27,12 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
   );
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
+    console.log(values.debtors)
     let total = 0;
     JSON.parse(values.debtors).forEach(debtor => {
-      total += debtor.amount;
+      total += JSON.parse(debtor.amount);
     });
-
+    console.log(total)
     if (total < values.amount) {
       setStatus(`Debtors's payments are less in total than the amount. Increase payments!`);
       setSubmitting(false);
