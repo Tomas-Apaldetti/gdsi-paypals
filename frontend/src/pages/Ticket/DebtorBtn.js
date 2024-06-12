@@ -1,16 +1,38 @@
 import { XMarkIcon } from '@heroicons/react/20/solid';
+import { React, useEffect, useState } from 'react';
 
 export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleChange, debtors, selectedButton, ticketAmount }) => {
 
-  const FIXED = 0
-  const EQUALLY = 1
-  const PERCENTAGE = 2
+  const [equallyAmount, setEquallyAmount] = useState(parseFloat((ticketAmount / debtors?.length).toFixed(2)));
 
-  const calculateEqually = () => parseFloat((ticketAmount / debtors.length).toFixed(2))
+  const FIXED = 0;
+  const EQUALLY = 1;
+  const PERCENTAGE = 2;
+
+  useEffect(() => {
+    calculateEqually();
+  }, [ticketAmount, debtors?.length, selectedButton]);
+
+  const calculateEqually = () => {
+    const value = parseFloat((ticketAmount / debtors?.length).toFixed(2)) ?? 0
+    setEquallyAmount(value);
+    const updatedDebtors = debtors?.map(x =>
+      ({ ...x, amount: value.toFixed(2) })
+    );
+    if (handleChange) {
+      handleChange({
+      target: {
+        name: 'debtors',
+        value: JSON.stringify(updatedDebtors),
+      },
+    });
+    }
+  };
+
   const calculatePercentage = (amount) => {
-    if (ticketAmount === 0 || amount === 0) return 0
-    return parseFloat(((amount / ticketAmount) * 100).toFixed(2))
-  }
+    if (ticketAmount === 0 || amount === 0) return 0;
+    return parseFloat(((amount / ticketAmount) * 100).toFixed(2));
+  };
 
   return (
     <div className='flex items-center justify-center w-fit rounded-sm border border-slate-400 text-slate-500 has-[button:hover]:border-red-400 has-[button:hover]:text-red-400 transition'>
@@ -37,9 +59,10 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
       )}
       {selectedButton === EQUALLY && (
         <div className='relative w-20 mr-4'>
-          <span className='w-20 ml-2 pl-2 border-l border-slate-400'>
-            {`$${calculateEqually()}` ?? ''}
-          </span>
+          <input
+            className='w-20 ml-2 pl-2 border-l border-slate-400'
+            value={equallyAmount}
+          />
         </div>
       )}
       {selectedButton === PERCENTAGE && (
