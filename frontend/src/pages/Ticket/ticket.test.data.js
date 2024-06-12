@@ -3,41 +3,60 @@ export const tickets = [
     id: 1,
     name: "A ticket name",
     amount: 150,
-    description: "Some description about the ticketSome description about the ticketSome description about the ticketSome description about the ticketSome description about the ticketSome description about the ticket",
+    creator: "663b8fb9b7cdde00a35967ca",
+    comment: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id arcu turpis. Etiam scelerisque vulputate erat, nec vehicula eros ultricies eget. Sed et massa orci. Vivamus non gravida quam. Nam quis malesuada ipsum, ut luctus tortor. Nulla fringilla vel.",
     category: "home",
     debtors: [
       {
-        id: 1,
-        name: "Caro",
-        amount: 10
+        _id: "663b8fb9b7cdde00a35967ca",
+        username: "Caro",
+        amount: 11
       },
       {
-        id: 2,
-        name: "Tomas",
+        _id: "663b8fb9b7cdde00a35967cb",
+        username: "Tomas",
         amount: 100
       },
       {
-        id: 3,
-        name: "Fran",
+        _id: "663b8fb9b7cdde00a35967cc",
+        username: "Fran",
         amount: 40
-      }
+      },
     ],
     payments: [
       {
-        id: 1,
+        _id: 1,
         from: {
-          id: 1,
-          name: "Caro"
+          _id: "663b8fb9b7cdde00a35967ca",
+          username: "Caro"
         },
-        amount: 10
+        amount: 10,
+        note: "This a note for this payment",
+        onDate: new Date().toString()
       },
       {
-        id: 2,
+        _id: 2,
         from: {
-          id: 2,
-          name: "Tomas",
+          _id: "663b8fb9b7cdde00a35967cb",
+          username: "Tomas",
         },
-        amount: 50
+        amount: 50,
+        onDate: new Date().toString()
+      }
+    ],
+    waivers: [
+      {
+        _id: 3,
+        to: {
+          _id: "663b8fb9b7cdde00a35967cc",
+          username: "Fran"
+        },
+        from: {
+          _id: "663b8fb9b7cdde00a35967ca",
+          username: "Caro"
+        },
+        note: "This is a note for a waiver",
+        onDate: new Date().toString()
       }
     ]
   }

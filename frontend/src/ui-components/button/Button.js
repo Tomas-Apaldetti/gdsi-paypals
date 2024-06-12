@@ -17,7 +17,6 @@ const Button = ({ type = 'button', secondary, onClick, children, disabled = fals
           hover:shadow-slate-300
           sm:text-base
           rounded-sm
-          py-2
           ${className.includes("w-") ? "" : "w-full"}
 
           transition

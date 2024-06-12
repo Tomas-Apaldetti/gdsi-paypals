@@ -5,7 +5,6 @@ import { useSearchParams } from 'react-router-dom';
 import { useAPIData } from 'hooks/useAPIData';
 import { Loading } from 'logic-components/Loading';
 import { useEffect, useState } from 'react';
-
 export default function List() {
   const [queryparams] = useSearchParams();
   const [searchText, setSearchText] = useState('')
@@ -16,7 +15,7 @@ export default function List() {
     };
   };
 
-  const { data: tickets, loading, error, setStale } = useAPIData(_getTickets(), [], []);
+  let { data: tickets, loading, error, setStale } = useAPIData(_getTickets(), [], []);
 
   const searchTicket = (e) => {
     e.preventDefault()

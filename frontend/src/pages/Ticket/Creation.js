@@ -27,9 +27,6 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
   );
 
   const handleSubmit = async (values, { setStatus, setSubmitting }) => {
-    console.log(JSON.parse(values.debtors));
-    console.log(values.amount)
-
     let total = 0;
     JSON.parse(values.debtors).forEach(debtor => {
       total += debtor.amount;
@@ -43,16 +40,13 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
       setStatus(`Debtors's payments are greater in total than the amount. Decrease payments!`);
       setSubmitting(false);
       return;
-    } 
+    }
 
     try {
       const response = await (ticket ? ticketEdit : ticketCreate)(
         {
           ...values,
           debtors: JSON.parse(values.debtors).map((debtor, _i, arr) => {
-            console.log('debtor amount', debtor.amount)
-            console.log('values amount', values.amount)
-            console.log('total amount', parseFloat(((debtor.amount / 100) * values.amount).toFixed(2)))
             return {
               _id: debtor.id,
               cut: selectedButton == 1 ? parseFloat((values.amount / JSON.parse(values.debtors).length).toFixed(2)) : debtor.amount
@@ -191,13 +185,13 @@ export const TicketCreation = ({ onCancel, onSuccesfullSubmit, ticket = null }) 
 
                 <div className='w-full px-4'>
                   <Button secondary type='cancel' onClick={onCancel} disabled={isSubmitting}>
-                    <span className='text-md font-semibold tracking-wider'>Cancel</span>
+                    <span className='text-md font-semibold tracking-wider py-2'>Cancel</span>
                   </Button>
                 </div>
 
                 <div className='w-full pl-4'>
                   <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                    <span className='text-md font-semibold tracking-wider'>Save</span>
+                    <span className='text-md font-semibold tracking-wider py-2'>Save</span>
                   </Button>
                 </div>
               </div>

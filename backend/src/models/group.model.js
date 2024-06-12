@@ -1,23 +1,24 @@
 const mongoose = require('mongoose');
 const { toJSON } = require('./plugins');
+const { inviteTypes, inviteStatus } = require('../config/constants');
 
 
 const inviteSchema = mongoose.Schema({
   type: {
     type: String,
-    enum: ['PERSONAL', 'LINK'],
+    enum: Object.values(inviteTypes),
     required: true
   },
   for: {
     type: mongoose.Types.ObjectId,
     required: function(){
-      return this.type === 'PERSONAL'
+      return this.type === inviteTypes.PERSONAL
     }
   },
   validUntil: {
     type: Date,
     required: function(){
-      return this.type === 'LINK'
+      return this.type === inviteTypes.LINK
     }
   },
   createdBy: {
@@ -27,14 +28,14 @@ const inviteSchema = mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['PENDING', 'ACCEPTED', 'DENIED', 'EXPIRED'],
+    enum: Object.values(inviteStatus),
     required: true,
     default: 'PENDING'
   },
   answeredOn: {
     type: Date,
     required: function(){
-      return this.status === 'ACCEPTED' || this.status === 'DENIED'
+      return this.status === inviteStatus.ACCEPTED || this.status === inviteStatus.DENIED
     },
   }
 })

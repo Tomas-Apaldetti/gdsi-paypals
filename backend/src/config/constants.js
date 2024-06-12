@@ -251,6 +251,33 @@ const countries = [
   'ZW',
 ];
 
+const debtCancellationTypes = {
+  PAYMENT: 'PAYMENT',
+  WAIVER: 'WAIVER',
+};
+
+const debtSplitTypes = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED',
+  EQUALLY: 'EQUALLY',
+};
+
+const inviteTypes = {
+  PERSONAL: 'PERSONAL',
+  LINK: 'LINK',
+};
+
+const inviteStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  DENIED: 'DENIED',
+  EXPIRED: 'EXPIRED',
+};
+
 module.exports = {
-  countries
+  countries,
+  debtCancellationTypes,
+  debtSplitTypes,
+  inviteTypes,
+  inviteStatus
 };

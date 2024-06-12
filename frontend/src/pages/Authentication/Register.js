@@ -196,7 +196,7 @@ export const Register = () => {
                   />
 
                   <div className='flex w-full mt-3'>
-                    <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
+                    <Button type='submit' onClick={handleSubmit} disabled={isSubmitting} className='py-2'>
                       <span className='mr-2 font-semibold text-lg sm:text-md'>Register</span>
                     </Button>
                   </div>

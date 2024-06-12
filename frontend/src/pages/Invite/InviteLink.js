@@ -50,6 +50,7 @@ export const InviteLink = () => {
                     e.preventDefault();
                     navigate('/');
                   }}
+                  className='py-2'
                 >
                   Nope
                 </Button>
@@ -58,6 +59,7 @@ export const InviteLink = () => {
                     e.preventDefault();
                     await acceptInvite();
                   }}
+                  className='py-2'
                 >
                   Let's go
                 </Button>

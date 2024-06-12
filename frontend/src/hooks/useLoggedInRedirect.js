@@ -6,7 +6,6 @@ import { useNavigateBack } from "./useNavigateBack";
 
 export const useLoggedInRedirect = () => {
   const navigateBack = useNavigateBack();
-  console.log(navigateBack)
   const auth = useAuth();
 
   useEffect(() => {

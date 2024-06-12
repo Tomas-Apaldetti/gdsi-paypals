@@ -3,6 +3,7 @@ const moment = require('moment');
 const { Group, Invite } = require('../models');
 const ApiError = require('../utils/ApiError');
 const mongoose = require('mongoose');
+const { inviteTypes, inviteStatus } = require('../config/constants');
 
 const createGroup = async (groupInfo) => {
   return Group.create(groupInfo);
@@ -57,7 +58,7 @@ const createInvitesForMembers = async (groupId, inviter, users) => {
         // Avoid creating invites for users that already have/had invites and accepted them
         return (
           mongoose.Types.ObjectId(user) === mongoose.Types.ObjectId(invite.for) &&
-          (invite.status === 'PENDING' || invite.status === 'ACCEPTED')
+          (invite.status === inviteStatus.PENDING || invite.status === inviteStatus.ACCEPTED)
         );
       })
     )
@@ -65,7 +66,7 @@ const createInvitesForMembers = async (groupId, inviter, users) => {
 
     group.invites.push(
       new Invite({
-        type: 'PERSONAL',
+        type: inviteTypes.PERSONAL,
         for: user,
         createdBy: inviter,
       }),
@@ -86,12 +87,12 @@ const createInviteLink = async (groupId, inviter) => {
     throw new ApiError(httpStatus.NOT_FOUND, `Group ${groupId} does not exists`);
   }
 
-  if(!group.members.includes(mongoose.Types.ObjectId(inviter))){
+  if (!group.members.includes(mongoose.Types.ObjectId(inviter))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, `You must belong to the group to create an invite link`);
   }
 
   const invite = new Invite({
-    type: 'LINK',
+    type: inviteTypes.LINK,
     validUntil: moment().add(60, 'minutes'),
     createdBy: inviter,
   });
@@ -125,12 +126,18 @@ const acceptInvite = async (groupId, forUser, inviteId) => {
   }
 
   const updateQuery = {
-    'invites.$.status': 'ACCEPTED',
+    'invites.$.status': inviteStatus.ACCEPTED,
     'invites.$.answeredOn': new Date(),
   };
 
   const updated = await Group.findOneAndUpdate(
-    { _id: groupId, 'invites._id': inviteId, 'invites.for': forUser, 'invites.status': 'PENDING', 'invites.type': 'PERSONAL' },
+    {
+      _id: groupId,
+      'invites._id': inviteId,
+      'invites.for': forUser,
+      'invites.status': inviteStatus.PENDING,
+      'invites.type': inviteTypes.PERSONAL,
+    },
     { $set: updateQuery, $addToSet: { members: mongoose.Types.ObjectId(forUser) } },
     { new: true, runValidators: true },
   );
@@ -154,7 +161,13 @@ const rejectInvite = async (groupId, forUser, inviteId) => {
   };
 
   const updated = await Group.findOneAndUpdate(
-    { _id: groupId, 'invites._id': inviteId, 'invites.for': forUser, 'invites.status': 'PENDING', 'invites.type': 'PERSONAL'  },
+    {
+      _id: groupId,
+      'invites._id': inviteId,
+      'invites.for': forUser,
+      'invites.status': inviteStatus.PENDING,
+      'invites.type': inviteTypes.PERSONAL,
+    },
     { $set: updateQuery },
     { new: true, runValidators: true },
   );
@@ -174,10 +187,10 @@ const acceptInviteLink = async (groupId, inviteId, forUser) => {
 
   const group = await Group.findOne(
     {
-      '_id': mongoose.Types.ObjectId(groupId),
+      _id: mongoose.Types.ObjectId(groupId),
       'invites._id': mongoose.Types.ObjectId(inviteId),
-      'invites.type': 'LINK',
-      'invites.status': 'PENDING',
+      'invites.type': inviteTypes.LINK,
+      'invites.status': inviteStatus.PENDING,
     },
     {
       'invites.$': 1,
@@ -201,24 +214,27 @@ const acceptInviteLink = async (groupId, inviteId, forUser) => {
 };
 
 const getGroupForInviteLink = async (inviteId) => {
-  const group = await Group.findOne({
-    'invites._id': mongoose.Types.ObjectId(inviteId),
-    'invites.type': 'LINK',
-    'invites.status': 'PENDING',
-    'invites.validUntil': { $gt: moment() }
-  }, {
-    '_id': 1,
-    'name': 1,
-    'description': 1,
-    'category': 1,
-  });
+  const group = await Group.findOne(
+    {
+      'invites._id': mongoose.Types.ObjectId(inviteId),
+      'invites.type': inviteTypes.LINK,
+      'invites.status': inviteStatus.PENDING,
+      'invites.validUntil': { $gt: moment() },
+    },
+    {
+      _id: 1,
+      name: 1,
+      description: 1,
+      category: 1,
+    },
+  );
 
   if (!group) {
     throw new ApiError(httpStatus.NOT_FOUND, `No invite link found for ${inviteId}`);
   }
 
   return group;
-}
+};
 
 const getPendingInvites = async (forUser) => {
   if (!forUser) {
@@ -228,9 +244,9 @@ const getPendingInvites = async (forUser) => {
   const groupAndInvites = await Group.aggregate([
     {
       $match: {
-        'members': {$ne: mongoose.Types.ObjectId(forUser)},
+        members: { $ne: mongoose.Types.ObjectId(forUser) },
         'invites.for': mongoose.Types.ObjectId(forUser),
-        'invites.status': 'PENDING',
+        'invites.status': inviteStatus.PENDING,
       },
     },
     {
@@ -243,7 +259,10 @@ const getPendingInvites = async (forUser) => {
             input: '$invites',
             as: 'invite',
             cond: {
-              $and: [{ $eq: ['$$invite.for', mongoose.Types.ObjectId(forUser)] }, { $eq: ['$$invite.status', 'PENDING'] }],
+              $and: [
+                { $eq: ['$$invite.for', mongoose.Types.ObjectId(forUser)] },
+                { $eq: ['$$invite.status', inviteStatus.PENDING] },
+              ],
             },
           },
         },
@@ -291,5 +310,5 @@ module.exports = {
   getPendingInvites,
   createInviteLink,
   acceptInviteLink,
-  getGroupForInviteLink
+  getGroupForInviteLink,
 };

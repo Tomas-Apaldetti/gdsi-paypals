@@ -74,6 +74,7 @@ export const GroupNotification = ({ notification, invite }) => {
                 await handleDecine(notification.data._id, invite._id);
               }}
               disabled={submitting}
+              className='py-2'
             >
               Decline
             </Button>
@@ -84,6 +85,7 @@ export const GroupNotification = ({ notification, invite }) => {
                 await handleAccept(notification.data._id, invite._id);
               }}
               disabled={submitting}
+              className='py-2'
             >
               Accept
             </Button>

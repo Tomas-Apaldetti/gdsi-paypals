@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { password } = require('./custom.validation');
-const { countries } = require('../config/countries');
+const { countries } = require('../config/constants');
 
 const maxDate = () => {
   const date = new Date();

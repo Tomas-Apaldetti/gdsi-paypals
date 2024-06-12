@@ -15,6 +15,14 @@ maybeGroupRouter
   .route('/:ticketId')
   .put(auth('TODO'), validate(ticketValidation.editTicket), ticketController.editTicket)
 
+maybeGroupRouter
+  .route('/:ticketId/payment')
+  .post(auth('TODO'), validate(ticketValidation.debtPayment), ticketController.payTicket)
+
+maybeGroupRouter
+  .route('/:ticketId/waiver')
+  .post(auth('TODO'), validate(ticketValidation.debtWaiver), ticketController.waiveTicket)
+
 module.exports = {
   maybeGroupRouter
 };

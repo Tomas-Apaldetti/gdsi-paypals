@@ -8,7 +8,6 @@ import { DebtorBtn } from './DebtorBtn';
 
 export const TicketDetail = ({ ticket }) => {
   const defaultCategory = categories.find(({ id }) => id === ticket.category);
-  console.log(ticket)
 
   return (
     <div className='max-h-full w-92 sm:w-112 md:w-128 flex flex-col justify-center px-4 pb-4 transition'>
@@ -56,9 +55,7 @@ export const TicketDetail = ({ ticket }) => {
       />
 
       <div className='py-2'>
-        <label className='text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>
-        Debtors
-      </label>
+        <label className='text-md sm:text-sm tracking-wide text-slate-700 font-semibold'>Debtors</label>
         <div className='flex w-full mt-2 gap-2 flex-wrap'>
           {ticket.debtors.map((debtor) => (
             <DebtorBtn key={debtor.id} debtor={debtor} />

@@ -71,13 +71,13 @@ function AddMembersForm({ onSuccesfullSubmit, onCancel, groupId, existingMembers
 
               <div className='w-full px-4'>
                 <Button secondary type='cancel' onClick={onCancel} disabled={isSubmitting}>
-                  <span className='text-md font-semibold tracking-wider'>Cancel</span>
+                  <span className='text-md font-semibold tracking-wider py-2'>Cancel</span>
                 </Button>
               </div>
 
               <div className='w-full pl-4'>
                 <Button type='submit' onClick={handleSubmit} disabled={isSubmitting}>
-                  <span className='text-md font-semibold tracking-wider'>Add Members</span>
+                  <span className='text-md font-semibold tracking-wider py-2'>Add Members</span>
                 </Button>
               </div>
             </div>

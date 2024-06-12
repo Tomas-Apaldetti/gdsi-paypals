@@ -33,7 +33,7 @@ function NotFound() {
         </p>
         <div className='flex flex-row justify-center'>
           <div className='w-1/2'></div>
-          <Button onClick={() => navigate('/')}>Take me back</Button>
+          <Button onClick={() => navigate('/')} className='py-2'>Take me back</Button>
           <div className='w-1/2'></div>
         </div>
       </div>
