@@ -5,7 +5,7 @@ import { authCookie, refreshCookie } from "utils/auth";
 import { useNavigateBack } from "./useNavigateBack";
 
 export const useLoggedInRedirect = () => {
-  const navigateBack = useNavigateBack();
+  const [navigateBack] = useNavigateBack();
   const auth = useAuth();
 
   useEffect(() => {

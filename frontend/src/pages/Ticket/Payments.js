@@ -120,7 +120,6 @@ const PaymentScreen = ({ ticketId, isWaiver, debtor, maxPayment, onSuccess }) =>
       onSuccess();
     }catch(e){
       setStatus(e.message)
-      console.log(e)
     }
   };
 

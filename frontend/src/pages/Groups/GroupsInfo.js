@@ -14,23 +14,14 @@ export const GroupsInfo = () => {
   const [queryparams, setQueryParams] = useSearchParams();
   const { data: groups, loading, error, setStale } = useAPIData(getGroups, [], null);
 
-  const {subscribe, unsuscribe} = useNotifications();
+  const { subscribe, unsuscribe } = useNotifications();
 
-  useEffect(()=>{
+  useEffect(() => {
     subscribe('GROUP_REQUEST', 'GROUP-INFO', () => {
-      setStale(true)
-    })
-    return () => unsuscribe('GROUP_REQUEST', 'GROUP-INFO')
-  }, [setStale])
-
-  const groupSuccessfullyCreated = () => {
-    setShowCreate(false);
-    setStale(true);
-  };
-
-  const fetchGroupInformation = () => {
-    setStale(true)
-  }
+      setStale(true);
+    });
+    return () => unsuscribe('GROUP_REQUEST', 'GROUP-INFO');
+  }, [setStale]);
 
   return (
     <>
@@ -56,9 +47,20 @@ export const GroupsInfo = () => {
         <button onClick={() => setShowCreate(!showCreate)} className='text-slate-800 transition hover:text-purple-500'>
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
-        <Modal open={showCreate} setOpen={setShowCreate} title={'Create Group'} icon={<UserGroupIcon class="h-6 w-6 mr-64 mt-0.5 text-gray-100"/>}
-        onClose={() => setShowCreate(false)}>
-          <GroupCreation onSuccesfullSubmit={groupSuccessfullyCreated} onCancel={() => setShowCreate(false)} />
+        <Modal
+          open={showCreate}
+          setOpen={setShowCreate}
+          title={'Create Group'}
+          icon={<UserGroupIcon class='h-6 w-6 mr-64 mt-0.5 text-gray-100' />}
+          onClose={() => setShowCreate(false)}
+        >
+          <GroupCreation
+            onSuccesfullSubmit={() => {
+              setShowCreate(false);
+              setStale(true);
+            }}
+            onCancel={() => setShowCreate(false)}
+          />
         </Modal>
       </span>
 
@@ -72,7 +74,7 @@ export const GroupsInfo = () => {
                 queryparams.get('group') === String(group.id)
                   ? 'text-purple-500 border-l-2 border-purple-500 under pointer-events-none px-1'
                   : 'text-slate-800 hover:text-purple-500 px-1'
-                }
+              }
               `}
             >
               <button
@@ -92,33 +94,32 @@ export const GroupsInfo = () => {
           <>
             <span className='flex my-4 mx-2 border-b border-slate-300 shadow-sm' />
 
-            <GroupMembers group={groups.filter((g) => String(g.id) === queryparams.get('group'))[0]} onNewMembersAdded={fetchGroupInformation}/>
+            <GroupMembers group={groups.filter((g) => String(g.id) === queryparams.get('group'))[0]} />
           </>
         ) : null}
       </Loading>
     </>
   );
 };
-const GroupMembers = ({ group, onNewMembersAdded }) => {
-
-  const [addMembers, setAddMembers] = useState(false)
+const GroupMembers = ({ group }) => {
+  const [addMembers, setAddMembers] = useState(false);
   const [queryparams] = useSearchParams();
-  const groupId = queryparams.get('group')
+  const groupId = queryparams.get('group');
   const membersUpdated = () => {
-    onNewMembersAdded()
-    setAddMembers(false)
-  }
-  if(!group){
-    return <></>
+    setAddMembers(false);
+  };
+  if (!group) {
+    return <></>;
   }
 
-  const membersIds = group?.members?.map(x => x.id);
+  const membersIds = group?.members?.map((x) => x.id);
 
   const involvedIds = membersIds?.concat(
-    group?.invites?.filter(invite => {
-        return (invite.type === 'PERSONAL' && invite.status === 'PENDING')
+    group?.invites
+      ?.filter((invite) => {
+        return invite.type === 'PERSONAL' && invite.status === 'PENDING';
       })
-      .map(invite => invite.for) || []
+      .map((invite) => invite.for) || [],
   );
 
   return (
@@ -128,8 +129,19 @@ const GroupMembers = ({ group, onNewMembersAdded }) => {
         <button className='text-slate-800 transition hover:text-purple-500' onClick={() => setAddMembers(!addMembers)}>
           <PlusIcon className='h-6 w-6'></PlusIcon>
         </button>
-        <Modal open={addMembers} setOpen={setAddMembers} title={'Add Members'} icon={<UserPlusIcon class="h-6 w-6 mr-64 mt-0.5 text-gray-100"/>} onClose={() => setAddMembers(false)}>
-          <AddMembersForm onSuccesfullSubmit={membersUpdated} onCancel={() => setAddMembers(false)} groupId={groupId} existingMembersInGroup={involvedIds}/>
+        <Modal
+          open={addMembers}
+          setOpen={setAddMembers}
+          title={'Add Members'}
+          icon={<UserPlusIcon class='h-6 w-6 mr-64 mt-0.5 text-gray-100' />}
+          onClose={() => setAddMembers(false)}
+        >
+          <AddMembersForm
+            onSuccesfullSubmit={membersUpdated}
+            onCancel={() => setAddMembers(false)}
+            groupId={groupId}
+            existingMembersInGroup={involvedIds}
+          />
         </Modal>
       </span>
 

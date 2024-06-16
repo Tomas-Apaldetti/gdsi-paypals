@@ -1,91 +1,114 @@
-
-import { getTickets } from 'services/tickets';
-import { getGroupMembers } from 'services/groups';
-import { useEffect, useState } from 'react';
 import Tooltip from '@mui/material/Tooltip';
+import { getTicketsDissagg, getTotalDebtForUser, getTotalPaidForUser, getUniqueDebtors, hasWaiverFor } from './utils';
+import { Disclosure, Transition } from '@headlessui/react';
+import { useState } from 'react';
+import { UserIcon } from '@heroicons/react/20/solid';
+import { user } from 'utils/auth';
 
-const LeftToPayToolTip = ({ leftToPayTickets = [] }) => {
+const UserBalanceSummary = ({ username, totalOwed, totalPaid, ticketsInvolved }) => {
+  const t = totalPaid - totalOwed;
   return (
-    <div className='flex flex-col p-4 gap-2 w-full'>
-      {leftToPayTickets.map((ticket) => (
-        <div className='flex w-64 justify-between'>
-          <div>{ticket.name}</div>
-          <div>{ticket.balanceForTicket.toFixed(2)}</div>
-        </div>
-      ))}
-    </div>
-  )
-}
+    <Disclosure as='div' className='flex flex-col w-full justify-between my-2 px-2 transition border-l-2 border-purple-500'>
+      <Disclosure.Button className='flex w-full justify-between'>
+        <Tooltip title={username}>
+          <p className='max-w-28 lg:max-w-40 overflow-hidden text-ellipsis font-bold text-slate-900 tracking-tight'>
+            {username}
+          </p>
+        </Tooltip>
+        <p className={`font-bold tracking-tight ${t < 0 ? 'text-red-500' : 'text-green-500'}`}>${t < 0 ? Math.abs(t) : 0}</p>
+      </Disclosure.Button>
 
-const UserBalance = ({ name, amount, ticketsLeftToPay }) => {
+      <Transition
+        enter='transition duration-200 ease-out'
+        enterFrom='transform -translate-y-full scale-0 opacity-0'
+        enterTo='transform translate-y-0 scale-95 opacity-100'
+        leave='transition duration-200 ease-out'
+        leaveFrom='transform translate-y-0 scale-95 opacity-10'
+        leaveTo='transform -translate-y-full scale-0 opacity-0'
+      >
+        <Disclosure.Panel as='ul' className='text-slate-800 font-thin tracking-tight px-2'>
+          {ticketsInvolved.map((ticket) => (
+            <li><span className='font-medium'>{`${ticket.name}`}</span>{`: $${ticket.paid} out of $${ticket.toPay}`}</li>
+          ))}
+        </Disclosure.Panel>
+      </Transition>
+    </Disclosure>
+  );
+};
+
+const MovementSummary = ({ history }) => {
+  console.log(history);
   return (
-    <Tooltip title={<LeftToPayToolTip leftToPayTickets={ticketsLeftToPay}/>}>
-      <div className='flex w-full justify-between'>
-        <div className='font-extrabold'>{name}</div>
-        <div className={'font-extrabold ' + (amount < 0 ? 'text-red-800' : 'text-lime-600')} >{Math.abs(amount)}</div>
+    <ul className='font-thin tracking-tight text-sm text-slate-800'>
+      {history
+        .sort((a, b) => a.onDate - b.onDate)
+        .map((h) => {
+          const title = `${new Date(h.onDate).toDateString()} - ${h.ticketName}`;
+          const description = h.to ? `${h.from.username} waived the debt to ${h.to.username}` : `${h.from.username} paid $${h.amount}`
+          return (
+            <li className='flex flex-col px-2 my-2 border-l border-purple-500'>
+              <span className='font-medium'>{title}</span>
+              <span>{description}</span>
+            </li>
+          );
+        })}
+    </ul>
+  );
+};
+
+const Balance = ({ tickets }) => {
+  const uniqueDebtors = getUniqueDebtors(tickets);
+  const [onlySelf, setOnlySelf] = useState(false);
+  const me = user().sub;
+
+  return (
+    <>
+      <span className='flex justify-between mx-2 px-2 pt-2 pb-2 border-b border-purple-500'>
+        <h2 className='text-lg text-slate-800 font-medium'>Outstanding Debts</h2>
+      </span>
+      <div className='mx-2 pt-2 px-2 transition'>
+        {uniqueDebtors.map((u) => {
+          const unwaived = tickets.filter((t) => !hasWaiverFor(t, u));
+
+          return (
+            <UserBalanceSummary
+              username={u.username}
+              totalOwed={getTotalDebtForUser(unwaived, u)}
+              totalPaid={getTotalPaidForUser(unwaived, u)}
+              ticketsInvolved={getTicketsDissagg(unwaived, u)}
+            />
+          );
+        })}
       </div>
-    </Tooltip>
-  )
-}
 
-const Balance = ({ queryParamGroup }) => {
-  const [tickets, setTickets] = useState([])
-  const [usersOnGroup, setUsersOnGroup] = useState([])
+      <span className='flex justify-between mx-2 px-2 pt-2 pb-2 border-b border-purple-500'>
+        <h2 className='text-lg text-slate-800 font-medium'>Movements</h2>
+        <button onClick={() => setOnlySelf(!onlySelf)} className={`${onlySelf ? 'text-purple-500 hover:text-slate-600' : 'text-slate-800 hover:text-purple-500'} transition `}>
+          <UserIcon className='h-6 w-6' />
+        </button>
+      </span>
+      <div className='mx-2 pt-2 px-2 transition'>
+        <MovementSummary
+          history={tickets
+            .map((t) => [
+              t.payments.map((p) => ({ ...p, ticketName: t.name })),
+              t.waivers.map((w) => ({ ...w, ticketName: t.name })),
+            ])
+            .flat(2)
+            .filter(h => {
+              if(!onlySelf){
+                return true
+              }
+              if(h.to){
+                return h.from._id === me || h.to._id === me;
+              }
+              return h.from._id === me;
+            })
+          }
+        />
+      </div>
+    </>
+  );
+};
 
-  const _getTickets = async () => {
-      const response = await getTickets(queryParamGroup);
-      const data = await response.json()
-      setTickets(data)
-  };
-
-  const _getGroupMembers = async () => {
-    const response = await getGroupMembers(queryParamGroup)
-    const data = await response.json()
-    setUsersOnGroup(data)
-  }
-
-  const calculateBalances = () => {
-    const ticektsBalances = usersOnGroup?.map((x) => {
-      const userId = x.id
-      const balanceForUser = tickets?.map((ticket) => {
-        const debtOnTicket = ticket.debtors.find((usersOnTicket) => String(usersOnTicket._id) === String(userId))
-        const paysOnTicket = ticket.payments.find((usersOnTicket) => String(usersOnTicket.from._id) === String(userId))
-        const waivedOnTicket = ticket.waivers.find((usersOnTicket) => String(usersOnTicket.to._id) === String(userId))
-
-        let amountToPay = 0
-        if (debtOnTicket && !waivedOnTicket) {
-          amountToPay = debtOnTicket.amount
-        } 
-        
-        let amountPayed = 0
-        if (paysOnTicket) {
-          amountPayed = paysOnTicket.amount
-        }
-       
-        const balanceForTicket = amountPayed - amountToPay
-        return { balanceForTicket, name: ticket.name }
-      })
-
-      return { 
-        name: x.username, 
-        amount: balanceForUser.reduce((acc, x) => acc + x.balanceForTicket, 0).toFixed(2),
-        ticketsLeftToPay: balanceForUser.filter(x => x.balanceForTicket < 0)
-      }
-    }) || []
-
-    return ticektsBalances
-  }
-
-  useEffect(() => {
-    _getTickets()
-    _getGroupMembers()
-  }, [queryParamGroup])
-
-  return usersOnGroup && usersOnGroup.length > 0 && (
-    <div className='flex flex-col p-4 gap-2'>
-      {calculateBalances().map(x => <UserBalance name={x.name} amount={x.amount} ticketsLeftToPay={x.ticketsLeftToPay}/>)}
-    </div>
-  )
-}
-
-export default Balance
+export default Balance;

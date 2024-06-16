@@ -90,7 +90,7 @@ export const DebtorBtn = ({ debtor, selected = null, setSelected = null, handleC
           <span className='w-20 ml-2 pl-2 border-l bordedr-slate-400'>
             {`$${parseFloat(debtor.amount).toFixed(2)}` ?? ''}
           </span>
-        </div> 
+        </div>
       )}
       {selected && setSelected && (
         <button
