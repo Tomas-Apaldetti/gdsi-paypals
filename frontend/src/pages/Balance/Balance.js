@@ -28,7 +28,7 @@ const UserBalanceSummary = ({ username, totalOwed, totalPaid, ticketsInvolved })
       >
         <Disclosure.Panel as='ul' className='text-slate-800 font-thin tracking-tight px-2'>
           {ticketsInvolved.map((ticket) => (
-            <li><span className='font-medium'>{`${ticket.name}`}</span>{`: $${ticket.paid} out of $${ticket.toPay}`}</li>
+            ticket.toPay ? <li><span className='font-medium'>{`${ticket.name}`}</span>{`: $${ticket.paid} out of $${ticket.toPay}`}</li> : null
           ))}
         </Disclosure.Panel>
       </Transition>
@@ -37,7 +37,6 @@ const UserBalanceSummary = ({ username, totalOwed, totalPaid, ticketsInvolved })
 };
 
 const MovementSummary = ({ history }) => {
-  console.log(history);
   return (
     <ul className='font-thin tracking-tight text-sm text-slate-800'>
       {history

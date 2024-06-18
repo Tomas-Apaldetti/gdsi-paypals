@@ -39,7 +39,7 @@ export function getTicketsDissagg(tickets, user){
   return tickets.map(ticket => ({
     ...ticket,
     currUser: user,
-    toPay: ticket.debtors.find(d => d._id === user._id).amount,
+    toPay: ticket.debtors.find(d => d._id === user._id)?.amount || null,
     paid: getPaidForUser(ticket, user)
   }));
 }

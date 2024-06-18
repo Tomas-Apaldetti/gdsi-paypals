@@ -30,7 +30,7 @@ export async function getTickets(group) {
 
 export async function payTicket(group, ticket, payment){
   if(!group){
-    return post(`${BASE_URL}/${ticket}/payment`, payment)
+    return post(`${BASE_URL}/v1/tickets/${ticket}/payment`, payment)
   }
   return post(`${BASE_URL}/${PATHS.forGroup(group)}/${ticket}/payment`, payment)
 }
